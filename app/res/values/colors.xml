@@ -4,4 +4,6 @@
 <color name="green">#00ff00</color>
 <color name="blue">#0000ff</color>
 <color name="transparent_black">#33333333</color>
+ <color name="menu_background">#c6c4c4</color>
+ <color name="background_light">#c6c4c4</color>
 </resources>

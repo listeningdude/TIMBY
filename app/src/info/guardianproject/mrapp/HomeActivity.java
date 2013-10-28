@@ -6,6 +6,7 @@ import info.guardianproject.mrapp.model.LessonGroup;
 import info.guardianproject.mrapp.model.Media;
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.server.LoginActivity;
+import info.guardianproject.mrapp.server.RegisterActivity;
 import info.guardianproject.mrapp.ui.MyCard;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 import info.guardianproject.mrapp.login.*;
@@ -22,6 +23,7 @@ import java.util.Locale;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
+import net.sqlcipher.database.SQLiteDatabase;
 
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.ProgressDialog;
@@ -48,6 +50,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
@@ -65,12 +68,13 @@ public class HomeActivity extends BaseActivity {
     UserFunctions userFunctions;
 
 	CardUI mCardView;
-    
+    RelativeLayout load_new_report;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
     
     	super.onCreate(savedInstanceState);
+    	SQLiteDatabase.loadLibs(this);
         try {
             String pkg = getPackageName();
             String vers= getPackageManager().getPackageInfo(pkg, 0).versionName;
@@ -80,7 +84,7 @@ public class HomeActivity extends BaseActivity {
            
         }
         checkCreds();
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.homescreen);
         
         // action bar stuff
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -88,6 +92,15 @@ public class HomeActivity extends BaseActivity {
         checkForTor();
         
         //checkForUpdates();
+        load_new_report = (RelativeLayout)findViewById(R.id.load_new_report);
+        load_new_report.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View view) {
+				Intent i = new Intent(getApplicationContext(),StoryNewActivity.class);
+				startActivity(i);
+				finish();
+			}
+		});
         
     }
     
@@ -97,7 +110,7 @@ public class HomeActivity extends BaseActivity {
 	public void onResume() {
 		super.onResume();
 		
-		new getAsynctask().execute("");
+		//new getAsynctask().execute("");
 		
 		boolean isExternalStorageReady = ((StoryMakerApp)getApplication()).isExternalStorageReady();
 		
@@ -611,13 +624,13 @@ public class HomeActivity extends BaseActivity {
     //if the user hasn't registered with the user, show the login screen
     private void checkCreds ()
     {	 
-    	if(userFunctions.isUserLoggedIn(getApplicationContext())){
+    	//if(userFunctions.isUserLoggedIn(getApplicationContext())){
     		//Do nothing
-    	}
-    	else{
+    	//}
+    	//else{
     		Intent intent = new Intent(this,LoginActivity.class);
         	startActivity(intent);
-    	}
+    	//}
     	
     	/*
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

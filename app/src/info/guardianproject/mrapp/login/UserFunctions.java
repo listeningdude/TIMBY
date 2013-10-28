@@ -12,8 +12,8 @@ import android.content.Context;
 public class UserFunctions {
 	
 	private JSONParser jsonParser;
-	private static String loginURL = "http://10.0.2.2/timby_dummy_api/login.php";
-	private static String registerURL = "http://10.0.2.2/timby_dummy_api/register.php";
+	private static String loginURL = "http://pichanoma.com/timby/login.php";
+	private static String registerURL = "http://pichanoma.com/timby/register.php";
 
 	
 	// constructor

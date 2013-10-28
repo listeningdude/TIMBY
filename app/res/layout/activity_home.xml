@@ -4,14 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="0dp"
-         android:background="#eaeae5"
-     >
+    android:background="#eaeae5">
 
     <com.fima.cardsui.views.CardUI
         android:id="@+id/cardsview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-         />
+     />
    
 
   </LinearLayout>

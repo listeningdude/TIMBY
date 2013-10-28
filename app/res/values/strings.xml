@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="app_name">StoryMaker</string>
+    <string name="app_name">TIMBY</string>
 
 
     <string name="title_projects">Stories</string>
     <string name="title_lessons">Lessons</string>
-
+	<string name="add">Add Report</string>
+	<string name="view">View Reports</string>
+	<string name="help">Help</string>
+	<string name="sync">Sync Reports</string>
+	
+	<string name="capture_audio">Audio</string>
+	<string name="capture_video">Video</string>
+	<string name="capture_picture">Picture</string>
+	<string name="company_or_person_field">Company/Person</string>
+	<string name="description_field">Add descriptive text here\nWho, What, Where, Why&#8230;</string>
+    <string name="set_location">Set Location</string>
+    <string name="done">Done</string>
+    <string name="edit">Edit</string>
+	
+    <string name="action_settings">Settings</string>
+    <string name="logout">Logout</string>
     <string name="action_publish">Publish</string>
     <!-- menus -->
     <string name="menu_new_project">New</string>

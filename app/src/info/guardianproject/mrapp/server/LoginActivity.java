@@ -5,9 +5,9 @@ import info.guardianproject.mrapp.*;
 import info.guardianproject.mrapp.R;
 import info.guardianproject.mrapp.login.*;
 
-import org.holoeverywhere.widget.Button;
-import org.holoeverywhere.widget.EditText;
-import org.holoeverywhere.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,8 +18,7 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
  
-public class LoginActivity extends Activity 
-{
+public class LoginActivity extends Activity{
 	
 	Button btnLogin;
 	Button btnLinkToRegister;
