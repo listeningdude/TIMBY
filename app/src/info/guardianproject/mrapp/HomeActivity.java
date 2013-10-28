@@ -79,7 +79,7 @@ public class HomeActivity extends BaseActivity {
         } catch (NameNotFoundException e) {
            
         }
-        
+        checkCreds();
         setContentView(R.layout.activity_home);
         
         // action bar stuff
