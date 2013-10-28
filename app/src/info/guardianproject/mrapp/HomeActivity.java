@@ -8,7 +8,7 @@ import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.server.LoginActivity;
 import info.guardianproject.mrapp.ui.MyCard;
 import info.guardianproject.onionkit.ui.OrbotHelper;
-
+import info.guardianproject.mrapp.login.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -62,7 +62,7 @@ public class HomeActivity extends BaseActivity {
     private ProgressDialog mLoading;
     private ArrayList<Lesson> mLessonsCompleted;
     private ArrayList<Project> mListProjects;
-
+    UserFunctions userFunctions;
 
 	CardUI mCardView;
     
@@ -610,8 +610,16 @@ public class HomeActivity extends BaseActivity {
 
     //if the user hasn't registered with the user, show the login screen
     private void checkCreds ()
-    {
+    {	 
+    	if(userFunctions.isUserLoggedIn(getApplicationContext())){
+    		//Do nothing
+    	}
+    	else{
+    		Intent intent = new Intent(this,LoginActivity.class);
+        	startActivity(intent);
+    	}
     	
+    	/*
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
        
         String user = settings.getString("user",null);
@@ -620,7 +628,7 @@ public class HomeActivity extends BaseActivity {
         {
         	Intent intent = new Intent(this,LoginActivity.class);
         	startActivity(intent);
-        }
+        }*/
     }
     
     @Override

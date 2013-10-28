@@ -1,174 +1,109 @@
 package info.guardianproject.mrapp.server;
 
 
-import info.guardianproject.mrapp.AppConstants;
-import info.guardianproject.mrapp.BaseActivity;
+import info.guardianproject.mrapp.*;
 import info.guardianproject.mrapp.R;
-import info.guardianproject.mrapp.StoryMakerApp;
+import info.guardianproject.mrapp.login.*;
 
 import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.TextView;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
  
-public class LoginActivity extends BaseActivity implements Runnable 
+public class LoginActivity extends Activity 
 {
 	
-	private ImageView viewLogo;
-	private TextView txtStatus;
-	private EditText txtUser;
-	private EditText txtPass;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // setting default screen to login.xml
-        setContentView(R.layout.activity_login);
-        
-        viewLogo = (ImageView)findViewById(R.id.logo);
-        txtStatus = (TextView)findViewById(R.id.status);
-        txtUser = (EditText)findViewById(R.id.login_username);
-        txtPass = (EditText)findViewById(R.id.login_password);
-        
-        getCreds();
-        
-        getSupportActionBar().hide();
-        
-        Button btnLogin = (Button) findViewById(R.id.btnLogin);
-        btnLogin.setOnClickListener(new OnClickListener ()
-        {
+	Button btnLogin;
+	Button btnLinkToRegister;
+	EditText inputUsername;
+	EditText inputPassword;
+	TextView loginErrorMsg;
 
-			@Override
-			public void onClick(View v) {
-				
-				handleLogin ();
-				
+	// JSON Response node names
+	private static String KEY_SUCCESS = "success";
+	private static String KEY_ERROR = "error";
+	private static String KEY_ERROR_MSG = "error_msg";
+	private static String KEY_UID = "uid";
+	private static String KEY_USERNAME = "username";
+	private static String KEY_CREATED_AT = "created_at";
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+	    StrictMode.setThreadPolicy(policy);
+	    
+		setContentView(R.layout.activity_login);
+
+		// Importing all assets like buttons, text fields
+		inputUsername = (EditText) findViewById(R.id.loginUsername);
+		inputPassword = (EditText) findViewById(R.id.loginPassword);
+		btnLogin = (Button) findViewById(R.id.btnLogin);
+		btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
+		loginErrorMsg = (TextView) findViewById(R.id.login_error);
+
+		// Login button Click Event
+		btnLogin.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View view) {
+				String username = inputUsername.getText().toString();
+				String password = inputPassword.getText().toString();
+				UserFunctions userFunction = new UserFunctions();
+				Log.d("Button", "Login");
+				JSONObject json = userFunction.loginUser(username, password);
+
+				// check for login response
+				try {
+					if (json.getString(KEY_SUCCESS) != null) {
+						loginErrorMsg.setText("");
+						String res = json.getString(KEY_SUCCESS); 
+						if(Integer.parseInt(res) == 1){
+							// user successfully logged in
+							// Store user details in SQLite Database
+							DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+							JSONObject json_user = json.getJSONObject("user");
+							
+							// Clear all previous data in database
+							userFunction.logoutUser(getApplicationContext());
+							db.addUser(json_user.getString(KEY_USERNAME), json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));						
+							
+							// Launch Dashboard Screen
+							Intent dashboard = new Intent(getApplicationContext(), HomeActivity.class);
+							
+							// Close all views before launching Dashboard
+							dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							startActivity(dashboard);
+							
+							// Close Login Screen
+							finish();
+						}else{
+							// Error in login
+							loginErrorMsg.setText("Incorrect username/password");
+						}
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
-        	
-        });
-        
-        TextView registerScreen = (TextView) findViewById(R.id.link_to_register);
- 
-        // Listening to register new account link
-        registerScreen.setOnClickListener(new View.OnClickListener() {
- 
-            public void onClick(View v) {
-                // Switching to Register screen
-               Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(i);
-            	//StoryMakerApp.getServerManager().createAccount(LoginActivity.this);
-            }
-        });
-        
-        TextView skipScreen = (TextView) findViewById(R.id.link_to_skip);
-        
-        // Listening to skip link
-        skipScreen.setOnClickListener(new View.OnClickListener() {
- 
-            public void onClick(View v) {
-              
-            	 saveCreds("","");//skip login
-            	 loginSuccess ();
-            }
-        });
-    }
-    
-    private void handleLogin ()
-    {
-    	txtStatus.setText("Connecting to server...");
-    	
-    	new Thread(this).start();
-    }
-    
-    private void saveCreds (String user, String pass)
-    { 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        Editor edit = settings.edit(); 
-        
-        edit.putString("user", user);
-        edit.putString("pass", pass);
-        
-        edit.commit();
-        
-    }
-    
-    private void getCreds ()
-    { 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-       
-        String user = settings.getString("user",null);
-        String pass = settings.getString("pass",null);
-        
-        if (user != null)
-        	txtUser.setText(user);
-        
-        if (pass != null)
-        	txtPass.setText(pass);
-        
-    }
-    
-    public void run ()
-    {
-    	String username = txtUser.getText().toString();
-    	String password = txtPass.getText().toString();
-    	
-    	//for now just save to keep it simple
-    	saveCreds(username, password);
-    	
-    	try {
-			StoryMakerApp.getServerManager().connect(username, password);
+		});
 
-			mHandler.sendEmptyMessage(0);
-	         
-		} catch (Exception e) {
-			
-			Message msgErr= mHandler.obtainMessage(1);
-			msgErr.getData().putString("err",e.getLocalizedMessage());
-			mHandler.sendMessage(msgErr);
-			Log.e(AppConstants.TAG,"login err",e);
-		}
-    }
-    
-    private Handler mHandler = new Handler ()
-    {
+		// Link to Register Screen
+		btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
 
-		@Override
-		public void handleMessage(Message msg) {
-			
-			switch (msg.what)
-			{
-				case 0:
-					loginSuccess();
-					break;
-				case 1:
-					loginFailed(msg.getData().getString("err"));
-					
-					
-				default:
+			public void onClick(View view) {
+				Intent i = new Intent(getApplicationContext(),
+						RegisterActivity.class);
+				startActivity(i);
+				finish();
 			}
-		}
-    	
-    };
-    
-    private void loginFailed (String err)
-    {
-    	txtStatus.setText(err);
-    	//Toast.makeText(this, "Login failed: " + err, Toast.LENGTH_LONG).show();
-    }
-    
-    private void loginSuccess ()
-    {
-    	finish();
-    }
+		});
+	}
 }

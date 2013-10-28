@@ -18,21 +18,16 @@
                      android:orientation="vertical"
                 >
                 <!-- Logo Start-->
-                <ImageView android:src="@drawable/logo_large"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center|center"
-                            android:id="@+id/logo"
-                            />
-  <TextView 
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"                
-                android:text="@string/app_name"
-                android:gravity="center"
-                android:textSize="24dip"
-                android:textColor="#333333"/>          
+
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="144dp"
+                    android:layout_height="144dp"
+                    android:layout_gravity="center|center"
+                    android:src="@drawable/logo_large" />
+          
                  <TextView 
-                android:id="@+id/status"
+                android:id="@+id/login_error"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"                
                 android:text="             "
@@ -40,10 +35,12 @@
                 android:textSize="18dip"
                 android:textColor="#555555"/>         
                 <!-- Logo Ends -->
+
         </LinearLayout>
         <!--  Header Ends -->
         <!-- Footer Start -->
         <LinearLayout android:id="@+id/footer"
+            android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="90dip"
                 android:layout_alignParentBottom="true">
@@ -60,7 +57,7 @@
           android:layout_below="@id/header">
           <!--  Email Label -->          
           <EditText android:layout_width="fill_parent"
-              	android:id="@+id/login_username"
+              	android:id="@+id/loginUsername"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
                 android:layout_marginBottom="20dip"
@@ -69,7 +66,7 @@
                 />
           <!--  Password Label -->          
           <EditText android:layout_width="fill_parent"
-                android:id="@+id/login_password"
+                android:id="@+id/loginPassword"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
                 android:singleLine="true"
@@ -99,24 +96,25 @@
               android:paddingLeft="10dp"
               android:paddingRight="10dp"
               android:paddingTop="20dp"
-              android:text="Skip Login"
+              android:text="Skip to Tutorials"
               android:textColor="#0b84aa"
               android:textSize="20dip" />
           
           <!-- Link to Registration Screen -->
 
-          <TextView
-              android:id="@+id/link_to_register"
+          <Button
+              android:id="@+id/btnLinkToRegisterScreen"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:gravity="center"
+               android:gravity="center"
+               android:background="#FFFFFF"
               android:paddingBottom="20dp"
               android:paddingLeft="10dp"
               android:paddingRight="10dp"
               android:paddingTop="20dp"
-              android:text="Create Account"
+              android:text="Register"
               android:textColor="#0b84aa"
-              android:textSize="20dip" />
+              android:textSize="20dip"/>
 
  </LinearLayout>
         </LinearLayout>
