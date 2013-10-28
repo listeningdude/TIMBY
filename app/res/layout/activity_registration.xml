@@ -15,27 +15,18 @@
           android:layout_height="wrap_content"
           android:padding="10dip">
           <!-- Full Name Label -->
-          
-          <EditText android:id="@+id/reg_fullname"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:singleLine="true"
-                android:layout_marginBottom="20dip"
-                android:hint="Display Name"
-                />
           <!--  Email Label -->
-          <EditText android:id="@+id/reg_email"
+          <EditText android:id="@+id/registerUsername"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
                 android:singleLine="true"
                 android:layout_marginBottom="20dip"
-                android:hint="Your Email"
+                android:hint="Your Username"
                 />
           <!-- Password Label -->
         
-          <EditText android:id="@+id/reg_password"
+          <EditText android:id="@+id/registerPassword"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:password="true"
@@ -66,15 +57,29 @@
                 android:layout_marginTop="10dip"
                 android:text="Register New Account"/>
           <!-- Link to Login Screen -->
-          <TextView android:id="@+id/link_to_login"
+
+          <TextView
+              android:id="@+id/register_error"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_horizontal"
+              android:text=""
+              android:textAppearance="?android:attr/textAppearanceSmall" />
+
+          <Button android:id="@+id/btnLinkToLoginScreen"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dip"
-                android:layout_marginBottom="40dip"
-                android:text="Return to Login"
-                android:gravity="center"
-                android:textSize="20dip"
-                android:textColor="#025f7c"/>
+                android:layout_marginTop="20dip"
+                android:layout_marginBottom="20dip"
+               android:gravity="center"
+               android:background="#FFFFFF"
+              android:paddingBottom="5dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:paddingTop="5dp"
+              android:text="Back to Login"
+              android:textColor="#0b84aa"
+              android:textSize="20dip"/>
  
         </LinearLayout>
         <!-- Registration Form Ends -->
