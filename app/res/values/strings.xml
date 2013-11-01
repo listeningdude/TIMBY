@@ -2,8 +2,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="app_name">TIMBY</string>
-
-
     <string name="title_projects">Stories</string>
     <string name="title_lessons">Lessons</string>
 	<string name="add">Add Report</string>

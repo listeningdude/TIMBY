@@ -25,6 +25,7 @@ public class LoginActivity extends Activity{
 	EditText inputUsername;
 	EditText inputPassword;
 	TextView loginErrorMsg;
+	Button btnLessons;
 
 	// JSON Response node names
 	private static String KEY_SUCCESS = "success";
@@ -48,7 +49,7 @@ public class LoginActivity extends Activity{
 		btnLogin = (Button) findViewById(R.id.btnLogin);
 		btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
 		loginErrorMsg = (TextView) findViewById(R.id.login_error);
-
+		btnLessons = (Button)findViewById(R.id.link_to_skip);
 		// Login button Click Event
 		btnLogin.setOnClickListener(new View.OnClickListener() {
 
@@ -93,7 +94,18 @@ public class LoginActivity extends Activity{
 				}
 			}
 		});
-
+		//Link to Lessions
+		btnLessons.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent lessons = new Intent(getApplicationContext(), LessonsActivity.class);
+				startActivity(lessons);
+				
+			}
+		});
+		
 		// Link to Register Screen
 		btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
 

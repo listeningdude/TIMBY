@@ -103,6 +103,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
+        <activity
+            android:name=".ReportsActivity"
+            android:configChanges="locale"
+            android:label="Reports"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
 
         <activity
             android:name=".StoryTemplateChooserActivity"

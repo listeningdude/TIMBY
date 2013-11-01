@@ -39,10 +39,12 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/load_reports"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:background="@color/menu_background" >
+            android:background="@color/menu_background"
+            android:clickable="true" >
 
             <TextView
                 android:id="@+id/textView2"
@@ -72,11 +74,13 @@
         android:padding="2dp" >
 
         <RelativeLayout
+            android:id="@+id/load_lessons"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="2dp"
             android:layout_weight="0.50"
-            android:background="@color/menu_background" >
+            android:background="@color/menu_background"
+            android:clickable="true" >
 
             <TextView
                 android:id="@+id/TextView02"
@@ -101,7 +105,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.39"
-            android:background="@color/menu_background" >
+            android:background="@color/menu_background" 
+            android:clickable="true">
 
             <TextView
                 android:id="@+id/TextView01"

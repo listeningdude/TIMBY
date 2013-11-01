@@ -30,18 +30,19 @@
         android:layout_below="@+id/editTextStoryName"
         android:layout_marginTop="10dp"
         android:text="@string/new_story_choose_something"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="gone" />
 
      <LinearLayout
-        android:id="@+id/llMedium"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-                android:layout_below="@+id/textView2"
-        android:orientation="vertical"
-        android:background="#ffffff"
-        android:padding="6sp"
-         >
+         android:id="@+id/llMedium"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/textView2"
+         android:layout_marginTop="10dp"
+         android:background="#ffffff"
+         android:orientation="vertical"
+         android:padding="6sp" >
+
     <TextView
         android:id="@+id/textViewChooseAMedium"
         android:layout_width="wrap_content"
@@ -50,7 +51,8 @@
         android:layout_below="@+id/textView2"
         android:layout_marginTop="10dp"
         android:text="@string/new_story_choose_a_medium"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:visibility="gone"/>
 
     <RadioGroup
         android:id="@+id/radioGroupStoryType"
@@ -123,7 +125,8 @@
         android:gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:visibility="gone">
          <RadioButton
             android:id="@+id/radioStoryType0"
             android:layout_width="wrap_content"
@@ -139,15 +142,81 @@
             android:text="@string/new_story_choose_template"
             />
         </RadioGroup>
-        
     <Button
-                android:id="@+id/buttonStartStory"
-        
+        android:id="@+id/buttonStartStory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/button_start_my_story" />
+        android:text="@string/button_start_my_story" 
+        android:visibility="gone"
+      />
+      <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
+        <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="@string/company_or_person_field"
+            android:inputType="textPersonName"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" />
+
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="@string/description_field"
+            android:inputType="textMultiLine"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" >
+
+            <requestFocus />
+        </EditText>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="114dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp" >
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="26dp"
+                android:src="@drawable/location_dark" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/imageView4"
+                android:text="@string/set_location" />
+
+            <CheckBox
+                android:id="@+id/checkBox1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/done" />
+
+        </RelativeLayout>
 </LinearLayout>
 </RelativeLayout>
 </ScrollView>

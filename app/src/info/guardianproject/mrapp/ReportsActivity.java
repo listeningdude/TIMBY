@@ -59,7 +59,7 @@ import com.fima.cardsui.views.CardUI;
 //import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.viewpagerindicator.CirclePageIndicator;
 
-public class HomeActivity extends BaseActivity {
+public class ReportsActivity extends BaseActivity {
 
     
     private ProgressDialog mLoading;
@@ -68,9 +68,6 @@ public class HomeActivity extends BaseActivity {
     UserFunctions userFunctions;
 
 	CardUI mCardView;
-    RelativeLayout load_new_report;
-    RelativeLayout load_lessons;
-    RelativeLayout load_reports;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,8 +82,8 @@ public class HomeActivity extends BaseActivity {
         } catch (NameNotFoundException e) {
            
         }
-        checkCreds();
-        setContentView(R.layout.homescreen);
+      //  checkCreds();
+        setContentView(R.layout.activity_home);
         
         // action bar stuff
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -94,37 +91,7 @@ public class HomeActivity extends BaseActivity {
         checkForTor();
         
         //checkForUpdates();
-        load_new_report = (RelativeLayout)findViewById(R.id.load_new_report);
-        load_new_report.setOnClickListener(new View.OnClickListener() {
-
-			public void onClick(View view) {
-				Intent i = new Intent(getApplicationContext(),NewReportActivity.class);
-				startActivity(i);
-				
-			}
-		});
-        load_reports = (RelativeLayout)findViewById(R.id.load_reports);
-        load_reports.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplicationContext(),ReportsActivity.class);
-				startActivity(i);
-			}
-		});
-        
-        load_lessons = (RelativeLayout)findViewById(R.id.load_lessons);
-        load_lessons.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplicationContext(),LessonsActivity.class);
-				startActivity(i);
-			}
-		});
-        
+               
     }
     
     
@@ -159,14 +126,14 @@ public class HomeActivity extends BaseActivity {
             super.onPreExecute();
             
             if (mLoading == null || (!mLoading.isShowing()))
-            	mLoading = ProgressDialog.show(HomeActivity.this, null, "Please wait...", true, true);
+            	mLoading = ProgressDialog.show(ReportsActivity.this, null, "Please wait...", true, true);
         }
         protected Integer doInBackground(String... params) {
             try {
             	
                 
-            	mLessonsCompleted = getLessonsCompleted(HomeActivity.this);
-            	mListProjects = Project.getAllAsList(HomeActivity.this);
+            	mLessonsCompleted = getLessonsCompleted(ReportsActivity.this);
+            	mListProjects = Project.getAllAsList(ReportsActivity.this);
 
             	
                 return null;
@@ -240,7 +207,7 @@ public class HomeActivity extends BaseActivity {
 
     			@Override
     			public void onClick(View v) {
-                    startActivity(new Intent(HomeActivity.this, LessonsActivity.class));
+                    startActivity(new Intent(ReportsActivity.this, LessonsActivity.class));
 
 
     			}
@@ -397,7 +364,7 @@ public class HomeActivity extends BaseActivity {
 		
     }
     
-    public static class ActivityEntry implements Comparable<HomeActivity.ActivityEntry> {
+    public static class ActivityEntry implements Comparable<ReportsActivity.ActivityEntry> {
 
     	  public Date dateTime;
     	  public MyCard card;
@@ -467,7 +434,7 @@ public class HomeActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				
-				Intent intent = new Intent(HomeActivity.this, LessonsActivity.class);
+				Intent intent = new Intent(ReportsActivity.this, LessonsActivity.class);
 				startActivity(intent);
 			}
         	 
@@ -514,7 +481,7 @@ public class HomeActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(HomeActivity.this, StoryNewActivity.class);
+				Intent intent = new Intent(ReportsActivity.this, StoryNewActivity.class);
 				startActivity(intent);
 				
 			}
@@ -770,7 +737,7 @@ public class HomeActivity extends BaseActivity {
 		if (changed)
 		{
 			finish();
-			startActivity(new Intent(this,HomeActivity.class));
+			startActivity(new Intent(this,ReportsActivity.class));
 			
 		}
 	}
