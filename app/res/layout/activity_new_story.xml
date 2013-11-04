@@ -69,8 +69,7 @@
             android:layout_height="48dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/btn_toggle_ic_list_video"
-            android:button="@android:color/transparent"
-            android:checked="true" />
+            android:button="@android:color/transparent"/>
 
         <RadioButton
             android:id="@+id/radioStoryType1"
@@ -195,18 +194,11 @@
                 android:id="@+id/imageView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/checkBox1"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="26dp"
                 android:src="@drawable/location_dark" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignRight="@+id/imageView4"
-                android:text="@string/set_location" />
 
             <CheckBox
                 android:id="@+id/checkBox1"
@@ -215,6 +207,14 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:text="@string/done" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/imageView4"
+                android:layout_below="@+id/imageView4"
+                android:text="@string/set_location" />
 
         </RelativeLayout>
 </LinearLayout>

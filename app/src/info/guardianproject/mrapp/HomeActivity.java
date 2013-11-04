@@ -98,7 +98,7 @@ public class HomeActivity extends BaseActivity {
         load_new_report.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View view) {
-				Intent i = new Intent(getApplicationContext(),NewReportActivity.class);
+				Intent i = new Intent(getApplicationContext(),StoryNewActivity.class);
 				startActivity(i);
 				
 			}

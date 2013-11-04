@@ -10,8 +10,10 @@ import info.guardianproject.mrapp.model.Scene;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -37,7 +39,6 @@ public class StoryNewActivity extends BaseActivity {
         editTextStoryName = (EditText)findViewById(R.id.editTextStoryName);
         
         rGroup = (RadioGroup)findViewById(R.id.radioGroupStoryType);
-        
         rGroup.setOnCheckedChangeListener(new OnCheckedChangeListener()
         {
 
@@ -71,7 +72,7 @@ public class StoryNewActivity extends BaseActivity {
 					txtNewStoryDesc.setText(R.string.template_essay_desc);
 		    		
 		    	}
-				
+				launchSimpleStory(editTextStoryName.getText().toString(), getSelectedStoryMode(), false);		
 			}
         	
         });
