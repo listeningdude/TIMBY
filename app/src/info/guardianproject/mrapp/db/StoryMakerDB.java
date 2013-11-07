@@ -6,8 +6,8 @@ import android.content.Context;
 
 public class StoryMakerDB extends SQLiteOpenHelper {
 	
-    private static final int DB_VERSION = 7;
-    private static final String DB_NAME = "sm.db3";
+    private static final int DB_VERSION = 8;
+    private static final String DB_NAME = "sm.db4";
     
     public StoryMakerDB(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -16,6 +16,7 @@ public class StoryMakerDB extends SQLiteOpenHelper {
     
     @Override
     public void onCreate(SQLiteDatabase db) {
+    	db.execSQL(StoryMakerDB.Schema.Reports.CREATE_TABLE_REPORTS);
         db.execSQL(StoryMakerDB.Schema.Projects.CREATE_TABLE_PROJECTS);
         db.execSQL(StoryMakerDB.Schema.Scenes.CREATE_TABLE_SCENES);
 		db.execSQL(StoryMakerDB.Schema.Lessons.CREATE_TABLE_LESSONS);
@@ -58,23 +59,15 @@ public class StoryMakerDB extends SQLiteOpenHelper {
             
             public static final String ID = "_id";
             public static final String COL_TITLE = "title";
-            public static final String COL_SECTOR = "_sector";
-            public static final String COL_ENTITY = "_entity";
-            public static final String COL_DESCRIPTION = "_description";
-            public static final String COL_LOCATION = "_location";
-            public static final String COL_ISSUE = "_issue";
+            public static final String COL_REPORT_ID = "report_id";
             public static final String COL_THUMBNAIL_PATH = "thumbnail_path";
             public static final String COL_STORY_TYPE = "story_type";
             public static final String COL_TEMPLATE_PATH = "template_path";
             
             private static final String CREATE_TABLE_PROJECTS = "create table " + NAME + " (" 
                     + ID + " integer primary key autoincrement, " 
-                    + COL_TITLE + " text not null, " 
-                    + COL_ISSUE + " text,"
-                    + COL_ENTITY + " text,"
-                    + COL_DESCRIPTION + " text,"
-                    + COL_LOCATION + " text,"
-                    + COL_SECTOR + " text,"
+                    + COL_TITLE + " text not null, "
+                    + COL_REPORT_ID + " integer,"
                     + COL_THUMBNAIL_PATH + " text,"
                     + COL_STORY_TYPE + " integer,"
                     + COL_TEMPLATE_PATH + " text"
@@ -85,7 +78,29 @@ public class StoryMakerDB extends SQLiteOpenHelper {
                     + COL_STORY_TYPE + " integer"
                     + " DEFAULT 0";
         }
-        
+        public class Reports
+        {
+            public static final String NAME = "reports";
+            
+            public static final String ID = "_id";
+            public static final String COL_TITLE = "title";
+            public static final String COL_SECTOR = "_sector";
+            public static final String COL_ENTITY = "_entity";
+            public static final String COL_DESCRIPTION = "_description";
+            public static final String COL_LOCATION = "_location";
+            public static final String COL_ISSUE = "_issue";
+            
+            private static final String CREATE_TABLE_REPORTS = "create table " + NAME + " (" 
+                    + ID + " integer primary key autoincrement, " 
+                    + COL_TITLE + " text not null, " 
+                    + COL_ISSUE + " text,"
+                    + COL_ENTITY + " text,"
+                    + COL_DESCRIPTION + " text,"
+                    + COL_LOCATION + " text,"
+                    + COL_SECTOR + " text"
+                    + "); ";
+        }
+       
         public class Scenes
         {
             public static final String NAME = "scenes";

@@ -124,7 +124,7 @@ public class Project {
         
         mSceneCount = cursor.getCount();
         
-        // FIXME CLEANUP --- not sure why this was calculated this way, but for now I am just using count
+// FIXME CLEANUP --- not sure why this was calculated this way, but for now I am just using count
 //        if (cursor.moveToFirst()) {
 //            do {
 //                Scene scene = new Scene(context, cursor);

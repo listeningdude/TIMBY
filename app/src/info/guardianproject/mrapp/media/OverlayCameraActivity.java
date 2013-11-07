@@ -35,7 +35,7 @@ import com.larvalabs.svgandroid.SVGParser;
 public class OverlayCameraActivity extends SherlockActivity implements Callback, SwipeInterface 
 {
    
-
+	
 	private Camera camera;
     private SurfaceView mSurfaceView;
     SurfaceHolder mSurfaceHolder;
@@ -89,18 +89,19 @@ public class OverlayCameraActivity extends SherlockActivity implements Callback,
         ActivitySwipeDetector swipe = new ActivitySwipeDetector(this);
         mOverlayView.setOnTouchListener(swipe);
       
-        mOverlayView.setOnClickListener(new OnClickListener ()
+       /* mOverlayView.setOnClickListener(new OnClickListener ()
         {
 
 			@Override
 			public void onClick(View v) {
-				closeOverlay();
-			}
+		*/		
+        		closeOverlay();
+		/*	}
         	
         });
-        
-        mSurfaceView = new SurfaceView(this);
-         addContentView(mSurfaceView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+        */
+       mSurfaceView = new SurfaceView(this);
+       addContentView(mSurfaceView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
        mSurfaceHolder = mSurfaceView.getHolder();
        mSurfaceHolder.addCallback(this);
        mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);

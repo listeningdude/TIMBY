@@ -11,6 +11,7 @@ import info.guardianproject.mrapp.model.Scene;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,10 +35,13 @@ public class StoryNewActivity extends BaseActivity {
 	private EditText editTextDesc;
 	private EditText editTextEntity;
 	private TextView textViewLocation; 
-	
+	int pid;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+       pid = intent.getIntExtra("pid", -1);
+        
         setContentView(R.layout.activity_new_story);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
@@ -109,7 +113,7 @@ public class StoryNewActivity extends BaseActivity {
         });
         
         
-        Intent intent = getIntent();
+       
        
         if (intent.hasExtra("story_name") && intent.hasExtra("story_type"))
         {
@@ -189,14 +193,24 @@ public class StoryNewActivity extends BaseActivity {
     private void launchSimpleStory(String pName, int storyMode, String pIssue, String pSector, String pEntity, String pDesc, String pLocation, boolean autoCapture) {
         int clipCount = AppConstants.DEFAULT_CLIP_COUNT;
         
-        Project project = new Project (this, clipCount);
-        project.setTitle(pName);
-        project.setIssue(pIssue);
-        project.setSector(pSector);
-        project.setEntity(pEntity);
-        project.setDescription(pDesc);
-        project.setLocation(pLocation);
-        project.save();
+       
+        Project project;
+        Log.d("pid", String.valueOf(pid));
+        if (pid == -1) {
+        	project = new Project (this, clipCount);
+        	project.setTitle(pName);
+            project.setIssue(pIssue);
+            project.setSector(pSector);
+            project.setEntity(pEntity);
+            project.setDescription(pDesc);
+            project.setLocation(pLocation);
+            project.save();
+
+        }else{
+        	project = Project.get(this, pid);
+       }
+        
+        
         
         Scene scene = new Scene(this, clipCount);
         scene.setProjectIndex(0);

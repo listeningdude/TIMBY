@@ -6,13 +6,16 @@ import java.io.IOException;
 import net.micode.soundrecorder.SoundRecorder;
 import info.guardianproject.mrapp.media.MediaProjectManager;
 import info.guardianproject.mrapp.media.OverlayCameraActivity;
+import info.guardianproject.mrapp.model.Media;
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.model.Scene;
 import info.guardianproject.mrapp.model.template.Template;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.ImageView;
 
 public class StoryMakerCaptureActivitySimple extends EditorBaseActivity{
 		private int mSceneIndex = 0;
@@ -49,7 +52,7 @@ public class StoryMakerCaptureActivitySimple extends EditorBaseActivity{
             {
             	Log.e(AppConstants.TAG,"could not parse templates",e);
             }
-            setContentView(R.layout.activity_scene_editor_no_swipe);
+            setContentView(R.layout.medialist);
             openCaptureMode(0, 0);
 	 }
 	 public void openCaptureMode (int shotType, int clipIndex)
@@ -127,5 +130,6 @@ public class StoryMakerCaptureActivitySimple extends EditorBaseActivity{
 	            	}
 	            }*/
 	        }
+	        
 	    }
 }
