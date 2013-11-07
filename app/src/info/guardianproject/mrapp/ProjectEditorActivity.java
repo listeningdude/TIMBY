@@ -48,11 +48,23 @@ public class ProjectEditorActivity extends BaseActivity{
         location = i.getStringExtra("location");
         
         editTextStoryName.setText(title);
-        //spinnerSector.setText(sector);
+        setSelectedItem(spinnerSector, sector);
+        setSelectedItem(spinnerIssue, issue);
         //spinnerIssue.setText(issue);
         editTextDesc.setText(description);
         editTextEntity.setText(entity);
         textViewLocation.setText(location);
         
+        
+        
 	}
+	public void setSelectedItem(Spinner spinner,String string){
+		int index = 0;
+		for (int i = 0; i < spinner.getAdapter().getCount(); i++){
+			if (spinner.getItemAtPosition(i).equals(string)){
+				index = i;
+			}
+		}
+			spinner.setSelection(index);
+		}
 }
