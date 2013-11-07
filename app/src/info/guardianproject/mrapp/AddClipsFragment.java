@@ -130,7 +130,7 @@ public class AddClipsFragment extends Fragment {
                     {
                         mDragAtEnd++;
                         
-                        if (mDragAtEnd > mTemplate.getScene(mScene).getClips().size())
+                        /*if (mDragAtEnd > mTemplate.getScene(mScene).getClips().size())
                         {
                             AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                             builder.setMessage(R.string.add_new_clip_to_the_scene_)
@@ -144,7 +144,7 @@ public class AddClipsFragment extends Fragment {
                                     .setNegativeButton(R.string.no, null).show();
                            
                             mDragAtEnd = 0;
-                        }
+                        }*/
                     }
                     else
                     {

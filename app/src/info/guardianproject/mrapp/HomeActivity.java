@@ -109,7 +109,7 @@ public class HomeActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplicationContext(),ReportsActivity.class);
+				Intent i = new Intent(getApplicationContext(),ProjectsActivity.class);
 				startActivity(i);
 			}
 		});

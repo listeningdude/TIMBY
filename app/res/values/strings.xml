@@ -17,6 +17,16 @@
     <string name="done">Done</string>
     <string name="edit">Edit</string>
 	
+    <string-array name="issues">
+        <item>Select Issue</item>
+        <item>Logging</item>
+    </string-array>
+    
+    <string-array name="sectors">
+        <item>Select Sector</item>
+        <item>Environment</item>
+    </string-array>
+    
     <string name="action_settings">Settings</string>
     <string name="logout">Logout</string>
     <string name="action_publish">Publish</string>

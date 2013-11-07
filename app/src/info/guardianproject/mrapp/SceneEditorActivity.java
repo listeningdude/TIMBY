@@ -58,13 +58,13 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
 
         Intent intent = getIntent();
         
-//        mTemplateJsonPath = getIntent().getStringExtra("template_path"); 
- //       mStoryMode = getIntent().getIntExtra("story_mode", Project.STORY_TYPE_VIDEO);
+        //mTemplateJsonPath = getIntent().getStringExtra("template_path"); 
+        //mStoryMode = getIntent().getIntExtra("story_mode", Project.STORY_TYPE_VIDEO);
 
         int pid = intent.getIntExtra("pid", -1); //project id
 
         mSceneIndex = getIntent().getIntExtra("scene", 0);
-
+        //Log.e("pid", String.valueOf(pid));
         if (pid != -1)
         {
         	mProject = Project.get(getApplicationContext(), pid);
@@ -117,14 +117,15 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
         }
 
         // For each of the sections in the app, add a tab to the action bar.
-        actionBar.addTab(actionBar.newTab().setText(R.string.tab_add_clips).setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setText(R.string.tab_order).setTabListener(this));
+        	//actionBar.addTab(actionBar.newTab().setText("Media List").setTabListener(this));
+        /*    actionBar.addTab(actionBar.newTab().setText(R.string.tab_order).setTabListener(this));
         if (mMPM.mProject.isTemplateStory()) {
             actionBar.addTab(actionBar.newTab().setText(R.string.tab_finish).setTabListener(this));
         } else {
+        */
             actionBar.addTab(actionBar.newTab().setText(R.string.tab_publish).setTabListener(this));
-        }
-        
+        /*}
+        */
         
         if (intent.hasExtra("auto_capture")
         		&& intent.getBooleanExtra("auto_capture", false))
@@ -413,7 +414,8 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        // When the given tab is selected, show the tab contents in the
+        
+    	// When the given tab is selected, show the tab contents in the
         // container
         int layout = R.layout.fragment_add_clips;
         FragmentManager fm = getSupportFragmentManager();
@@ -428,12 +430,13 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
         	((OrderClipsFragment) mLastTabFrag).stopPlaybackOnTabChange();
         }
         
-        if (tab.getPosition() == 0) {
+        if (tab.getPosition() == 2) {
+
             if (mMenu != null) {
                 mMenu.findItem(R.id.itemForward).setEnabled(true);
             }
             layout = R.layout.fragment_add_clips;
-
+            //layout = R.layout.fragment_media_list;	
             if (mFragmentTab0 == null)
             {
                
@@ -470,7 +473,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
                 	mMenu.findItem(R.id.itemTrim).setVisible(true);
                 }             
             }
-
+            
             if (mFragmentTab1 == null)
             {
                 
@@ -497,7 +500,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
 
             mLastTabFrag = mFragmentTab1;
 
-        } else if (tab.getPosition() == 2) {
+        } else if (tab.getPosition() == 0) {
             if (mMPM.mProject.isTemplateStory()) {
                 Intent intent = new Intent(getBaseContext(), StoryTemplateActivity.class);
                 intent.putExtra("template_path", mProject.getTemplatePath());
@@ -511,8 +514,6 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
                 
                 if (mPublishFragment == null)
                 {
-                    	
-
                 	mPublishFragment = new PublishFragment();
                     Bundle args = new Bundle();
                     args.putInt(PublishFragment.ARG_SECTION_NUMBER, tab.getPosition() + 1);
@@ -629,7 +630,6 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
             		Log.e(AppConstants.TAG,"error handling capture response: " + mCapturePath,e);
             	}
             }
-
         }
     }
 

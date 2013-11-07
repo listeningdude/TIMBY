@@ -140,6 +140,14 @@
                 android:value=".ProjectsActivity" />
         </activity>
         <activity
+            android:name=".StoryMakerCaptureActivitySimple"
+            android:configChanges="orientation|screenSize"
+            android:label="List of Media Items" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ProjectsActivity" />
+        </activity>
+        <activity
             android:name=".WelcomeActivity"
             android:label="@string/app_name"            
              >
@@ -149,6 +157,12 @@
              <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
+        </activity>
+        <activity
+            android:name=".ProjectEditorActivity">
+             <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ProjectListActivity" />
         </activity>
         <activity
             android:name=".lessons.LessonViewActivity"

@@ -2,6 +2,7 @@ package info.guardianproject.mrapp;
 
 import java.util.Date;
 
+import org.holoeverywhere.widget.Spinner;
 import org.holoeverywhere.widget.Toast;
 
 import info.guardianproject.mrapp.R;
@@ -28,6 +29,11 @@ public class StoryNewActivity extends BaseActivity {
 	private RadioGroup rGroup;
 	private TextView txtNewStoryDesc;
 	private EditText editTextStoryName;
+	private Spinner spinnerSector;
+	private Spinner spinnerIssue;
+	private EditText editTextDesc;
+	private EditText editTextEntity;
+	private TextView textViewLocation; 
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,11 +43,16 @@ public class StoryNewActivity extends BaseActivity {
         
         txtNewStoryDesc = (TextView)findViewById(R.id.txtNewStoryDesc);
         editTextStoryName = (EditText)findViewById(R.id.editTextStoryName);
+        spinnerSector = (Spinner)findViewById(R.id.spinnerSector);
+        spinnerIssue = (Spinner)findViewById(R.id.spinnerIssue);
+        editTextDesc = (EditText)findViewById(R.id.editTextDescription);
+        editTextEntity = (EditText)findViewById(R.id.editTextEntity);
+        textViewLocation = (TextView)findViewById(R.id.textViewLocation);
         
         rGroup = (RadioGroup)findViewById(R.id.radioGroupStoryType);
         rGroup.setOnCheckedChangeListener(new OnCheckedChangeListener()
         {
-
+        	
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				
@@ -72,23 +83,26 @@ public class StoryNewActivity extends BaseActivity {
 					txtNewStoryDesc.setText(R.string.template_essay_desc);
 		    		
 		    	}
-				launchSimpleStory(editTextStoryName.getText().toString(), getSelectedStoryMode(), false);		
+				
+				launchSimpleStory(editTextStoryName.getText().toString(), getSelectedStoryMode(),spinnerIssue.getSelectedItem().toString(),spinnerSector.getSelectedItem().toString(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),textViewLocation.getText().toString(), true);		
 			}
         	
         });
         
-        ((Button) findViewById(R.id.buttonStartStory)).setOnClickListener(new OnClickListener() {
+        ((Button) findViewById(R.id.done)).setOnClickListener(new OnClickListener() {
             
             @Override
             public void onClick(View v) {
             	
             	if (formValid()) {
 
-                	RadioGroup view = ((RadioGroup)findViewById(R.id.radioGroupStoryLevel));
+                	/*RadioGroup view = ((RadioGroup)findViewById(R.id.radioGroupStoryLevel));
                 	if (view.getCheckedRadioButtonId() == R.id.radioStoryType0)
                 		launchSimpleStory(editTextStoryName.getText().toString(), getSelectedStoryMode(), false);
                 	else
-                		launchTemplateChooser();
+                		launchTemplateChooser();*/
+            		//Submit Form
+            		
             	}
             	
             }
@@ -96,7 +110,7 @@ public class StoryNewActivity extends BaseActivity {
         
         
         Intent intent = getIntent();
-        
+       
         if (intent.hasExtra("story_name") && intent.hasExtra("story_type"))
         {
         	String storyName = intent.getExtras().getString("story_name");
@@ -108,9 +122,10 @@ public class StoryNewActivity extends BaseActivity {
         	
         	storyName += " " + new Date().toLocaleString();
         	
-        	launchSimpleStory(storyName, storyType, autoCapture);
+        	launchSimpleStory(storyName, storyType, "", "", "", "", "", autoCapture);
         	
         }
+      
     }
     
     private boolean formValid ()
@@ -170,14 +185,17 @@ public class StoryNewActivity extends BaseActivity {
         startActivity(i);
         finish();
     }
-    
-   
-    
-    private void launchSimpleStory(String pName, int storyMode, boolean autoCapture) {
+
+    private void launchSimpleStory(String pName, int storyMode, String pIssue, String pSector, String pEntity, String pDesc, String pLocation, boolean autoCapture) {
         int clipCount = AppConstants.DEFAULT_CLIP_COUNT;
         
         Project project = new Project (this, clipCount);
         project.setTitle(pName);
+        project.setIssue(pIssue);
+        project.setSector(pSector);
+        project.setEntity(pEntity);
+        project.setDescription(pDesc);
+        project.setLocation(pLocation);
         project.save();
         
         Scene scene = new Scene(this, clipCount);
@@ -190,7 +208,7 @@ public class StoryNewActivity extends BaseActivity {
         project.setStoryType(storyMode);
         project.save();
         
-        Intent intent = new Intent(getBaseContext(), SceneEditorActivity.class);
+        Intent intent = new Intent(getBaseContext(), StoryMakerCaptureActivitySimple.class);
         intent.putExtra("story_mode", storyMode);
         intent.putExtra("template_path", templateJsonPath);
         intent.putExtra("title", project.getTitle());
@@ -200,7 +218,7 @@ public class StoryNewActivity extends BaseActivity {
         
         startActivity(intent);
         
-        finish();
+ 
     }
 
     @Override

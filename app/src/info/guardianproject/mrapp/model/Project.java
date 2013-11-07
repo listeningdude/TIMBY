@@ -17,6 +17,12 @@ public class Project {
     protected Context context;
     protected int id;
     protected String title;
+    protected String _sector;
+    protected String _issue;
+    protected String _entity;
+    protected String _description;
+    protected String _location;
+    
     protected String thumbnailPath;
     protected int storyType;
     protected String templatePath;
@@ -66,11 +72,16 @@ public class Project {
         mSceneCount = sceneCount;
     }
 
-    public Project(Context context, int id, String title, String thumbnailPath, int storyType, String templatePath) {
+    public Project(Context context, int id, String title, String _sector, String _issue,String _entity, String _description, String _location, String thumbnailPath, int storyType, String templatePath) {
         super();
         this.context = context;
         this.id = id;
         this.title = title;
+        this._sector = _sector;
+        this._issue = _issue;
+        this._entity = _entity;
+        this._description = _description;
+        this._location = _location;
         this.thumbnailPath = thumbnailPath;
         this.storyType = storyType;
         this.templatePath = templatePath;
@@ -84,6 +95,16 @@ public class Project {
                         .getColumnIndex(StoryMakerDB.Schema.Projects.ID)),
                 cursor.getString(cursor
                         .getColumnIndex(StoryMakerDB.Schema.Projects.COL_TITLE)),
+                cursor.getString(cursor
+                         .getColumnIndex(StoryMakerDB.Schema.Projects.COL_SECTOR)),
+                cursor.getString(cursor
+                        .getColumnIndex(StoryMakerDB.Schema.Projects.COL_ISSUE)),
+                cursor.getString(cursor
+                        .getColumnIndex(StoryMakerDB.Schema.Projects.COL_ENTITY)),
+                cursor.getString(cursor
+                        .getColumnIndex(StoryMakerDB.Schema.Projects.COL_DESCRIPTION)),
+               cursor.getString(cursor
+                          .getColumnIndex(StoryMakerDB.Schema.Projects.COL_LOCATION)),
                 cursor.getString(cursor
                         .getColumnIndex(StoryMakerDB.Schema.Projects.COL_THUMBNAIL_PATH)),
                 cursor.getInt(cursor
@@ -174,6 +195,11 @@ public class Project {
     private ContentValues getValues() {
         ContentValues values = new ContentValues();
         values.put(StoryMakerDB.Schema.Projects.COL_TITLE, title);
+        values.put(StoryMakerDB.Schema.Projects.COL_SECTOR, _sector);
+        values.put(StoryMakerDB.Schema.Projects.COL_ISSUE, _issue);
+        values.put(StoryMakerDB.Schema.Projects.COL_ENTITY, _entity);
+        values.put(StoryMakerDB.Schema.Projects.COL_DESCRIPTION, _description);
+        values.put(StoryMakerDB.Schema.Projects.COL_LOCATION, _location);
         values.put(StoryMakerDB.Schema.Projects.COL_THUMBNAIL_PATH, thumbnailPath);
         values.put(StoryMakerDB.Schema.Projects.COL_STORY_TYPE, storyType);
         values.put(StoryMakerDB.Schema.Projects.COL_TEMPLATE_PATH, templatePath);
@@ -303,7 +329,21 @@ public class Project {
     public String getTitle() {
         return title;
     }
-
+    public String getIssue() {
+        return _issue;
+    }
+    public String getSector() {
+        return _sector;
+    }
+    public String getEntity() {
+        return _entity;
+    }
+    public String getDescription() {
+        return _description;
+    }
+    public String getLocation() {
+        return _location;
+    }
     /**
      * @param title
      *            the title to set
@@ -311,7 +351,21 @@ public class Project {
     public void setTitle(String title) {
         this.title = title;
     }
-
+    public void setIssue(String _issue) {
+        this._issue = _issue;
+    }
+    public void setSector(String _sector) {
+        this._sector = _sector;
+    }
+    public void setDescription(String _description) {
+        this._description = _description;
+    }
+    public void setEntity(String _entity) {
+        this._entity = _entity;
+    }
+    public void setLocation(String _location) {
+        this._location = _location;
+    }
     /**
      * @return the thumbnailPath
      */

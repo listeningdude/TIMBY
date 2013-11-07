@@ -105,7 +105,8 @@
         android:layout_below="@+id/radioGroupStoryType"
         android:layout_marginTop="10dp"
         android:text="@string/template_video_desc"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall" 
+        android:visibility="gone"/>
 </LinearLayout>
     <LinearLayout
         android:id="@+id/llStoryType"
@@ -150,18 +151,20 @@
         android:visibility="gone"
       />
       <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Spinner
-            android:id="@+id/spinner2"
+            android:id="@+id/spinnerSector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
+            android:entries="@array/sectors" />
+
+        <Spinner
+            android:id="@+id/spinnerIssue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:entries="@array/issues" />
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/editTextEntity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -172,7 +175,7 @@
             android:paddingTop="5dp" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/editTextDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -194,14 +197,14 @@
                 android:id="@+id/imageView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/checkBox1"
+                android:layout_alignBottom="@+id/done"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="26dp"
                 android:src="@drawable/location_dark" />
 
-            <CheckBox
-                android:id="@+id/checkBox1"
+            <Button
+                android:id="@+id/done"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -209,7 +212,7 @@
                 android:text="@string/done" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/textViewLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/imageView4"
