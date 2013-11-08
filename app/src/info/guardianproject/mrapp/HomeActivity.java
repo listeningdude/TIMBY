@@ -166,7 +166,7 @@ public class HomeActivity extends BaseActivity {
             	
                 
             	mLessonsCompleted = getLessonsCompleted(HomeActivity.this);
-            	mListProjects = Project.getAllAsList(HomeActivity.this);
+            	mListProjects = Project.getAllAsList(HomeActivity.this, -1);
 
             	
                 return null;

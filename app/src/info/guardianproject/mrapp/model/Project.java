@@ -145,14 +145,21 @@ public class Project {
         return project;
     }
 
-    public static Cursor getAllAsCursor(Context context) {
+    public static Cursor getAllAsCursor(Context context, int rid) {
+    	String selection = StoryMakerDB.Schema.Projects.COL_REPORT_ID + "=?";
+        String[] selectionArgs = new String[] { "" + rid };
+        return context.getContentResolver().query(
+                ProjectsProvider.PROJECTS_CONTENT_URI, null, selection,
+                selectionArgs, null);
+        /*
         return context.getContentResolver().query(
                 ProjectsProvider.PROJECTS_CONTENT_URI, null, null, null, null);
+                */
     }
 
-    public static ArrayList<Project> getAllAsList(Context context) {
+    public static ArrayList<Project> getAllAsList(Context context, int rid) {
         ArrayList<Project> projects = new ArrayList<Project>();
-        Cursor cursor = getAllAsCursor(context);
+        Cursor cursor = getAllAsCursor(context, rid);
         if (cursor.moveToFirst()) {
             do {
                 projects.add(new Project(context, cursor));

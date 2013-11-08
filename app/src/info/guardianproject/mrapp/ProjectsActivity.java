@@ -35,12 +35,13 @@ public class ProjectsActivity extends BaseActivity {
 
 	private ArrayList<Project> mListProjects;
 	private ProjectArrayAdapter aaProjects;
-	
+	int rid;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        
+        Intent i = getIntent();
+        rid = i.getIntExtra("rid", -1);
         setContentView(R.layout.activity_projects);
         
         // action bar stuff
@@ -81,11 +82,11 @@ public class ProjectsActivity extends BaseActivity {
 	        	NavUtils.navigateUpFromSameTask(this);
 	        	
              return true;
-         case R.id.menu_new_project:
- 		
+         /*case R.id.menu_report:
+        	 Intent r = new Intent(this, ReportActivity.class);
 			 startActivity(new Intent(this, StoryNewActivity.class));
 
-             return true;
+             return true;*/
      }
  		
      return super.onOptionsItemSelected(item);
@@ -185,7 +186,7 @@ public class ProjectsActivity extends BaseActivity {
     
     public void refreshProjects ()
     {
-    	 mListProjects = Project.getAllAsList(this);
+    	 mListProjects = Project.getAllAsList(this, rid);
          aaProjects = new ProjectArrayAdapter(this, 
            	   R.layout.list_project_row, mListProjects);
          

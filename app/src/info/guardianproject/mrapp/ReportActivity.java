@@ -1,24 +1,20 @@
 package info.guardianproject.mrapp;
 
-import java.util.Date;
-
 import org.holoeverywhere.widget.Spinner;
 import org.holoeverywhere.widget.Toast;
 
 import info.guardianproject.mrapp.R;
+import info.guardianproject.mrapp.model.GPSTracker;
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.model.Report;
-import info.guardianproject.mrapp.model.Scene;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
@@ -44,7 +40,11 @@ public class ReportActivity extends BaseActivity {
 	String location;
 	String entity;
 	Button done;
+	ImageView setLocation;
 	Button view;
+	int story_mode;
+	TextView gpsInfo;
+	GPSTracker gpsT; 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,10 +62,14 @@ public class ReportActivity extends BaseActivity {
         rGroup = (RadioGroup)findViewById(R.id.radioGroupStoryType);
         
         done = (Button)findViewById(R.id.done);
-        view = (Button)findViewById(R.id.done);
+        view = (Button)findViewById(R.id.view);
+        setLocation = (ImageView)findViewById(R.id.setLocation);
+        gpsInfo = (TextView)findViewById(R.id.textViewLocation);
         
         Intent i = getIntent();
-        if(i.getIntExtra("rid", -1)!=-1){
+        rid = i.getIntExtra("rid", -1);
+        if(rid!=-1){
+        
         	title = i.getStringExtra("title");
             sector = i.getStringExtra("sector");
             issue = i.getStringExtra("issue");
@@ -80,7 +84,7 @@ public class ReportActivity extends BaseActivity {
             editTextEntity.setText(entity);
             textViewLocation.setText(location);
             
-            view.setVisibility(View.VISIBLE);
+          view.setVisibility(View.VISIBLE);
             done.setText("Update");
         }
         
@@ -110,8 +114,17 @@ public class ReportActivity extends BaseActivity {
 
 					txtNewStoryDesc.setText(R.string.template_audio_desc);
 		    	}
+				
+		    	else if (checkedId == R.id.radioStoryType3)
+                {
+                        //essay
+
+                            txtNewStoryDesc.setText(R.string.template_essay_desc);
+                        
+                }
+				story_mode = 2;
 				if (formValid()) {
-					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItem().toString(),spinnerSector.getSelectedItem().toString(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),textViewLocation.getText().toString());		
+					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItem().toString(),spinnerSector.getSelectedItem().toString(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),textViewLocation.getText().toString(), false);		
 				}
 			}
         	
@@ -123,11 +136,12 @@ public class ReportActivity extends BaseActivity {
             public void onClick(View v) {
             	
             	if (formValid()) {
-
+					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItem().toString(),spinnerSector.getSelectedItem().toString(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),textViewLocation.getText().toString(), true);		
             	}
             	
             }
         });
+        
 		view.setOnClickListener(new OnClickListener() {
 		            
 		            @Override
@@ -138,6 +152,31 @@ public class ReportActivity extends BaseActivity {
 		            	
 		            }
 		        });
+		setLocation.setOnClickListener(new OnClickListener(){
+			@Override
+            public void onClick(View v) {		
+				gpsT = new GPSTracker(ReportActivity.this); 
+				  
+		          // check if GPS enabled 
+		          if(gpsT.canGetLocation()){ 
+		  
+		              double latitude = gpsT.getLatitude(); 
+		              double longitude = gpsT.getLongitude(); 
+		  
+		              // \n is for new line 
+		              gpsInfo.setText(latitude+", "+longitude); 
+		             /* GeoPoint myGeoPoint = new GeoPoint( 
+		                    (int)(latitude*1000000), 
+		                    (int)(longitude*1000000)); 
+		            CenterLocatio(myGeoPoint);*/ 
+		          }else{ 
+		              // can't get location 
+		              // GPS or Network is not enabled 
+		              // Ask user to enable GPS/network in settings 
+		              gpsT.showSettingsAlert(); 
+		          } 
+			}
+		});
     }
     
     public void setSelectedItem(Spinner spinner,String string){
@@ -183,7 +222,7 @@ public class ReportActivity extends BaseActivity {
     	   case R.id.radioStoryType2:
     		   resultMode = Project.STORY_TYPE_AUDIO;
     		   break;
-    		   
+    		  	   
     	   case R.id.radioStoryType3:
     		   resultMode = Project.STORY_TYPE_ESSAY;
     		   break;
@@ -194,19 +233,29 @@ public class ReportActivity extends BaseActivity {
     }
     		
 
-    private void launchProject(String title, String pIssue, String pSector, String pEntity, String pDesc, String pLocation) {
+    private void launchProject(String title, String pIssue, String pSector, String pEntity, String pDesc, String pLocation, boolean update) {
         Report report;
         if(rid==-1){
         	report = new Report (this, 0, title, pIssue, pSector, pEntity, pDesc, pLocation);
         }else{
         	report = Report.get(this, rid);
+        	report.setTitle(title);
+        	report.setDescription(pDesc);
+        	report.setEntity(pEntity);
+        	report.setIssue(pIssue);
+        	report.setSector(pSector);
+        	report.setLocation(pLocation);
         }
         report.save();
         
-        Intent intent = new Intent(getBaseContext(), StoryNewActivity.class);
-        intent.putExtra("storymode", getSelectedStoryMode());
-        intent.putExtra("rid", report.getId());
-        startActivity(intent);
+        if(update == false){
+	        Intent intent = new Intent(getBaseContext(), StoryNewActivity.class);
+	        intent.putExtra("storymode", getSelectedStoryMode());
+	        intent.putExtra("rid", report.getId());
+	        startActivity(intent);
+        }else{
+        	Toast.makeText(getBaseContext(), "Updated successfully!", Toast.LENGTH_LONG).show();
+        }
          
     }
 
