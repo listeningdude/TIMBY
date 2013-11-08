@@ -285,7 +285,7 @@ public class OverlayCameraActivity extends SherlockActivity implements Callback,
         @Override
         public void onShutter() {
             //no action for the shutter
-
+       
         }
 
        };

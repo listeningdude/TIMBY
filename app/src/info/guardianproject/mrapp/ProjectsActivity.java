@@ -174,12 +174,6 @@ public class ProjectsActivity extends BaseActivity {
 				intent.putExtra("story_mode", project.getStoryType());
                 intent.putExtra("pid", project.getId());
                 intent.putExtra("title", project.getTitle());
-                intent.putExtra("issue", project.getIssue());
-                intent.putExtra("sector", project.getSector());
-                intent.putExtra("entity", project.getEntity());
-                intent.putExtra("description", project.getDescription());
-                intent.putExtra("location", project.getLocation());
-                
 		        startActivity(intent);
 			}
         	

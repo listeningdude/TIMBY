@@ -114,6 +114,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
+        <activity
+            android:name=".ReportActivity"
+            android:configChanges="locale"
+            android:label="Reports"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
 
         <activity
             android:name=".StoryTemplateChooserActivity"
@@ -158,7 +169,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
-        <activity
+          <activity
             android:name=".ProjectEditorActivity">
              <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -197,7 +208,11 @@
 		    android:multiprocess="true"
 		    android:exported="false"
 		    android:name="info.guardianproject.mrapp.db.LessonsProvider"></provider>
-        
+        <provider
+		    android:authorities="info.guardianproject.mrapp.db.ReportsProvider"
+		    android:multiprocess="true"
+		    android:exported="false"
+		    android:name="info.guardianproject.mrapp.db.ReportsProvider"></provider>
         <provider
 		    android:authorities="info.guardianproject.mrapp.db.ProjectsProvider"
 		    android:multiprocess="true"

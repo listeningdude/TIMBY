@@ -106,30 +106,9 @@ public class StoryMakerCaptureActivitySimple extends EditorBaseActivity{
 	                }
 	                
 	            }
-	            /*else if (reqCode == REQ_YOUTUBE_AUTH)
-	            {
-	            	if (resCode == RESULT_OK)
-	            	{
-	            		
-	            		String oauthToken = intent.getStringExtra("token");
-	            		Log.d("OAuth","got token: " + oauthToken);
-	            		mPublishFragment.setYouTubeAuth(oauthToken);
-	            	}
-	            }
-	            else
-	            {
-	            	try
-	            	{
-	            		mMPM.handleResponse(intent, mCapturePath);
-
-	            		refreshClipPager();
-	            	}
-	            	catch (IOException e)
-	            	{
-	            		Log.e(AppConstants.TAG,"error handling capture response: " + mCapturePath,e);
-	            	}
-	            }*/
+	           
 	        }
+	        	
 	        
 	    }
 }

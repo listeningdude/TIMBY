@@ -109,7 +109,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
         setContentView(R.layout.activity_scene_editor_no_swipe);
 
         // Set up the action bar.
-       /* final ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayHomeAsUpEnabled(true);
         if (mMPM.mScene != null) {
@@ -126,7 +126,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
             actionBar.addTab(actionBar.newTab().setText(R.string.tab_publish).setTabListener(this));
         }
         
-        */
+        
         if (intent.hasExtra("auto_capture")
         		&& intent.getBooleanExtra("auto_capture", false))
         {

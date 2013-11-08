@@ -98,7 +98,7 @@ public class HomeActivity extends BaseActivity {
         load_new_report.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View view) {
-				Intent i = new Intent(getApplicationContext(),StoryNewActivity.class);
+				Intent i = new Intent(getApplicationContext(),ReportActivity.class);
 				startActivity(i);
 				
 			}
@@ -109,7 +109,7 @@ public class HomeActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplicationContext(),ProjectsActivity.class);
+				Intent i = new Intent(getApplicationContext(),ReportsActivity.class);
 				startActivity(i);
 			}
 		});

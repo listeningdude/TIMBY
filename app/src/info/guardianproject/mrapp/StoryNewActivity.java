@@ -1,216 +1,37 @@
 package info.guardianproject.mrapp;
 
-import java.util.Date;
-
-import org.holoeverywhere.widget.Spinner;
-import org.holoeverywhere.widget.Toast;
-
-import info.guardianproject.mrapp.R;
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.model.Scene;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.TextView;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 public class StoryNewActivity extends BaseActivity {
 
-	private RadioGroup rGroup;
-	private TextView txtNewStoryDesc;
-	private EditText editTextStoryName;
-	private Spinner spinnerSector;
-	private Spinner spinnerIssue;
-	private EditText editTextDesc;
-	private EditText editTextEntity;
-	private TextView textViewLocation; 
-	int pid;
+	int rid;
+	int storymode;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-       pid = intent.getIntExtra("pid", -1);
+        rid = intent.getIntExtra("rid", -1);
+        storymode = intent.getIntExtra("storymode", -1);
         
         setContentView(R.layout.activity_new_story);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
-        txtNewStoryDesc = (TextView)findViewById(R.id.txtNewStoryDesc);
-        editTextStoryName = (EditText)findViewById(R.id.editTextStoryName);
-        spinnerSector = (Spinner)findViewById(R.id.spinnerSector);
-        spinnerIssue = (Spinner)findViewById(R.id.spinnerIssue);
-        editTextDesc = (EditText)findViewById(R.id.editTextDescription);
-        editTextEntity = (EditText)findViewById(R.id.editTextEntity);
-        textViewLocation = (TextView)findViewById(R.id.textViewLocation);
-        
-        rGroup = (RadioGroup)findViewById(R.id.radioGroupStoryType);
-        rGroup.setOnCheckedChangeListener(new OnCheckedChangeListener()
-        {
-        	
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				
-				if (checkedId == R.id.radioStoryType0)
-		    	{
-		    		//video
-					txtNewStoryDesc.setText(R.string.template_video_desc);
-		    		
-		    	}
-		    	else if (checkedId == R.id.radioStoryType1)
-		    	{
-
-		    		//photo
-
-					txtNewStoryDesc.setText(R.string.template_photo_desc);
-		    	}
-		    	else if (checkedId == R.id.radioStoryType2)
-		    	{
-
-		    		//audio
-
-					txtNewStoryDesc.setText(R.string.template_audio_desc);
-		    	}
-		    	else if (checkedId == R.id.radioStoryType3)
-		    	{
-		    		//essay
-
-					txtNewStoryDesc.setText(R.string.template_essay_desc);
-		    		
-		    	}
-				
-				launchSimpleStory(editTextStoryName.getText().toString(), getSelectedStoryMode(),spinnerIssue.getSelectedItem().toString(),spinnerSector.getSelectedItem().toString(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),textViewLocation.getText().toString(), true);		
-			}
-        	
-        });
-        
-        ((Button) findViewById(R.id.done)).setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-            	
-            	if (formValid()) {
-
-                	/*RadioGroup view = ((RadioGroup)findViewById(R.id.radioGroupStoryLevel));
-                	if (view.getCheckedRadioButtonId() == R.id.radioStoryType0)
-                		launchSimpleStory(editTextStoryName.getText().toString(), getSelectedStoryMode(), false);
-                	else
-                		launchTemplateChooser();*/
-            		//Submit Form
-            		
-            	}
-            	
-            }
-        });
-        
-        
-       
-       
-        if (intent.hasExtra("story_name") && intent.hasExtra("story_type"))
-        {
-        	String storyName = intent.getExtras().getString("story_name");
-        	int storyType = intent.getExtras().getInt("story_type");
-        	boolean autoCapture = false;
-        	
-        	if (intent.hasExtra("auto_capture"))
-        			autoCapture = intent.getExtras().getBoolean("auto_capture");
-        	
-        	storyName += " " + new Date().toLocaleString();
-        	
-        	launchSimpleStory(storyName, storyType, "", "", "", "", "", autoCapture);
-        	
-        }
-      
+        launchSimpleStory("", rid, storymode, true);
+  
     }
     
-    private boolean formValid ()
-    {
-    	String pName = editTextStoryName.getText().toString();
-    	    
-    	if (pName == null || pName.length() == 0)
-    	{
-    		Toast.makeText(this, R.string.you_must_enter_a_project_name, Toast.LENGTH_SHORT).show();
-    		return false;
-    	}
-    	else
-    	{
-    		return true;
-    	}
-    }
-    
-    private int getSelectedStoryMode ()
-    {
-    	   int checkedId = rGroup.getCheckedRadioButtonId();
-    	   int resultMode = -1;
-    	   
-    	   switch (checkedId)
-    	   {
-    	   case R.id.radioStoryType0:
-    		   resultMode = Project.STORY_TYPE_VIDEO;
-    		   break;
-    	   case R.id.radioStoryType1:
-    		   resultMode = Project.STORY_TYPE_PHOTO;
-    		   break;
-    		   
-    	   case R.id.radioStoryType2:
-    		   resultMode = Project.STORY_TYPE_AUDIO;
-    		   break;
-    		   
-    	   case R.id.radioStoryType3:
-    		   resultMode = Project.STORY_TYPE_ESSAY;
-    		   break;
-    		   
-    	   }
-    	   
-    	   return resultMode;
-    }
-    		
-    private void launchTemplateChooser ()
-    {
-        int storyMode = getSelectedStoryMode();
 
-        String templateJsonPath = Project.getSimpleTemplateForMode(storyMode);
-        
-        Intent i = new Intent(getBaseContext(), StoryTemplateChooserActivity.class);
-
-        i.putExtra("project_title", editTextStoryName.getText().toString());
-        i.putExtra("story_mode", storyMode);
-        i.putExtra("story_mode_template", templateJsonPath);
-        
-        startActivity(i);
-        finish();
-    }
-
-    private void launchSimpleStory(String pName, int storyMode, String pIssue, String pSector, String pEntity, String pDesc, String pLocation, boolean autoCapture) {
+    private void launchSimpleStory(String pName,  int pReport, int storyMode, boolean autoCapture) {
         int clipCount = AppConstants.DEFAULT_CLIP_COUNT;
         
-       
         Project project;
-        Log.d("pid", String.valueOf(pid));
-        if (pid == -1) {
-        	project = new Project (this, clipCount);
-        	project.setTitle(pName);
-            project.setIssue(pIssue);
-            project.setSector(pSector);
-            project.setEntity(pEntity);
-            project.setDescription(pDesc);
-            project.setLocation(pLocation);
-            project.save();
-
-        }else{
-        	project = Project.get(this, pid);
-       }
-        
-        
+    	project = new Project (this, clipCount);
+    	project.setTitle(pName);
+        project.setReport(String.valueOf(pReport));
+        project.save();
         
         Scene scene = new Scene(this, clipCount);
         scene.setProjectIndex(0);
@@ -231,25 +52,6 @@ public class StoryNewActivity extends BaseActivity {
         intent.putExtra("auto_capture", autoCapture);
         
         startActivity(intent);
-        
- 
+        finish();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.activity_new_story, menu);
-        return true;
-    }
-
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }

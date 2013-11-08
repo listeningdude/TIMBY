@@ -1,10 +1,7 @@
 package info.guardianproject.mrapp.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
-
-import info.guardianproject.mrapp.StoryMakerApp;
-import info.guardianproject.mrapp.db.ProjectsProvider;
+import info.guardianproject.mrapp.db.ReportsProvider;
 import info.guardianproject.mrapp.db.StoryMakerDB;
 import android.content.ContentValues;
 import android.content.Context;
@@ -44,51 +41,50 @@ public class Report {
         this(
                 context,
                 cursor.getInt(cursor
-                        .getColumnIndex(StoryMakerDB.Schema.Projects.ID)),
+                        .getColumnIndex(StoryMakerDB.Schema.Reports.ID)),
                 cursor.getString(cursor
-                        .getColumnIndex(StoryMakerDB.Schema.Projects.COL_TITLE)),
+                        .getColumnIndex(StoryMakerDB.Schema.Reports.COL_TITLE)),
                 cursor.getString(cursor
-                         .getColumnIndex(StoryMakerDB.Schema.Projects.COL_SECTOR)),
+                         .getColumnIndex(StoryMakerDB.Schema.Reports.COL_SECTOR)),
                 cursor.getString(cursor
-                        .getColumnIndex(StoryMakerDB.Schema.Projects.COL_ISSUE)),
+                        .getColumnIndex(StoryMakerDB.Schema.Reports.COL_ISSUE)),
                 cursor.getString(cursor
-                        .getColumnIndex(StoryMakerDB.Schema.Projects.COL_ENTITY)),
+                        .getColumnIndex(StoryMakerDB.Schema.Reports.COL_ENTITY)),
                 cursor.getString(cursor
-                        .getColumnIndex(StoryMakerDB.Schema.Projects.COL_DESCRIPTION)),
+                        .getColumnIndex(StoryMakerDB.Schema.Reports.COL_DESCRIPTION)),
                cursor.getString(cursor
-                          .getColumnIndex(StoryMakerDB.Schema.Projects.COL_LOCATION));
+                          .getColumnIndex(StoryMakerDB.Schema.Reports.COL_LOCATION)));
         
-                cursor.close();
+               // cursor.close();
 
     }
-    
-   
-    /***** Table level static methods *****/
+
+	/***** Table level static methods *****/
 
     public static Cursor getAsCursor(Context context, int id) {
         String selection = StoryMakerDB.Schema.Reports.ID + "=?";
         String[] selectionArgs = new String[] { "" + id };
         return context.getContentResolver().query(
-                ProjectsProvider.PROJECTS_CONTENT_URI, null, selection,
+                ReportsProvider.REPORTS_CONTENT_URI, null, selection,
                 selectionArgs, null);
     }
 
     public static Report get(Context context, int id) {
         Cursor cursor = Report.getAsCursor(context, id);
-        Report project = null;
+        Report report = null;
         
         if (cursor.moveToFirst()) {
-            project = new Report(context, cursor);
+            report = new Report(context, cursor);
            
         } 
         
         cursor.close();
-        return project;
+        return report;
     }
 
     public static Cursor getAllAsCursor(Context context) {
         return context.getContentResolver().query(
-                ProjectsProvider.PROJECTS_CONTENT_URI, null, null, null, null);
+                ReportsProvider.REPORTS_CONTENT_URI, null, null, null, null);
     }
 
     public static ArrayList<Report> getAllAsList(Context context) {
@@ -119,27 +115,27 @@ public class Report {
     
     private ContentValues getValues() {
         ContentValues values = new ContentValues();
-        values.put(StoryMakerDB.Schema.Projects.COL_TITLE, title);
-        values.put(StoryMakerDB.Schema.Projects.COL_SECTOR, _sector);
-        values.put(StoryMakerDB.Schema.Projects.COL_ISSUE, _issue);
-        values.put(StoryMakerDB.Schema.Projects.COL_ENTITY, _entity);
-        values.put(StoryMakerDB.Schema.Projects.COL_DESCRIPTION, _description);
-        values.put(StoryMakerDB.Schema.Projects.COL_LOCATION, _location);
+        values.put(StoryMakerDB.Schema.Reports.COL_TITLE, title);
+        values.put(StoryMakerDB.Schema.Reports.COL_SECTOR, _sector);
+        values.put(StoryMakerDB.Schema.Reports.COL_ISSUE, _issue);
+        values.put(StoryMakerDB.Schema.Reports.COL_ENTITY, _entity);
+        values.put(StoryMakerDB.Schema.Reports.COL_DESCRIPTION, _description);
+        values.put(StoryMakerDB.Schema.Reports.COL_LOCATION, _location);
         
         return values;
     }
     private void insert() {
         ContentValues values = getValues();
         Uri uri = context.getContentResolver().insert(
-                ProjectsProvider.PROJECTS_CONTENT_URI, values);
+                ReportsProvider.REPORTS_CONTENT_URI, values);
         String lastSegment = uri.getLastPathSegment();
         int newId = Integer.parseInt(lastSegment);
         this.setId(newId);
     }
     
     private void update() {
-    	Uri uri = ProjectsProvider.PROJECTS_CONTENT_URI.buildUpon().appendPath("" + id).build();
-        String selection = StoryMakerDB.Schema.Projects.ID + "=?";
+    	Uri uri = ReportsProvider.REPORTS_CONTENT_URI.buildUpon().appendPath("" + id).build();
+        String selection = StoryMakerDB.Schema.Reports.ID + "=?";
         String[] selectionArgs = new String[] { "" + id };
     	ContentValues values = getValues();
         int count = context.getContentResolver().update(
@@ -148,15 +144,15 @@ public class Report {
     }
     
     public void delete() {
-    	Uri uri = ProjectsProvider.PROJECTS_CONTENT_URI.buildUpon().appendPath("" + id).build();
-        String selection = StoryMakerDB.Schema.Projects.ID + "=?";
+    	Uri uri = ReportsProvider.REPORTS_CONTENT_URI.buildUpon().appendPath("" + id).build();
+        String selection = StoryMakerDB.Schema.Reports.ID + "=?";
         String[] selectionArgs = new String[] { "" + id };
         int count = context.getContentResolver().delete(
                 uri, selection, selectionArgs);
-        Log.d(TAG, "deleted project: " + id + ", rows deleted: " + count);
+        Log.d(TAG, "deleted report: " + id + ", rows deleted: " + count);
         // FIXME make sure 1 row updated
         
-        //TODO should we also delete all media files associated with this project?
+        //TODO should we also delete all media files associated with this report?
     }
 
    
