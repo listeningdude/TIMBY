@@ -162,7 +162,7 @@ public class ProjectsActivity extends BaseActivity {
 				Intent intent = null;
 
 			    
-				if (project.getScenesAsArray().length > 1) {
+				/*if (project.getScenesAsArray().length > 1) {
 					
 				    intent = new Intent(ProjectsActivity.this, StoryTemplateActivity.class);
 				    
@@ -175,7 +175,7 @@ public class ProjectsActivity extends BaseActivity {
 				intent.putExtra("story_mode", project.getStoryType());
                 intent.putExtra("pid", project.getId());
                 intent.putExtra("title", project.getTitle());
-		        startActivity(intent);
+		        startActivity(intent);*/
 			}
         	
         });

@@ -22,6 +22,9 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
+
 public class ReportActivity extends BaseActivity {
 
 	private RadioGroup rGroup;
@@ -31,7 +34,6 @@ public class ReportActivity extends BaseActivity {
 	private Spinner spinnerIssue;
 	private EditText editTextDesc;
 	private EditText editTextEntity;
-	private TextView textViewLocation; 
 	int rid;
 	String title;
 	String issue;
@@ -58,7 +60,6 @@ public class ReportActivity extends BaseActivity {
         spinnerIssue = (Spinner)findViewById(R.id.spinnerIssue);
         editTextDesc = (EditText)findViewById(R.id.editTextDescription);
         editTextEntity = (EditText)findViewById(R.id.editTextEntity);
-        textViewLocation = (TextView)findViewById(R.id.textViewLocation);
         rGroup = (RadioGroup)findViewById(R.id.radioGroupStoryType);
         
         done = (Button)findViewById(R.id.done);
@@ -82,12 +83,13 @@ public class ReportActivity extends BaseActivity {
             setSelectedItem(spinnerIssue, issue);
             editTextDesc.setText(description);
             editTextEntity.setText(entity);
-            textViewLocation.setText(location);
+            gpsInfo.setText(location);
             
-          view.setVisibility(View.VISIBLE);
+            view.setVisibility(View.VISIBLE);
             done.setText("Update");
         }
-        
+
+        //Button actions
         rGroup.setOnCheckedChangeListener(new OnCheckedChangeListener()
         {
         	
@@ -124,7 +126,7 @@ public class ReportActivity extends BaseActivity {
                 }
 				story_mode = 2;
 				if (formValid()) {
-					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItem().toString(),spinnerSector.getSelectedItem().toString(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),textViewLocation.getText().toString(), false);		
+					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItem().toString(),spinnerSector.getSelectedItem().toString(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
 				}
 			}
         	
@@ -136,7 +138,7 @@ public class ReportActivity extends BaseActivity {
             public void onClick(View v) {
             	
             	if (formValid()) {
-					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItem().toString(),spinnerSector.getSelectedItem().toString(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),textViewLocation.getText().toString(), true);		
+					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItem().toString(),spinnerSector.getSelectedItem().toString(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), true);		
             	}
             	
             }
@@ -168,7 +170,7 @@ public class ReportActivity extends BaseActivity {
 		             /* GeoPoint myGeoPoint = new GeoPoint( 
 		                    (int)(latitude*1000000), 
 		                    (int)(longitude*1000000)); 
-		            CenterLocatio(myGeoPoint);*/ 
+		            	CenterLocatio(myGeoPoint); */
 		          }else{ 
 		              // can't get location 
 		              // GPS or Network is not enabled 
@@ -237,6 +239,7 @@ public class ReportActivity extends BaseActivity {
         Report report;
         if(rid==-1){
         	report = new Report (this, 0, title, pIssue, pSector, pEntity, pDesc, pLocation);
+        	rid = report.getId();
         }else{
         	report = Report.get(this, rid);
         	report.setTitle(title);
@@ -254,7 +257,8 @@ public class ReportActivity extends BaseActivity {
 	        intent.putExtra("rid", report.getId());
 	        startActivity(intent);
         }else{
-        	Toast.makeText(getBaseContext(), "Updated successfully!", Toast.LENGTH_LONG).show();
+        	
+        	Toast.makeText(getBaseContext(), String.valueOf(rid)+" Updated successfully!", Toast.LENGTH_LONG).show();
         }
          
     }

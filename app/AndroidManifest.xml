@@ -3,8 +3,7 @@
     android:installLocation="auto"
     android:versionCode="91"
     android:versionName="0.0.6-beta3-build91" >
-   
-    <uses-sdk
+      <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="17" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
@@ -200,9 +199,7 @@
          <activity android:name=".media.AudioRecorderActivity" />
 
        <activity android:name=".server.OAuthAccessTokenActivity" />
-         
-       
-       
+      
         <provider
 		    android:authorities="info.guardianproject.mrapp.db.LessonsProvider"
 		    android:multiprocess="true"
@@ -264,9 +261,8 @@
          	 android:taskAffinity=""
             />
 
-<activity android:name="net.hockeyapp.android.UpdateActivity" />
+	<activity android:name="net.hockeyapp.android.UpdateActivity" />
 
-        
     </application>
 
 </manifest>

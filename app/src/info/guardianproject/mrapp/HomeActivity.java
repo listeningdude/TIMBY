@@ -86,7 +86,7 @@ public class HomeActivity extends BaseActivity {
            
         }
         checkCreds();
-        setContentView(R.layout.homescreen);
+        setContentView(R.layout.activity_home_screen);
         
         // action bar stuff
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

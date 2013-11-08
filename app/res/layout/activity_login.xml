@@ -115,7 +115,8 @@
               android:paddingTop="20dp"
               android:text="Register"
               android:textColor="#0b84aa"
-              android:textSize="20dip"/>
+              android:textSize="20dip"
+              android:visibility="gone"/>
 
  </LinearLayout>
         </LinearLayout>

@@ -182,6 +182,7 @@ public class ReportsActivity extends BaseActivity {
     
     public void refreshReports ()
     {
+    	
     	 mListReports = Report.getAllAsList(this);
          aaReports = new ReportArrayAdapter(this, 
            	   R.layout.list_project_row, mListReports);
@@ -231,11 +232,12 @@ public class ReportsActivity extends BaseActivity {
             tv = (TextView)row.findViewById(R.id.title);
             
             Report report = reports.get(position);
-            
+            int totalprojects = Project.getAllAsList(((Activity)context), report.getId()).size();
             tv.setText(report.getTitle());       
             
             tv = (TextView)row.findViewById(R.id.description);
-        	    	
+            
+        	tv.setText(String.valueOf(totalprojects)+" files(s)");   	
             
             return row;
         }
