@@ -62,7 +62,7 @@ public class RegisterActivity extends Activity {
 							
 							// Clear all previous data in database
 							userFunction.logoutUser(getApplicationContext());
-							db.addUser(json_user.getString(KEY_USERNAME), json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));						
+						//	db.addUser(json_user.getString(KEY_USERNAME), json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));						
 							// Launch Dashboard Screen
 							Intent dashboard = new Intent(getApplicationContext(), HomeActivity.class);
 							// Close all views before launching Dashboard

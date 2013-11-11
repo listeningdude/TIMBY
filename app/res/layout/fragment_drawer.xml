@@ -13,7 +13,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" 
         android:layout_margin="3sp"
         android:textColor="#dddddd"
-        />
+        android:visibility="gone"/>
     <View
     android:layout_width="fill_parent"
     android:layout_height="1dp"
@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20sp"
+        android:visibility="gone"
          >
 
         
@@ -98,7 +99,7 @@
         android:gravity="left|center_vertical"
         android:text="@string/menu_lessons"
         android:textColor="#dddddd"
-
+	
 />
 <View
     android:layout_width="fill_parent"
@@ -112,7 +113,7 @@
             android:background="@android:color/transparent"
         android:drawableLeft="@drawable/ic_nav_preferences"
         android:gravity="left|center_vertical"
-        android:text="@string/drawer_profile"
+        android:text="Logout"
                 android:textColor="#dddddd"
         
          />

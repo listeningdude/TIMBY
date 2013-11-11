@@ -2,12 +2,13 @@ package info.guardianproject.mrapp.server;
 
 
 import info.guardianproject.mrapp.*;
-import info.guardianproject.mrapp.R;
 import info.guardianproject.mrapp.login.*;
 
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.holoeverywhere.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,12 +29,12 @@ public class LoginActivity extends Activity{
 	Button btnLessons;
 
 	// JSON Response node names
-	private static String KEY_SUCCESS = "success";
+	private static String KEY_SUCCESS = "status";
 	private static String KEY_ERROR = "error";
-	private static String KEY_ERROR_MSG = "error_msg";
-	private static String KEY_UID = "uid";
-	private static String KEY_USERNAME = "username";
-	private static String KEY_CREATED_AT = "created_at";
+	private static String KEY_ERROR_MSG = "message";
+
+	private static String KEY_USER_ID = "user_id";
+	private static String KEY_TOKEN = "token";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,41 +57,47 @@ public class LoginActivity extends Activity{
 			public void onClick(View view) {
 				String username = inputUsername.getText().toString();
 				String password = inputPassword.getText().toString();
-				UserFunctions userFunction = new UserFunctions();
-				Log.d("Button", "Login");
-				JSONObject json = userFunction.loginUser(username, password);
-
-				// check for login response
-				try {
-					if (json.getString(KEY_SUCCESS) != null) {
-						loginErrorMsg.setText("");
-						String res = json.getString(KEY_SUCCESS); 
-						if(Integer.parseInt(res) == 1){
-							// user successfully logged in
-							// Store user details in SQLite Database
-							DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-							JSONObject json_user = json.getJSONObject("user");
-							
-							// Clear all previous data in database
-							userFunction.logoutUser(getApplicationContext());
-							db.addUser(json_user.getString(KEY_USERNAME), json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));						
-							
-							// Launch Dashboard Screen
-							Intent dashboard = new Intent(getApplicationContext(), HomeActivity.class);
-							
-							// Close all views before launching Dashboard
-							dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-							startActivity(dashboard);
-							
-							// Close Login Screen
-							finish();
-						}else{
-							// Error in login
-							loginErrorMsg.setText("Incorrect username/password");
+				//check if password and username filled
+				if((username.equals(""))||(password.equals(""))){
+					Toast.makeText(getBaseContext(), "You need to provide both username and password!", Toast.LENGTH_LONG).show();
+				}else{
+					UserFunctions userFunction = new UserFunctions();
+					Log.d("Button", "Login");
+					JSONObject json = userFunction.loginUser(username, password);
+	
+					// check for login response
+					try {
+						if (json.getString(KEY_SUCCESS)!=null) {
+							String res = json.getString(KEY_SUCCESS); 
+							if(res.equals("OK")){
+								// user successfully logged in
+								// Store user details in SQLite Database
+								DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+								JSONObject json_user = json.getJSONObject("message");
+								
+								// Clear all previous data in database
+								userFunction.logoutUser(getApplicationContext());
+								db.addUser(json_user.getString(KEY_USER_ID), json_user.getString(KEY_TOKEN));						
+								
+								Toast.makeText(getBaseContext(), "Login Successfull!", Toast.LENGTH_LONG).show();
+								
+								// Launch Dashboard Screen
+								Intent dashboard = new Intent(getApplicationContext(), HomeActivity.class);
+								
+								// Close all views before launching Dashboard
+								dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								startActivity(dashboard);
+								
+								// Close Login Screen
+								finish();
+							}else{
+								// Error in login
+								loginErrorMsg.setText(json.getString(KEY_ERROR_MSG));
+							}
 						}
+					} catch (JSONException e) {
+						e.printStackTrace();
 					}
-				} catch (JSONException e) {
-					e.printStackTrace();
 				}
 			}
 		});

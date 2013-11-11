@@ -117,14 +117,14 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
         }
 
         // For each of the sections in the app, add a tab to the action bar.
-        	actionBar.addTab(actionBar.newTab().setText("Media List").setTabListener(this));
-          actionBar.addTab(actionBar.newTab().setText(R.string.tab_order).setTabListener(this));
-        if (mMPM.mProject.isTemplateStory()) {
-            actionBar.addTab(actionBar.newTab().setText(R.string.tab_finish).setTabListener(this));
-        } else {
+        //	actionBar.addTab(actionBar.newTab().setText("Media List").setTabListener(this));
+        // actionBar.addTab(actionBar.newTab().setText(R.string.tab_order).setTabListener(this));
+      //  if (mMPM.mProject.isTemplateStory()) {
+            actionBar.addTab(actionBar.newTab().setText("Caption").setTabListener(this));
+       // } else {
         
-            actionBar.addTab(actionBar.newTab().setText(R.string.tab_publish).setTabListener(this));
-        }
+       //     actionBar.addTab(actionBar.newTab().setText(R.string.tab_publish).setTabListener(this));
+     //   }
         
         
         if (intent.hasExtra("auto_capture")
@@ -430,7 +430,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
         	((OrderClipsFragment) mLastTabFrag).stopPlaybackOnTabChange();
         }
         
-        if (tab.getPosition() == 0) {
+        if (tab.getPosition() == 2) {
 
             if (mMenu != null) {
                 mMenu.findItem(R.id.itemForward).setEnabled(true);
@@ -500,7 +500,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
 
             mLastTabFrag = mFragmentTab1;
 
-        } else if (tab.getPosition() == 2) {
+        } else if (tab.getPosition() == 0) {
             if (mMPM.mProject.isTemplateStory()) {
                 Intent intent = new Intent(getBaseContext(), StoryTemplateActivity.class);
                 intent.putExtra("template_path", mProject.getTemplatePath());

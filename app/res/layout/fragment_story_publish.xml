@@ -24,7 +24,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_weight="1"
-        android:src="@drawable/cliptype_close" />
+        android:src="@drawable/cliptype_close" 
+        android:visibility="gone"/>
 
     <EditText
         android:id="@+id/etStoryTitle"
@@ -37,6 +38,7 @@
         android:layout_marginTop="10dp"
         android:hint="@string/story_publish_story_title"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone"
         />
     </LinearLayout>
 
@@ -59,7 +61,8 @@
         android:layout_below="@+id/storyThumb"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="10dp"
-        android:background="@android:color/darker_gray" />
+        android:background="@android:color/darker_gray"
+        android:visibility="gone" />
 
     <EditText
         android:id="@+id/editTextDescribe"
@@ -67,9 +70,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider0"
         android:ems="10"
-        android:hint="@string/story_publish_describe_hint"
+        android:hint="Describe your capture..."
         android:inputType="textMultiLine"
-        android:lines="3" 
+        android:lines="5" 
         >
 
         <requestFocus />
@@ -82,13 +85,15 @@
         android:layout_below="@+id/editTextDescribe"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:background="@android:color/darker_gray" />
+        android:background="@android:color/darker_gray"
+         android:visibility="gone" />
 
     
   <LinearLayout 
       android:orientation="horizontal" 
          android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+         android:visibility="gone">
     <TextView
         android:id="@+id/textViewSection"
         android:layout_width="wrap_content"
@@ -116,7 +121,8 @@
         android:layout_below="@+id/textViewSection"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:background="@android:color/darker_gray" />
+        android:background="@android:color/darker_gray"
+         android:visibility="gone" />
 
     <!-- 
     <TextView
@@ -155,7 +161,8 @@
   <LinearLayout 
       android:orientation="horizontal" 
          android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+         android:visibility="gone">
     <TextView
         android:id="@+id/textViewLocation"
         android:layout_width="wrap_content"
@@ -184,7 +191,8 @@
         android:layout_height="1dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:background="@android:color/darker_gray" />
+        android:background="@android:color/darker_gray" 
+         android:visibility="gone"/>
     
 <!-- 
     <TextView
@@ -366,7 +374,8 @@
   <LinearLayout 
       android:orientation="horizontal"
         android:layout_below="@+id/divider4"    android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+         android:visibility="gone">
      <Button
         android:id="@+id/btnRender"
         android:layout_width="wrap_content"
@@ -393,17 +402,15 @@
         android:gravity="center_vertical"
                 android:enabled="false"
         android:text="@string/action_share"
-         />
-     
+         />        
+    </LinearLayout>
     <Button
         android:id="@+id/btnPublish"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:gravity="center_vertical"
         android:text="@string/action_publish" />
-        
-    </LinearLayout>
 
   </LinearLayout>
 </ScrollView>

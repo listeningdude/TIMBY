@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Date;
 
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.widget.Toast;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -89,8 +90,9 @@ public class BaseActivity extends Activity {
             	intent.putExtra("story_type", 0);
             	intent.putExtra("auto_capture", true);
                 
-                 activity.startActivity(intent);           
+                 activity.startActivity(intent);      	Toast.makeText(BaseActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
                  }
+            	
         });
         
         btnDrawerQuickCapturePhoto.setOnClickListener(new OnClickListener() {
@@ -105,8 +107,10 @@ public class BaseActivity extends Activity {
             	intent.putExtra("story_type", 2);
             	intent.putExtra("auto_capture", true);
                 
-                 activity.startActivity(intent);           
+                 activity.startActivity(intent);  
                  }
+    		
+
         });
         
         btnDrawerQuickCaptureAudio.setOnClickListener(new OnClickListener() {
@@ -121,7 +125,7 @@ public class BaseActivity extends Activity {
             	intent.putExtra("story_type", 1);
             	intent.putExtra("auto_capture", true);
                 
-                 activity.startActivity(intent);           
+                 activity.startActivity(intent);  
                  }
         });
         
@@ -140,7 +144,7 @@ public class BaseActivity extends Activity {
             public void onClick(View v) {
 
             	mSlidingMenu.showContent(true);
-            	  Intent i = new Intent(activity, ProjectsActivity.class);
+            	  Intent i = new Intent(activity, ReportsActivity.class);
                   activity.startActivity(i);
             }
         });

@@ -12,8 +12,9 @@ import android.content.Context;
 public class UserFunctions {
 	
 	private JSONParser jsonParser;
-	private static String loginURL = "http://pichanoma.com/timby/login.php";
-	private static String registerURL = "http://pichanoma.com/timby/register.php";
+	private static String loginURL = "https://timby.org/mobileapi/api/login";
+	private static String registerURL = "";
+	private static String api_key = "6b239b3568b209";
 
 	
 	// constructor
@@ -24,8 +25,9 @@ public class UserFunctions {
 	public JSONObject loginUser(String username, String password){
 		// Building Parameters
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("username", username));
+		params.add(new BasicNameValuePair("user_name", username));
 		params.add(new BasicNameValuePair("password", password));
+		params.add(new BasicNameValuePair("key", api_key));
 		JSONObject json = jsonParser.getJSONFromUrl(loginURL, params);
 		// return json
 		// Log.e("JSON", json.toString());

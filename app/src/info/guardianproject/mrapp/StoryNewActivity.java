@@ -43,7 +43,7 @@ public class StoryNewActivity extends BaseActivity {
         project.setStoryType(storyMode);
         project.save();
         
-        Intent intent = new Intent(getBaseContext(), StoryMakerCaptureActivitySimple.class);
+        Intent intent = new Intent(getBaseContext(), SceneEditorActivity.class);
         intent.putExtra("story_mode", storyMode);
         intent.putExtra("template_path", templateJsonPath);
         intent.putExtra("title", project.getTitle());

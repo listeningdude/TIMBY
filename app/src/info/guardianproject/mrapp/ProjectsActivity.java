@@ -236,7 +236,7 @@ public class ProjectsActivity extends BaseActivity {
             
             Project project = projects.get(position);
             
-            tv.setText(project.getTitle());       
+            tv.setText("");       
             
             tv = (TextView)row.findViewById(R.id.description);
             
@@ -263,7 +263,7 @@ public class ProjectsActivity extends BaseActivity {
             
             String projectDesc = sceneCount + " " + getContext().getString(R.string.scene_s_) + ", " + clipCount + ' ' + getContext().getString(R.string.clip_s_);
 
-            tv.setText(projectDesc);
+            tv.setText(project.getTitle());
             
             if (project.getStoryType() == Project.STORY_TYPE_VIDEO)
 	    	{

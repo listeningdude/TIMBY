@@ -239,7 +239,7 @@ public class ReportActivity extends BaseActivity {
         Report report;
         if(rid==-1){
         	report = new Report (this, 0, title, pIssue, pSector, pEntity, pDesc, pLocation);
-        	rid = report.getId();
+        	
         }else{
         	report = Report.get(this, rid);
         	report.setTitle(title);
@@ -251,13 +251,14 @@ public class ReportActivity extends BaseActivity {
         }
         report.save();
         
+        rid = report.getId();
+        
         if(update == false){
 	        Intent intent = new Intent(getBaseContext(), StoryNewActivity.class);
 	        intent.putExtra("storymode", getSelectedStoryMode());
 	        intent.putExtra("rid", report.getId());
 	        startActivity(intent);
         }else{
-        	
         	Toast.makeText(getBaseContext(), String.valueOf(rid)+" Updated successfully!", Toast.LENGTH_LONG).show();
         }
          

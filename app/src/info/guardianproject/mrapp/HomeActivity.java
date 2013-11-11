@@ -6,7 +6,6 @@ import info.guardianproject.mrapp.model.LessonGroup;
 import info.guardianproject.mrapp.model.Media;
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.server.LoginActivity;
-import info.guardianproject.mrapp.server.RegisterActivity;
 import info.guardianproject.mrapp.ui.MyCard;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 import info.guardianproject.mrapp.login.*;
@@ -71,6 +70,7 @@ public class HomeActivity extends BaseActivity {
     RelativeLayout load_new_report;
     RelativeLayout load_lessons;
     RelativeLayout load_reports;
+    RelativeLayout load_sync;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,7 +124,16 @@ public class HomeActivity extends BaseActivity {
 				startActivity(i);
 			}
 		});
-        
+        load_sync = (RelativeLayout)findViewById(R.id.load_sync);
+        load_sync.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(getApplicationContext(),SyncActivity.class);
+				startActivity(i);
+			}
+		});
     }
     
     

@@ -143,10 +143,11 @@ public class PublishFragment extends Fragment {
                 public void onClick(View arg0) {
                     saveForm();
                     
-                    mFileLastExport = mActivity.mMPM.getExportMediaFile();
+                    //mFileLastExport = mActivity.mMPM.getExportMediaFile();
                
                 	//do local render, overwrite always
-                    handlePublish(false, false, true);
+                    //handlePublish(false, false, true);
+                    mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
                 }
                 
             });
@@ -195,7 +196,8 @@ public class PublishFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     saveForm();
-                    setUploadAccount(); //triggers do publish! 
+                    
+                    //setUploadAccount(); //triggers do publish! 
                 }
             });
         }
@@ -244,10 +246,11 @@ public class PublishFragment extends Fragment {
     }
     
     private void saveForm() {
-        mActivity.mMPM.mProject.setTitle(mTitle.getText().toString());
+        mActivity.mMPM.mProject.setTitle(mDescription.getText().toString());
         //commenting this out for now until merges are fixed
-      //  mActivity.mMPM.mProject.setDescription(mDescription.getText().toString());
+       //mActivity.mMPM.mProject.set
         mActivity.mMPM.mProject.save();
+        mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
     }
 
     private void showLogin() {
