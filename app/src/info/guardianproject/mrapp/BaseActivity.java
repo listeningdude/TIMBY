@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.util.Date;
 
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.preference.PreferenceManager;
+import org.holoeverywhere.preference.SharedPreferences;
 import org.holoeverywhere.widget.Toast;
 
 import android.content.Intent;
@@ -162,10 +164,16 @@ public class BaseActivity extends Activity {
         btnDrawerAccount.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+            	//logout 
+            	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                settings.edit().clear();
+                settings.edit().commit();
+                
+                //load login
             	mSlidingMenu.showContent(true);
                 Intent i = new Intent(activity, LoginActivity.class);
                 activity.startActivity(i);
+                finish();
             }
         });
         

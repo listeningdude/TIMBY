@@ -6,6 +6,7 @@ import info.guardianproject.mrapp.model.LessonGroup;
 import info.guardianproject.mrapp.model.Media;
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.server.LoginActivity;
+import info.guardianproject.mrapp.server.LoginPreferencesActivity;
 import info.guardianproject.mrapp.ui.MyCard;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 import info.guardianproject.mrapp.login.*;
@@ -660,20 +661,20 @@ public class HomeActivity extends BaseActivity {
     		//Do nothing
     	//}
     	//else{
-    		Intent intent = new Intent(this,LoginActivity.class);
-        	startActivity(intent);
+    	//	Intent intent = new Intent(this,LoginPreferencesActivity.class);
+        //	startActivity(intent);
     	//}
     	
-    	/*
+    	
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
        
         String user = settings.getString("user",null);
         
         if (user == null)
         {
-        	Intent intent = new Intent(this,LoginActivity.class);
+        	Intent intent = new Intent(this,LoginPreferencesActivity.class);
         	startActivity(intent);
-        }*/
+        }
     }
     
     @Override
