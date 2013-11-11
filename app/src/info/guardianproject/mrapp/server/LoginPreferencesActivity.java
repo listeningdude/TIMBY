@@ -126,7 +126,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
             String username = txtUser.getText().toString();
             String password = txtPass.getText().toString();
             UserFunctions userFunction = new UserFunctions();
-			Log.d("Button", "Login");
+			
 			JSONObject json = userFunction.loginUser(username, password);
 
 			// check for login response
