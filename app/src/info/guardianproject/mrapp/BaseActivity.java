@@ -1,4 +1,5 @@
 package info.guardianproject.mrapp;
+import info.guardianproject.mrapp.login.UserFunctions;
 import info.guardianproject.mrapp.server.LoginActivity;
 
 import java.io.IOException;
@@ -9,6 +10,8 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.preference.PreferenceManager;
 import org.holoeverywhere.preference.SharedPreferences;
 import org.holoeverywhere.widget.Toast;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,7 +33,7 @@ import com.slidingmenu.lib.SlidingMenu.OnClosedListener;
 public class BaseActivity extends Activity {
 
 	public SlidingMenu mSlidingMenu;
-
+	private static String KEY_SUCCESS = "status";
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -164,16 +167,8 @@ public class BaseActivity extends Activity {
         btnDrawerAccount.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-            	//logout 
-            	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                settings.edit().clear();
-                settings.edit().commit();
-                
-                //load login
-            	mSlidingMenu.showContent(true);
-                Intent i = new Intent(activity, LoginActivity.class);
-                activity.startActivity(i);
-                finish();
+            	 handleLogin ();
+            	
             }
         });
         
@@ -207,7 +202,36 @@ public class BaseActivity extends Activity {
         initSlidingMenu();
 	}
 
-
+    private void handleLogin ()
+    {         
+            new Thread().start();
+    }
+    public void run ()
+    {
+    	try {
+        	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        	String username = settings.getString("username",null);
+            String password = settings.getString("password",null);
+            //logout remotely
+            UserFunctions userFunction = new UserFunctions();
+            JSONObject json = userFunction.logoutUser(username, password);
+            if ((json.getString(KEY_SUCCESS)!=null)&&(json.getString(KEY_SUCCESS).equals("OK"))){
+            	//logout locally 
+            	settings.edit().clear();
+                settings.edit().commit();	
+            	//load login
+            	mSlidingMenu.showContent(true);
+                Intent i = new Intent(getBaseContext(), LoginActivity.class);
+                startActivity(i);
+                finish();
+            }else{
+            	Toast.makeText(getBaseContext(), "Could not log you out. Try again!", Toast.LENGTH_LONG).show();
+            }
+            
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+    }
 
 	private void detectCoachOverlay ()
     {

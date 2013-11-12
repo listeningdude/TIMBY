@@ -93,32 +93,30 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
             new Thread(this).start();
     }
     
-    private void saveCreds (String user, String token)
+    private void saveCreds (String user_id, String token, String username, String password)
     { 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         Editor edit = settings.edit(); 
         
-        edit.putString("user_id", user);
+        edit.putString("user_id", user_id);
         edit.putString("token", token);
-        
+        edit.putString("username", username);
+        edit.putString("password", password);
         edit.commit();
-        
     }
     
     private void getCreds ()
     { 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
        
-        String user = settings.getString("user_id",null);
-        settings.getString("token",null);
+        String username = settings.getString("username",null);
+        String password = settings.getString("password",null);
+        if (username != null)
+                txtUser.setText(username);
         
-        /*
-        * if (user != null)
-                txtUser.setText(user);
+         if (password != null)
+                txtPass.setText(password);
         
-         if (pass != null)
-                txtPass.setText(pass);
-        */
     }
     
     public void run ()
@@ -140,9 +138,10 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 						JSONObject json_user = json.getJSONObject("message");
 						
 						// Clear all previous data in database
-						userFunction.logoutUser(getApplicationContext());
+						//userFunction.logoutUser(getApplicationContext());
 						//db.addUser(json_user.getString(KEY_USER_ID), json_user.getString(KEY_TOKEN));						
-						saveCreds(json_user.getString(KEY_USER_ID), json_user.getString(KEY_TOKEN));
+						
+						saveCreds(json_user.getString(KEY_USER_ID), json_user.getString(KEY_TOKEN), username, password);
 						//Toast.makeText(getBaseContext(), "Login Successfull!", Toast.LENGTH_LONG).show();
 						
 						// Launch Dashboard Screen

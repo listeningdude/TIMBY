@@ -18,29 +18,28 @@ public class SyncActivity extends BaseActivity{
 	private static String KEY_ERROR_MSG = "message";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		//if token valid
-			//loop through projects
-			//if project is not uploaded yet
-				//create projects
-				//upload files
-			//else
-				//if changes made
-					//update project
+		//if token not valid, redirect to login
+			checkToken();		
+		//loop through projects
+		//if project is not uploaded yet
+			//create projects
+			//upload files
 		//else
-			//login and redirect
-		checkToken();		
+			//if changes made
+				//update project
 	}
 	public void checkToken(){
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         token = settings.getString("token",null);
         user_id = settings.getString("user_id",null);
+        
         if(token==null){
         	Intent login = new Intent(getApplicationContext(), LoginPreferencesActivity.class);
 			login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(login);
         }
         UserFunctions userFunction = new UserFunctions();
-        JSONObject json = userFunction.loginUser(user_id, token);
+        JSONObject json = userFunction.checkTokenValidity(user_id, token);
         
         try{
         	String res = json.getString(KEY_SUCCESS); 
