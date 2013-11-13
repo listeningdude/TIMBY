@@ -11,6 +11,7 @@
          android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#ffffff"
+        android:padding="5dp"
         >
         
   <LinearLayout 
@@ -73,6 +74,8 @@
         android:hint="Describe your capture..."
         android:inputType="textMultiLine"
         android:lines="5" 
+         android:textColor="@color/soft_red"
+				android:background="@drawable/background_black_border_full"
         >
 
         <requestFocus />
@@ -404,11 +407,13 @@
         android:text="@string/action_share"
          />        
     </LinearLayout>
+
     <Button
         android:id="@+id/btnPublish"
+        style="@style/button_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:background="@drawable/red_button"
         android:gravity="center_vertical"
         android:text="@string/action_publish" />
 

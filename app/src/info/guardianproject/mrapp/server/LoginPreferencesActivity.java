@@ -13,6 +13,8 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -51,8 +53,8 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
         
         getCreds();
         
-        getSupportActionBar().hide();
-        
+        getSupportActionBar();
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new OnClickListener ()
         {
@@ -129,7 +131,6 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 
 			// check for login response
 			try {
-				if (json.getString(KEY_SUCCESS)!=null) {
 					String res = json.getString(KEY_SUCCESS); 
 					if(res.equals("OK")){
 						// user successfully logged in
@@ -144,7 +145,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 						saveCreds(json_user.getString(KEY_USER_ID), json_user.getString(KEY_TOKEN), username, password);
 						//Toast.makeText(getBaseContext(), "Login Successfull!", Toast.LENGTH_LONG).show();
 						
-						// Launch Dashboard Screen
+						/* Launch Dashboard Screen
 						Intent dashboard = new Intent(getApplicationContext(), HomeActivity.class);
 						
 						// Close all views before launching Dashboard
@@ -153,31 +154,23 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 						
 						// Close Login Screen
 						finish();
+						*/
+						mHandler.sendEmptyMessage(0);
 					}else{
 						// Error in login
-						txtStatus.setText(json.getString(KEY_ERROR_MSG));
+						//txtStatus.setText(json.getString(KEY_ERROR_MSG));
+						Message msgErr= mHandler.obtainMessage(1);
+                        msgErr.getData().putString("err",json.getString(KEY_ERROR_MSG));
+                        mHandler.sendMessage(msgErr);
+                        //Log.e(AppConstants.TAG,"login err",e);
 					}
-				}
+				
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-            //for now just save to keep it simple
-            /*saveCreds(username, password);
-            
-            try {
-                        StoryMakerApp.getServerManager().connect(username, password);
-
-                        mHandler.sendEmptyMessage(0);
-                 
-                } catch (Exception e) {
-                        
-                        Message msgErr= mHandler.obtainMessage(1);
-                        msgErr.getData().putString("err",e.getLocalizedMessage());
-                        mHandler.sendMessage(msgErr);
-                        Log.e(AppConstants.TAG,"login err",e);
-                }*/
+           
     }
-    
+
     private Handler mHandler = new Handler ()
     {
 
@@ -202,11 +195,12 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
     private void loginFailed (String err)
     {
             txtStatus.setText(err);
-            //Toast.makeText(this, "Login failed: " + err, Toast.LENGTH_LONG).show();
+            
     }
     
     private void loginSuccess ()
     {
             finish();
     }
+
 }

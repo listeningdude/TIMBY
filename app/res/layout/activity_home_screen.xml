@@ -3,7 +3,8 @@
     android:id="@+id/tableLayout1"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:stretchColumns="*" >
+    android:stretchColumns="*"
+    android:background="#ffffff" >
 
     <TableRow
         android:id="@+id/tableRow3"
@@ -17,7 +18,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="2dp"
             android:layout_weight="0.50"
-            android:background="@color/menu_background"
+            android:background="@color/soft_blue"
             android:clickable="true" >
 
             <TextView
@@ -43,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:background="@color/menu_background"
+            android:background="@color/soft_orange"
             android:clickable="true" >
 
             <TextView
@@ -80,7 +81,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="2dp"
             android:layout_weight="0.50"
-            android:background="@color/menu_background"
+            android:background="@color/softer_orange"
             android:clickable="true" >
 
             <TextView
@@ -107,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.39"
-            android:background="@color/menu_background" 
+            android:background="@color/soft_blue" 
             android:clickable="true">
 
             <TextView

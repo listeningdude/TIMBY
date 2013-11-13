@@ -34,7 +34,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -91,7 +93,7 @@ public class HomeActivity extends BaseActivity {
         
         // action bar stuff
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
         checkForTor();
         
         //checkForUpdates();

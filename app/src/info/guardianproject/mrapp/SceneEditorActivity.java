@@ -11,12 +11,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 import net.micode.soundrecorder.SoundRecorder;
 
@@ -465,7 +472,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
 
             if (mMenu != null) {
                 mMenu.findItem(R.id.itemInfo).setVisible(true);       
-                mMenu.findItem(R.id.itemForward).setEnabled(true);
+                //mMenu.findItem(R.id.itemForward).setEnabled(true);
                 
                 //if only photos, no need to display trim option
                 if(!(mMPM.mProject.getStoryType() == Project.STORY_TYPE_ESSAY || mMPM.mProject.getStoryType() == Project.STORY_TYPE_PHOTO))
@@ -581,7 +588,32 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
     }
 
     private File mCapturePath;
+  //function to perform the encryption before saving to the SD Card
+    static void encrypt(File file) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException
+    {
+    	// Here you read the cleartext.
+        FileInputStream fis = new FileInputStream(file);
+        // This stream write the encrypted text. This 	stream will be wrapped by another stream.
+        FileOutputStream fos = new FileOutputStream(file);
 
+        // Length is 16 byte
+        SecretKeySpec sks = new SecretKeySpec("BackYardSourceMap$2012".getBytes(), "AES");
+        // Create cipher
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, sks);
+        // Wrap the output stream
+        CipherOutputStream cos = new CipherOutputStream(fos, cipher);
+        // Write bytes
+        int b;
+        byte[] d = new byte[8];
+        while((b = fis.read(d)) != -1) {
+            cos.write(d, 0, b);
+        }
+        // Flush and close streams.
+        cos.flush();
+        cos.close();
+        fis.close();
+    }
     @Override
     protected void onActivityResult(int reqCode, int resCode, Intent intent) {
 
@@ -605,7 +637,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
                 {
                     mCapturePath = mMPM.mMediaHelper.capturePhoto(fileMediaFolder);
                 }
-
+                	
             }
             else if (reqCode == REQ_YOUTUBE_AUTH)
             {

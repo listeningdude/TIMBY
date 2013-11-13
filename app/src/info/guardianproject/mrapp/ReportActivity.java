@@ -1,29 +1,31 @@
 package info.guardianproject.mrapp;
 
-import org.holoeverywhere.widget.Spinner;
-import org.holoeverywhere.widget.Toast;
+import org.holoeverywhere.widget.*;
 
 import info.guardianproject.mrapp.R;
 import info.guardianproject.mrapp.model.GPSTracker;
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.model.Report;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.*;
 
 public class ReportActivity extends BaseActivity {
 
@@ -43,7 +45,7 @@ public class ReportActivity extends BaseActivity {
 	String entity;
 	Button done;
 	ImageView setLocation;
-	Button view;
+	ImageView view;
 	int story_mode;
 	TextView gpsInfo;
 	GPSTracker gpsT; 
@@ -53,7 +55,8 @@ public class ReportActivity extends BaseActivity {
         
         setContentView(R.layout.activity_new_story);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
+
         txtNewStoryDesc = (TextView)findViewById(R.id.txtNewStoryDesc);
         editTextStoryName = (EditText)findViewById(R.id.editTextStoryName);
         spinnerSector = (Spinner)findViewById(R.id.spinnerSector);
@@ -63,8 +66,8 @@ public class ReportActivity extends BaseActivity {
         rGroup = (RadioGroup)findViewById(R.id.radioGroupStoryType);
         
         done = (Button)findViewById(R.id.done);
-        view = (Button)findViewById(R.id.view);
-        setLocation = (ImageView)findViewById(R.id.setLocation);
+        view = (ImageView)findViewById(R.id.view);
+        setLocation = (ImageView)findViewById(R.id.imageView4);
         gpsInfo = (TextView)findViewById(R.id.textViewLocation);
         
         Intent i = getIntent();

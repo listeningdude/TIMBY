@@ -1,6 +1,7 @@
 package info.guardianproject.mrapp;
 import info.guardianproject.mrapp.login.UserFunctions;
 import info.guardianproject.mrapp.server.LoginActivity;
+import info.guardianproject.mrapp.server.LoginPreferencesActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -167,11 +168,16 @@ public class BaseActivity extends Activity {
         btnDrawerAccount.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-            	 handleLogin ();
-            	
+            	// handleLogin ();
+            	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        	  	settings.edit().clear();
+                settings.edit().commit();	
+                Intent i = new Intent(getBaseContext(), LoginPreferencesActivity.class);
+                startActivity(i);
+                finish();
             }
         });
-        
+         
         btnDrawerSettings.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
