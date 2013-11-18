@@ -130,8 +130,7 @@ public class MediaHelper implements MediaScannerConnectionClient {
 	   	 	
 	 }
 	 
-	 public void shareMedia (File mediaFile, String mimeType)
-	 {
+	 public void shareMedia (File mediaFile, String mimeType){
 			
 		 if (mimeType == null)
 			 mimeType = getMimeType(mediaFile.getAbsolutePath());

@@ -7,6 +7,7 @@
 	<string name="view">View Reports</string>
 	<string name="help">Help</string>
 	<string name="sync">Sync Reports</string>
+	<string name="menu_export">Export to SD</string>
 	
 	<string name="capture_audio">Audio</string>
 	<string name="capture_video">Video</string>

@@ -175,18 +175,25 @@ public class MediaProjectManager implements MediaManager {
     	if (mFileExternDir == null)
     	{
     	
-    		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+    		//SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
     		 
-    		mUseInternal = settings.getBoolean("p_use_internal_storage",false);
+    		//mUseInternal = settings.getBoolean("p_use_internal_storage",false);
         	
-    		if (mUseInternal)
+    		/*if (mUseInternal)
     			mFileExternDir = context.getDir(AppConstants.FOLDER_PROJECTS_NAME,Context.MODE_WORLD_WRITEABLE|Context.MODE_WORLD_READABLE);
     		else
     			mFileExternDir = new File(context.getExternalFilesDir(null),AppConstants.FOLDER_PROJECTS_NAME);
-    		
+    		*/
+    		mFileExternDir = new File(Environment.getExternalStorageDirectory(), AppConstants.TAG);
+    	    if (!mFileExternDir.exists()) {
+    	        if (!mFileExternDir.mkdirs()) {
+    	            Log.e("TIMBY: ", "Problem creating file");
+    	        }
+    	    }
 	    	mFileExternDir.mkdirs();
-	    	
+	    
     	}
+    	
     }
     
     public static File getRenderPath (Context context)
@@ -206,10 +213,13 @@ public class MediaProjectManager implements MediaManager {
     {
     	initExternalStorage (context);
     	
-    	String folderName = project.getId()+"";
+    	//String folderName = project.getId()+"";
+    	String folderName = project.getReport();
     	File fileProject = new File(mFileExternDir,folderName);
     	
-    	fileProject.mkdirs();
+    	if(!fileProject.exists()){
+    		fileProject.mkdirs();
+    	}
     	
     	return fileProject;
     }
@@ -828,10 +838,4 @@ public class MediaProjectManager implements MediaManager {
 //		AlertDialog alert = builder.create();
 //		alert.show();
 //	}
-
-
-	
-	
-	
-	
 }

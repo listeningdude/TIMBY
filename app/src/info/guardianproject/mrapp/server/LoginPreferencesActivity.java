@@ -116,8 +116,8 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
         if (username != null)
                 txtUser.setText(username);
         
-         if (password != null)
-                txtPass.setText(password);
+         //if (password != null)
+               // txtPass.setText(password);
         
     }
     

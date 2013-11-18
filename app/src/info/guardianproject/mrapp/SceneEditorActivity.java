@@ -46,8 +46,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class SceneEditorActivity extends EditorBaseActivity implements ActionBar.TabListener {
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-	
-	
+		
     protected Menu mMenu = null;
     
     //private String mTemplateJsonPath = null;
@@ -121,13 +120,14 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
         actionBar.setDisplayHomeAsUpEnabled(true);
         if (mMPM.mScene != null) {
             actionBar.setTitle(mMPM.mScene.getTitle());
+            
         }
 
         // For each of the sections in the app, add a tab to the action bar.
         //	actionBar.addTab(actionBar.newTab().setText("Media List").setTabListener(this));
-        // actionBar.addTab(actionBar.newTab().setText(R.string.tab_order).setTabListener(this));
+       //  actionBar.addTab(actionBar.newTab().setText(R.string.tab_order).setTabListener(this));
       //  if (mMPM.mProject.isTemplateStory()) {
-            actionBar.addTab(actionBar.newTab().setText("Caption").setTabListener(this));
+            actionBar.addTab(actionBar.newTab().setText("Add Caption").setTabListener(this));
        // } else {
         
        //     actionBar.addTab(actionBar.newTab().setText(R.string.tab_publish).setTabListener(this));
@@ -307,7 +307,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
 	    	fileList.addAll(Arrays.asList(fileProjectSrc.listFiles()));
 	    	
 	    	//add database file
-	    	fileList.add(getDatabasePath("sm.db"));
+	    	fileList.add(getDatabasePath("sm.db4"));
 	    	    	
 			FileOutputStream fos = new FileOutputStream(mZipFileName);
 			ZipOutputStream zos = new ZipOutputStream(fos);

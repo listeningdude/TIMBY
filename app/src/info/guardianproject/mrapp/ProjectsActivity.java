@@ -65,10 +65,6 @@ public class ProjectsActivity extends BaseActivity {
 
 	}
 
-
-
-	
-    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.activity_projects, menu);
