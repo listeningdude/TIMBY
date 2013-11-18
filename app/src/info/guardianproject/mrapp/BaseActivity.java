@@ -81,9 +81,8 @@ public class BaseActivity extends Activity {
         Button btnDrawerLessons = (Button) findViewById(R.id.btnDrawerLessons);
         Button btnDrawerAccount = (Button) findViewById(R.id.btnDrawerAccount);
         Button btnDrawerSettings = (Button) findViewById(R.id.btnDrawerSettings);
-        
+        Button btnExport = (Button) findViewById(R.id.btnExport);
 
-       
         btnDrawerQuickCaptureVideo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,6 +183,15 @@ public class BaseActivity extends Activity {
             	mSlidingMenu.showContent(true);
 
                 Intent i = new Intent(activity, SimplePreferences.class);
+                activity.startActivity(i);
+            }
+        });
+        btnExport.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	mSlidingMenu.showContent(true);
+
+                Intent i = new Intent(activity, Export2SD.class);
                 activity.startActivity(i);
             }
         });

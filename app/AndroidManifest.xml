@@ -121,6 +121,17 @@
                 android:value=".HomeActivity" />
         </activity>
         <activity
+            android:name=".Export2SD"
+            android:configChanges="locale"
+            android:label="Export to SD"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
+        <activity
             android:name=".SyncActivity"
             android:configChanges="locale"
             android:label="Sync"

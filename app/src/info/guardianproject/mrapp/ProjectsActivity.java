@@ -253,7 +253,6 @@ public class ProjectsActivity extends BaseActivity {
             			break;
             		}
             }
-            
             int sceneCount = project.getScenesAsList().size();
             int clipCount = project.getMediaAsList().size();
             
@@ -285,15 +284,9 @@ public class ProjectsActivity extends BaseActivity {
 	    		ivType.setImageDrawable(getContext().getResources().getDrawable(R.drawable.btn_toggle_ic_list_essay));
 	
 	    	}
-	    	
-            
             return row;
         }
         
     }
 
-
-   
-    
-    
 }

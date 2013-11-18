@@ -33,20 +33,13 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class ReportsActivity extends BaseActivity {
-
-
 	ListView mListView;
-
 	private ArrayList<Report> mListReports;
 	private ReportArrayAdapter aaReports;
-	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        
         setContentView(R.layout.activity_projects);
-        
         // action bar stuff
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
@@ -54,29 +47,16 @@ public class ReportsActivity extends BaseActivity {
         mListView = (ListView)findViewById(R.id.projectslist);
         initListView(mListView);
     }
-    
-    
-    
     @Override
 	protected void onResume() {
 		super.onResume();
-		
-
 		refreshReports();
-
 	}
-
-
-
-	
-    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.activity_reports, menu);
         return true;
     }
-
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -115,8 +95,7 @@ public class ReportsActivity extends BaseActivity {
 		
 
 		boolean changed = ((StoryMakerApp)getApplication()).checkLocale();
-		if (changed)
-		{
+		if (changed){
 			startActivity(new Intent(this,ReportsActivity.class));
 			
 			finish();
@@ -131,11 +110,7 @@ public class ReportsActivity extends BaseActivity {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                
-                
-                final Report report = mListReports.get(arg2);
-
-
+            final Report report = mListReports.get(arg2);
             AlertDialog.Builder builder = new AlertDialog.Builder(ReportsActivity.this);
             builder.setMessage(R.string.delete_project_)
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
@@ -163,9 +138,7 @@ public class ReportsActivity extends BaseActivity {
 			
 				Report report = mListReports.get(position);
 				Intent intent = null;
-
-    			intent = new Intent(ReportsActivity.this, ReportActivity.class);
-    		   
+				intent = new Intent(ReportsActivity.this, ReportActivity.class);
 				intent.putExtra("title",report.getTitle());
 				intent.putExtra("issue", report.getIssue());
                 intent.putExtra("sector", report.getSector());
@@ -187,12 +160,10 @@ public class ReportsActivity extends BaseActivity {
     {
     	
     	 mListReports = Report.getAllAsList(this);
-         aaReports = new ReportArrayAdapter(this, 
-           	   R.layout.list_project_row, mListReports);
+         aaReports = new ReportArrayAdapter(this, R.layout.list_project_row, mListReports);
          
          mListView.setAdapter(aaReports);
     }
-    
     
     private void deleteReport (Report report)
     {
