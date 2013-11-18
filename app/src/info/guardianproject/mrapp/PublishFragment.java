@@ -9,13 +9,29 @@ import info.guardianproject.mrapp.server.YouTubeSubmit;
 import info.guardianproject.mrapp.server.Authorizer.AuthorizationListener;
 import info.guardianproject.mrapp.server.soundcloud.SoundCloudUploader;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.StringTokenizer;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.Spinner;
@@ -242,13 +258,65 @@ public class PublishFragment extends Fragment {
         	
         }
     	
-        
     }
-    
+    static Cipher createCipher(int mode) throws Exception {
+        PBEKeySpec keySpec = new PBEKeySpec("test".toCharArray());
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+        SecretKey key = keyFactory.generateSecret(keySpec);
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update("input".getBytes());
+        byte[] digest = md.digest();
+        byte[] salt = new byte[8];
+        for (int i = 0; i < 8; ++i)
+          salt[i] = digest[i];
+        PBEParameterSpec paramSpec = new PBEParameterSpec(salt, 20);
+        Cipher cipher = Cipher.getInstance("PBEWithMD5AndDES");
+        cipher.init(mode, key, paramSpec);
+        return cipher;
+      }
+
+      static void applyCipher(String inFile, String outFile, Cipher cipher) throws Exception {
+        CipherInputStream in = new CipherInputStream(new FileInputStream(inFile), cipher);
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outFile));
+        int BUFFER_SIZE = 8;
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int numRead = 0;
+        do {
+          numRead = in.read(buffer);
+          if (numRead > 0)
+            out.write(buffer, 0, numRead);
+        } while (numRead == 8);
+      }
+      
     private void saveForm() {
         mActivity.mMPM.mProject.setTitle(mDescription.getText().toString());
         //commenting this out for now until merges are fixed
        //mActivity.mMPM.mProject.set
+        //Try encryption here
+        
+        //cipher = createCipher(Cipher.DECRYPT_MODE);
+       // applyCipher("file_to_decrypt", "decrypted_file", cipher);
+        
+        Media[] mediaList = mActivity.mMPM.mProject.getScenesAsArray()[0].getMediaAsArray();
+	 	for (Media media: mediaList){
+	 		String file = media.getPath();
+	 		Cipher cipher;
+			try {
+				cipher = createCipher(Cipher.ENCRYPT_MODE);
+				applyCipher(file, file+"_", cipher);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Log.e("Encryption error", e.getLocalizedMessage());
+				e.printStackTrace();
+			}
+			//Then delete original file
+			File oldfile = new File(file);
+			oldfile.delete();
+			//Then remove _ on encrypted file
+			File newfile = new File(file+"_");
+			newfile.renameTo(new File(file));
+			//Done!
+	 	}
         mActivity.mMPM.mProject.save();
         mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
     }

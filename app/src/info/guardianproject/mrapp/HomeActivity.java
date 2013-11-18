@@ -27,6 +27,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.ProgressDialog;
+import org.holoeverywhere.widget.Toast;
 
 import android.content.Context;
 import android.content.Intent;
@@ -133,8 +134,9 @@ public class HomeActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplicationContext(),SyncActivity.class);
-				startActivity(i);
+				//Intent i = new Intent(getApplicationContext(),SyncActivity.class);
+				//startActivity(i);
+				Toast.makeText(getBaseContext(), "Coming soon!", Toast.LENGTH_LONG).show();
 			}
 		});
     }

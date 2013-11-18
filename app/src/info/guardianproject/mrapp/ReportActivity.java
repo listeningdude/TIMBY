@@ -82,8 +82,10 @@ public class ReportActivity extends BaseActivity {
             location = i.getStringExtra("location");
             
             editTextStoryName.setText(title);
-            setSelectedItem(spinnerSector, sector);
-            setSelectedItem(spinnerIssue, issue);
+            spinnerSector.setSelection(Integer.parseInt(sector));
+            spinnerIssue.setSelection(Integer.parseInt(issue));
+            //setSelectedItem(spinnerSector, sector);
+           //setSelectedItem(spinnerIssue, issue);
             editTextDesc.setText(description);
             editTextEntity.setText(entity);
             gpsInfo.setText(location);
@@ -129,7 +131,7 @@ public class ReportActivity extends BaseActivity {
                 }
 				story_mode = 2;
 				if (formValid()) {
-					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItem().toString(),spinnerSector.getSelectedItem().toString(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
+					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
 				}
 			}
         	
@@ -141,7 +143,7 @@ public class ReportActivity extends BaseActivity {
             public void onClick(View v) {
             	
             	if (formValid()) {
-					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItem().toString(),spinnerSector.getSelectedItem().toString(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), true);		
+					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), true);		
             	}
             	
             }
@@ -238,18 +240,18 @@ public class ReportActivity extends BaseActivity {
     }
     		
 
-    private void launchProject(String title, String pIssue, String pSector, String pEntity, String pDesc, String pLocation, boolean update) {
+    private void launchProject(String title, int pIssue, int pSector, String pEntity, String pDesc, String pLocation, boolean update) {
         Report report;
         if(rid==-1){
-        	report = new Report (this, 0, title, pIssue, pSector, pEntity, pDesc, pLocation);
+        	report = new Report (this, 0, title, String.valueOf(pIssue), String.valueOf(pSector), pEntity, pDesc, pLocation);
         	
         }else{
         	report = Report.get(this, rid);
         	report.setTitle(title);
         	report.setDescription(pDesc);
         	report.setEntity(pEntity);
-        	report.setIssue(pIssue);
-        	report.setSector(pSector);
+        	report.setIssue(String.valueOf(pIssue));
+        	report.setSector(String.valueOf(pSector));
         	report.setLocation(pLocation);
         }
         report.save();

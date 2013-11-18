@@ -140,7 +140,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
         	openCaptureMode(0, 0);
         	
         }
-
+        
     }
 
     @Override
