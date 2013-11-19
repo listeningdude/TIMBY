@@ -14,6 +14,7 @@ import org.holoeverywhere.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -189,8 +190,8 @@ public class BaseActivity extends Activity {
         btnExport.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-            	mSlidingMenu.showContent(true);
-
+            	//mSlidingMenu.showContent(true);
+            	
                 Intent i = new Intent(activity, Export2SD.class);
                 activity.startActivity(i);
             }

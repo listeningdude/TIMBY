@@ -28,6 +28,7 @@ import javax.crypto.spec.PBEParameterSpec;
 import org.holoeverywhere.widget.Toast;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
@@ -42,10 +43,11 @@ public class Export2SD extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		
+		        
 		ext = String.valueOf(Environment.getExternalStorageDirectory());
 	 	ext += "/"+AppConstants.TAG;
 		//Begin "XML" file
+	 	
 		 data += "<?xml version='1.0' encoding='UTF-8'?>\n";
 		 data += "<reports>\n";
 		 mListReports = Report.getAllAsList(this);
@@ -79,10 +81,12 @@ public class Export2SD extends Activity{
 			 	data += "</report>\n";
 			}
 		 data += "</reports>";
-		writeToFile(data);
+		//writeToFile(data);
 		//Now zip it!
-		zipFileAtPath(ext, String.valueOf(Environment.getExternalStorageDirectory())+"/timby.zip");
+	
+		//zipFileAtPath(ext, String.valueOf(Environment.getExternalStorageDirectory())+"/timby.zip");
 		//Toast and end
+		
 		Toast.makeText(getBaseContext(), "Exported Successfully!", Toast.LENGTH_LONG).show();
 		finish();
 	}
@@ -96,22 +100,25 @@ public class Export2SD extends Activity{
         }
          //Encrypt db.xml
 		 
-         Cipher cipher;
-         String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/db.xml";
+        Cipher cipher;
+        String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/db.xml";
  		
-		 try {
+		try{
 			cipher = createCipher(Cipher.ENCRYPT_MODE);
 			applyCipher(file, file+"_", cipher);
-		} catch (Exception e) {
+		}catch(Exception e){
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		//Then delete original file
 		File oldfile = new File(file);
 		oldfile.delete();
+		
 		//Then remove _ on encrypted file
 		File newfile = new File(file+"_");
 		newfile.renameTo(new File(file));
+		
 		//Done!
     }
 	static Cipher createCipher(int mode) throws Exception {
@@ -152,7 +159,7 @@ public class Export2SD extends Activity{
 	                dest));
 	        if (sourceFile.isDirectory()) {
 	            zipSubFolder(out, sourceFile, sourceFile.getParent().length());
-	        } else {
+	        }else {
 	            byte data[] = new byte[BUFFER];
 	            FileInputStream fi = new FileInputStream(sourcePath);
 	            origin = new BufferedInputStream(fi, BUFFER);
@@ -164,7 +171,7 @@ public class Export2SD extends Activity{
 	            }
 	        }
 	        out.close();
-	    } catch (Exception e) {
+	    }catch (Exception e) {
 	        e.printStackTrace();
 	        return false;
 	    }

@@ -134,9 +134,9 @@ public class HomeActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//Intent i = new Intent(getApplicationContext(),SyncActivity.class);
-				//startActivity(i);
-				Toast.makeText(getBaseContext(), "Coming soon!", Toast.LENGTH_LONG).show();
+				Intent i = new Intent(getApplicationContext(),SyncActivity.class);
+				startActivity(i);
+				
 			}
 		});
     }

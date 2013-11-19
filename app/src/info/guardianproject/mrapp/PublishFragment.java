@@ -304,7 +304,7 @@ public class PublishFragment extends Fragment {
 			try {
 				cipher = createCipher(Cipher.ENCRYPT_MODE);
 				applyCipher(file, file+"_", cipher);
-			} catch (Exception e) {
+			}catch (Exception e) {
 				// TODO Auto-generated catch block
 				Log.e("Encryption error", e.getLocalizedMessage());
 				e.printStackTrace();
