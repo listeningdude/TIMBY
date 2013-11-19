@@ -61,6 +61,7 @@ public class Export2SD extends Activity{
 			 	data += "<entity>"+report.getEntity()+"</entity>\n";
 			 	data += "<description>"+report.getDescription()+"</description>\n";
 			 	data += "<location>"+report.getLocation()+"</location>\n";
+			 	data += "<date>"+report.getDate()+"</date>\n";
 			 	
 			 	mListProjects = Project.getAllAsList(this, report.getId());
 			 	for (int j = 0; j < mListProjects.size(); j++) {

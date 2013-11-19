@@ -1,5 +1,7 @@
 package info.guardianproject.mrapp.login;
 
+import info.guardianproject.mrapp.AppConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +17,9 @@ public class UserFunctions {
 	private static String loginURL = "https://timby.org/mobileapi/api/login";
 	private static String logoutURL = "https://timby.org/mobileapi/api/logout";
 	private static String tokenCheckURL = "https://timby.org/mobileapi/api/tokencheck";
+	private static String createreportURL = "https://timby.org/mobileapi/api/createreport";	
 	private static String registerURL = "";
-	private static String api_key = "6b239b3568b209";
+	private static String api_key = AppConstants.API_KEY;
 
 	
 	// constructor
@@ -68,7 +71,26 @@ public class UserFunctions {
 		// return json
 		return json;
 	}
-	
+	public JSONObject newReport(String token, String user_id, String title,
+		String issue, String sector, String entity, String lat, String lon,	String date) {
+		// TODO Auto-generated method stub
+		// Building Parameters
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("token", token));
+		params.add(new BasicNameValuePair("user_id", user_id));
+		params.add(new BasicNameValuePair("title", title));
+		params.add(new BasicNameValuePair("category", issue));
+		params.add(new BasicNameValuePair("sector", sector));
+		params.add(new BasicNameValuePair("company", entity));
+		params.add(new BasicNameValuePair("report_date", date));
+		params.add(new BasicNameValuePair("lat", lat));
+		params.add(new BasicNameValuePair("long", lon));
+		params.add(new BasicNameValuePair("key", AppConstants.API_KEY));
+		// getting JSON Object
+		JSONObject json = jsonParser.getJSONFromUrl(createreportURL, params);
+		// return json
+		return json;
+	}
 	/**
 	 * Function get Login status
 	 * */
@@ -91,5 +113,7 @@ public class UserFunctions {
 		db.resetTables();
 		return true;
 	}
+
+	
 	
 }

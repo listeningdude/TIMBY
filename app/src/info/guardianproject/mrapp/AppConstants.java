@@ -13,7 +13,7 @@ import android.widget.Toast;
 public class AppConstants {
 	
 public final static String TAG = "TIMBY";
-	
+	public final static String API_KEY = "6b239b3568b209";
 	public final static int IMAGE_EDITOR = 2;
 	public final static int VIDEO_EDITOR = 3;
 	public final static int REVIEW_MEDIA = 4;

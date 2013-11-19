@@ -19,12 +19,11 @@ public class Report {
     protected String _entity;
     protected String _description;
     protected String _location;
-
+    protected String _serverid;
+    protected String _date;
     
     
-    
-   
-    public Report(Context context, int id, String title, String _sector, String _issue,String _entity, String _description, String _location) {
+    public Report(Context context, int id, String title, String _sector, String _issue,String _entity, String _description, String _location, String _serverid, String _date) {
         super();
         this.context = context;
         this.id = id;
@@ -34,6 +33,8 @@ public class Report {
         this._entity = _entity;
         this._description = _description;
         this._location = _location;
+        this._serverid = _serverid;
+        this._date = _date;
     }
 
     public Report(Context context, Cursor cursor) {
@@ -53,8 +54,11 @@ public class Report {
                 cursor.getString(cursor
                         .getColumnIndex(StoryMakerDB.Schema.Reports.COL_DESCRIPTION)),
                cursor.getString(cursor
-                          .getColumnIndex(StoryMakerDB.Schema.Reports.COL_LOCATION)));
-        
+                          .getColumnIndex(StoryMakerDB.Schema.Reports.COL_LOCATION)),
+              cursor.getString(cursor
+                          .getColumnIndex(StoryMakerDB.Schema.Reports.COL_SERVERID)),
+        		cursor.getString(cursor
+        				.getColumnIndex(StoryMakerDB.Schema.Reports.COL_DATE)));
                // cursor.close();
 
     }
@@ -121,7 +125,8 @@ public class Report {
         values.put(StoryMakerDB.Schema.Reports.COL_ENTITY, _entity);
         values.put(StoryMakerDB.Schema.Reports.COL_DESCRIPTION, _description);
         values.put(StoryMakerDB.Schema.Reports.COL_LOCATION, _location);
-        
+        values.put(StoryMakerDB.Schema.Reports.COL_SERVERID, _serverid);
+        values.put(StoryMakerDB.Schema.Reports.COL_DATE, _date);
         return values;
     }
     private void insert() {
@@ -189,6 +194,12 @@ public class Report {
     public String getLocation() {
         return _location;
     }
+    public String getServerId() {
+        return _serverid;
+    }
+    public String getDate() {
+        return _date;
+    }
     /**
      * @param title
      *            the title to set
@@ -211,5 +222,10 @@ public class Report {
     public void setLocation(String _location) {
         this._location = _location;
     }
-        
+    public void setServerId(String _serverid) {
+        this._serverid = _serverid;
+    }
+    public void setDate(String _date) {
+        this._date = _date;
+    }    
 }

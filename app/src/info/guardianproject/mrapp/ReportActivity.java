@@ -1,5 +1,8 @@
 package info.guardianproject.mrapp;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.holoeverywhere.widget.*;
 
 import info.guardianproject.mrapp.R;
@@ -243,9 +246,10 @@ public class ReportActivity extends BaseActivity {
     private void launchProject(String title, int pIssue, int pSector, String pEntity, String pDesc, String pLocation, boolean update) {
         Report report;
         if(rid==-1){
-        	report = new Report (this, 0, title, String.valueOf(pIssue), String.valueOf(pSector), pEntity, pDesc, pLocation);
-        	
-        }else{
+        	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        	String currentdate = dateFormat.format(new Date());
+        	report = new Report (this, 0, title, String.valueOf(pIssue), String.valueOf(pSector), pEntity, pDesc, pLocation, "0", currentdate);
+         }else{
         	report = Report.get(this, rid);
         	report.setTitle(title);
         	report.setDescription(pDesc);
