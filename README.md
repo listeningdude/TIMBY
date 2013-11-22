@@ -1,5 +1,12 @@
-Story Maker
+TIMBY
 =====
+TIMBY is a mobile reporting application based on [StoryMaker](https://dev.guardianproject.info/projects/wrapp).
+Among the core modifications of this fork include:
+1. A simpler user experience
+2. Exporting reports to SD card
+3. Media files encryption
+4. Syncing with a remote API
+5. Multiple media formats in  a single story
 
 ## Setting up Development Environment
 

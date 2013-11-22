@@ -10,6 +10,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 public class UserFunctions {
 	
@@ -18,6 +19,7 @@ public class UserFunctions {
 	private static String logoutURL = "https://timby.org/mobileapi/api/logout";
 	private static String tokenCheckURL = "https://timby.org/mobileapi/api/tokencheck";
 	private static String createreportURL = "https://timby.org/mobileapi/api/createreport";	
+	private static String insertobjectURL = "https://timby.org/mobileapi/api/insertobject";	
 	private static String registerURL = "";
 	private static String api_key = AppConstants.API_KEY;
 
@@ -72,25 +74,54 @@ public class UserFunctions {
 		return json;
 	}
 	public JSONObject newReport(String token, String user_id, String title,
-		String issue, String sector, String entity, String lat, String lon,	String date) {
+		String issue, String sector, String entity, String lat, String lon,	String date, String description) {
 		// TODO Auto-generated method stub
 		// Building Parameters
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("token", token));
+	
 		params.add(new BasicNameValuePair("user_id", user_id));
+
 		params.add(new BasicNameValuePair("title", title));
+	
 		params.add(new BasicNameValuePair("category", issue));
+	
 		params.add(new BasicNameValuePair("sector", sector));
+	
+	
+		params.add(new BasicNameValuePair("description", description));
+		
 		params.add(new BasicNameValuePair("company", entity));
+		
 		params.add(new BasicNameValuePair("report_date", date));
+	
 		params.add(new BasicNameValuePair("lat", lat));
+
 		params.add(new BasicNameValuePair("long", lon));
-		params.add(new BasicNameValuePair("key", AppConstants.API_KEY));
+	
+		params.add(new BasicNameValuePair("key", api_key));
+
 		// getting JSON Object
 		JSONObject json = jsonParser.getJSONFromUrl(createreportURL, params);
 		// return json
 		return json;
 	}
+	public JSONObject newObject(String token, String user_id, String ptitle, String psequence, String preportid, String ptype) {
+			// TODO Auto-generated method stub
+			// Building Parameters
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("token", token));
+			params.add(new BasicNameValuePair("user_id", user_id));
+			params.add(new BasicNameValuePair("title", ptitle));
+			params.add(new BasicNameValuePair("sequence", psequence));
+			params.add(new BasicNameValuePair("report_id", preportid));
+			params.add(new BasicNameValuePair("object_type", ptype));
+			params.add(new BasicNameValuePair("key", api_key));
+			// getting JSON Object
+			JSONObject json = jsonParser.getJSONFromUrl(insertobjectURL, params);
+			// return json
+			return json;
+		}
 	/**
 	 * Function get Login status
 	 * */

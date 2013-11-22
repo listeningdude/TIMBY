@@ -208,6 +208,9 @@ public class ReportActivity extends BaseActivity {
     	{
     		Toast.makeText(this, R.string.you_must_enter_a_project_name, Toast.LENGTH_SHORT).show();
     		return false;
+    	}else if(spinnerSector.getSelectedItemPosition()==0){
+    		Toast.makeText(this, "You must select a sector", Toast.LENGTH_SHORT).show();
+    		return false;
     	}
     	else
     	{
