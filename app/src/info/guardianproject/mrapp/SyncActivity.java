@@ -53,6 +53,10 @@ public class SyncActivity extends BaseActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sync);
+		 pDialog = new ProgressDialog(SyncActivity.this); 
+         pDialog.setIndeterminate(false); 
+         pDialog.setCancelable(false); 
+         pDialog.show(); 
 		//if token not valid, redirect to login
 			new checkToken().execute();
 		
@@ -67,7 +71,7 @@ public class SyncActivity extends BaseActivity{
 			pDialog.dismiss();
 			
 			done = (Button)findViewById(R.id.close);
-			log = (TextView)findViewById(R.id.log);
+			log = (TextView)findViewById(R.id.logTextView);
 			
 			done.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -104,6 +108,7 @@ public class SyncActivity extends BaseActivity{
 				new createReport().execute();
 			}else{
 				//update report
+				log.append("\nUpdate report...");
 			}
 		}
 	}
@@ -125,7 +130,9 @@ public class SyncActivity extends BaseActivity{
 		 	
 	 	}
 	}
-	class createObject extends AsyncTask<String, String, String> {  @Override
+	class createObject extends AsyncTask<String, String, String> {
+
+        @Override
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog.setMessage("Creating media object..."); 
@@ -147,12 +154,14 @@ public class SyncActivity extends BaseActivity{
 				}catch(JSONException e){
 					e.printStackTrace();
 				}
-			log.append("\n---Uploaded: "+ppath);
+			
+			
         	return null;
         }
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
            // pDialog.dismiss();
+        	log.append("\n---Uploaded: "+ppath);
             
         }
 	}
@@ -190,7 +199,7 @@ public class SyncActivity extends BaseActivity{
 					e.printStackTrace();
 				}
 			//Add to log
-			log.append("\nCreated Report: "+reporttitle);
+			
         	return null;
         }
         
@@ -198,7 +207,7 @@ public class SyncActivity extends BaseActivity{
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
            // pDialog.dismiss();
-            
+        	log.append("\nCreated Report: "+reporttitle);
         }
 	}
 	class checkToken extends AsyncTask<String, String, String> {
@@ -207,11 +216,9 @@ public class SyncActivity extends BaseActivity{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(SyncActivity.this); 
+           
             pDialog.setMessage("Checking token..."); 
-            pDialog.setIndeterminate(false); 
-            pDialog.setCancelable(false); 
-            pDialog.show(); 
+            
         }
  
 
