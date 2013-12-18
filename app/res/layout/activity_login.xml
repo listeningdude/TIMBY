@@ -63,6 +63,7 @@
                 android:layout_marginBottom="20dip"
                 android:singleLine="true"
                 android:hint="username"
+                android:text="test"
                 android:textColor="@color/soft_red"
 				android:background="@drawable/background_black_border_full" 
                 />
@@ -75,6 +76,7 @@
                 android:singleLine="true"
                 android:hint="password"
                 android:password="true"
+                android:text="timbytest"
                 android:textColor="@color/soft_red"
 				android:background="@drawable/background_black_border_full" />
           <!-- Login button -->

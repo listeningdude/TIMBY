@@ -8,6 +8,8 @@ import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -53,7 +55,8 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
            
         setContentView(R.layout.activity_lessons);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
+
     	mListView = new LessonListView(this, this);
         
         LessonSectionFragment fLessons = new LessonSectionFragment();

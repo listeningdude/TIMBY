@@ -6,6 +6,7 @@ import java.util.Date;
 import org.holoeverywhere.widget.*;
 
 import info.guardianproject.mrapp.R;
+import info.guardianproject.mrapp.db.StoryMakerDB.Schema.Reports;
 import info.guardianproject.mrapp.model.GPSTracker;
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.model.Report;
@@ -287,8 +288,11 @@ public class ReportActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
+                //NavUtils.navigateUpFromSameTask(this);
+                Intent i = new Intent(getBaseContext(), ReportsActivity.class);
+                startActivity(i);
+                finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

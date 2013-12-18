@@ -2,14 +2,26 @@ package info.guardianproject.mrapp.login;
 
 import info.guardianproject.mrapp.AppConstants;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import redstone.xmlrpc.util.Base64;
+
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 public class UserFunctions {
@@ -17,9 +29,13 @@ public class UserFunctions {
 	private JSONParser jsonParser;
 	private static String loginURL = "https://timby.org/mobileapi/api/login";
 	private static String logoutURL = "https://timby.org/mobileapi/api/logout";
+	private static String sectorsURL = "https://timby.org/mobileapi/api/getsectors";
+	private static String categoriesURL = "https://timby.org/mobileapi/api/getcategories";
 	private static String tokenCheckURL = "https://timby.org/mobileapi/api/tokencheck";
 	private static String createreportURL = "https://timby.org/mobileapi/api/createreport";	
-	private static String insertobjectURL = "https://timby.org/mobileapi/api/insertobject";	
+	private static String updatereportURL = "https://timby.org/mobileapi/api/updatereport";	
+	private static String insertobjectURL = "https://timby.org/mobileapi/api/insertobject";
+	private static String updateobjectURL = "https://timby.org/mobileapi/api/updateobject";
 	private static String registerURL = "";
 	private static String api_key = AppConstants.API_KEY;
 
@@ -106,10 +122,86 @@ public class UserFunctions {
 		// return json
 		return json;
 	}
-	public JSONObject newObject(String token, String user_id, String ptitle, String psequence, String preportid, String ptype) {
+	public JSONArray getSectors(String token, String user_id){
+		// Building Parameters
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("user_id", user_id));
+		params.add(new BasicNameValuePair("token", token));
+		params.add(new BasicNameValuePair("key", api_key));
+		JSONArray json = jsonParser.getJSONArrayFromURL(sectorsURL, params);
+		return json;
+	}
+	public JSONArray getCategories(String token, String user_id){
+		// Building Parameters
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("user_id", user_id));
+		params.add(new BasicNameValuePair("token", token));
+		params.add(new BasicNameValuePair("key", api_key));
+		JSONArray json = jsonParser.getJSONArrayFromURL(categoriesURL, params);
+
+		return json;
+	}
+	public JSONObject updateReport(String token, String user_id, String title,
+			String issue, String sector, String entity, String lat, String lon,	String date, String description, String serverID) {
 			// TODO Auto-generated method stub
 			// Building Parameters
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("token", token));
+		
+			params.add(new BasicNameValuePair("user_id", user_id));
+
+			params.add(new BasicNameValuePair("title", title));
+		
+			params.add(new BasicNameValuePair("category", issue));
+		
+			params.add(new BasicNameValuePair("sector", sector));
+		
+		
+			params.add(new BasicNameValuePair("description", description));
+			
+			params.add(new BasicNameValuePair("company", entity));
+			
+			params.add(new BasicNameValuePair("report_date", date));
+		
+			params.add(new BasicNameValuePair("lat", lat));
+
+			params.add(new BasicNameValuePair("long", lon));
+		
+			params.add(new BasicNameValuePair("key", api_key));
+			
+			params.add(new BasicNameValuePair("report_id", serverID));
+
+			// getting JSON Object
+			JSONObject json = jsonParser.getJSONFromUrl(updatereportURL, params);
+			// return json
+			return json;
+		}
+	public JSONObject updateObject(String token, String user_id, String ptitle, String psequence, String preportid, String ptype, String pid, String pdate, String path) {
+		// TODO Auto-generated method stub
+		// Building Parameters
+		
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("token", token));
+		params.add(new BasicNameValuePair("user_id", user_id));
+		params.add(new BasicNameValuePair("title", ptitle));
+		params.add(new BasicNameValuePair("sequence", psequence));
+		params.add(new BasicNameValuePair("report_id", preportid));
+		params.add(new BasicNameValuePair("object_type", ptype));
+		params.add(new BasicNameValuePair("key", api_key));
+		params.add(new BasicNameValuePair("object_id", pid));
+		params.add(new BasicNameValuePair("report_date", pdate));
+		params.add(new BasicNameValuePair("narrative", "(empty)"));
+		// getting JSON Object
+		JSONObject json = jsonParser.getJSONFromUrl(updateobjectURL, params);
+		// return json
+		return json;
+	}	
+		//add media
+	public JSONObject newObject(String token, String user_id, String ptitle, String psequence, String preportid, String ptype, String pid, String pdate, String path) {
+			// TODO Auto-generated method stub
+			// Building Parameters
+			
+			/*List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("token", token));
 			params.add(new BasicNameValuePair("user_id", user_id));
 			params.add(new BasicNameValuePair("title", ptitle));
@@ -117,8 +209,32 @@ public class UserFunctions {
 			params.add(new BasicNameValuePair("report_id", preportid));
 			params.add(new BasicNameValuePair("object_type", ptype));
 			params.add(new BasicNameValuePair("key", api_key));
+			params.add(new BasicNameValuePair("object_id", pid));
+			params.add(new BasicNameValuePair("report_date", pdate));
+			params.add(new BasicNameValuePair("narrative", "(empty)"));
+			*/
+			//add media
+			MultipartEntity mpEntity = new MultipartEntity();
+			try{
+				ContentBody content = new FileBody(new File(path), ptype);
+				mpEntity.addPart("object", content);
+				mpEntity.addPart("token", new StringBody(token));
+				mpEntity.addPart("user_id", new StringBody(user_id));
+				mpEntity.addPart("title", new StringBody(ptitle));
+				mpEntity.addPart("sequence", new StringBody(psequence));
+				mpEntity.addPart("report_id", new StringBody(preportid));
+				mpEntity.addPart("object_type", new StringBody(ptype));
+				mpEntity.addPart("key", new StringBody(api_key));
+				mpEntity.addPart("object_id", new StringBody(pid));
+				mpEntity.addPart("report_date", new StringBody(pdate));
+				mpEntity.addPart("narrative", new StringBody("(empty)"));
+			} catch (IOException e) {
+	            Log.e("mpEntity Error", e.getMessage(), e);
+
+	        }
 			// getting JSON Object
-			JSONObject json = jsonParser.getJSONFromUrl(insertobjectURL, params);
+			JSONObject json = jsonParser.getJSONFromUrl_Object(insertobjectURL, mpEntity);
+			
 			// return json
 			return json;
 		}

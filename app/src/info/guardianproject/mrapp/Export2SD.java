@@ -56,29 +56,30 @@ public class Export2SD extends Activity{
 			 	Report report = mListReports.get(i);
 			 	data += "<id>"+String.valueOf(report.getId())+"</id>\n";
 			 	data += "<title>"+report.getTitle()+"</title>\n";
-			 	data += "<issue>"+report.getIssue()+"</issue>\n";
+			 	data += "<category>"+report.getIssue()+"</category>\n";
 			 	data += "<sector>"+report.getSector()+"</sector>\n";
 			 	data += "<entity>"+report.getEntity()+"</entity>\n";
-			 	data += "<description>"+report.getDescription()+"</description>\n";
 			 	data += "<location>"+report.getLocation()+"</location>\n";
-			 	data += "<date>"+report.getDate()+"</date>\n";
-			 	
+			 	data += "<report_date>"+report.getDate()+"</report_date>\n";
+			 	data += "<description>"+report.getDescription()+"</description>\n";
+			 	data += "<report_objects>\n";
 			 	mListProjects = Project.getAllAsList(this, report.getId());
 			 	for (int j = 0; j < mListProjects.size(); j++) {
 			 		Project project = mListProjects.get(j);
-				 	data += "<story>\n";
-				 	data += "<sid>"+project.getId()+"</sid>\n";
-				 	data += "<stitle>"+project.getTitle()+"</stitle>\n";
+				 	data += "<object>\n";
+				 	data += "<object_id>"+project.getId()+"</object_id>\n";
+				 	data += "<object_title>"+project.getTitle()+"</object_title>\n";
 				 	
 				 	Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
 				 	for (Media media: mediaList){
 				 		String path = media.getPath();
 				 		path = path.replace(ext, "");
-				 		data += "<smedia>"+path+"</smedia>\n";
-				 		data += "<stype>"+media.getMimeType()+"</stype>\n";
+				 		data += "<object_media>"+path+"</object_media>\n";
+				 		data += "<object_type>"+media.getMimeType()+"</object_type>\n";
 				 	}
-					data += "</story>\n";
+					data += "</object>\n";
 			 	}
+			 	data += "</report_objects>\n";
 			 	data += "</report>\n";
 			}
 		 data += "</reports>";

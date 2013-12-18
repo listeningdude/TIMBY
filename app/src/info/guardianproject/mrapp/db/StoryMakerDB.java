@@ -6,8 +6,8 @@ import android.content.Context;
 
 public class StoryMakerDB extends SQLiteOpenHelper {
 	
-    private static final int DB_VERSION = 12;
-    private static final String DB_NAME = "sm.db8";
+    private static final int DB_VERSION = 13;
+    private static final String DB_NAME = "sm.db9";
     
     public StoryMakerDB(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -62,6 +62,7 @@ public class StoryMakerDB extends SQLiteOpenHelper {
             public static final String COL_REPORT_ID = "report_id";
             public static final String COL_THUMBNAIL_PATH = "thumbnail_path";
             public static final String COL_STORY_TYPE = "story_type";
+            public static final String COL_DATE = "date";
             public static final String COL_TEMPLATE_PATH = "template_path";
             
             private static final String CREATE_TABLE_PROJECTS = "create table " + NAME + " (" 
@@ -70,6 +71,7 @@ public class StoryMakerDB extends SQLiteOpenHelper {
                     + COL_REPORT_ID + " integer,"
                     + COL_THUMBNAIL_PATH + " text,"
                     + COL_STORY_TYPE + " integer,"
+                    + COL_DATE + " text,"
                     + COL_TEMPLATE_PATH + " text"
                     + "); ";
             

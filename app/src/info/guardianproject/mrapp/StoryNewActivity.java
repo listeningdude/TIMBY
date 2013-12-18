@@ -1,5 +1,8 @@
 package info.guardianproject.mrapp;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.model.Scene;
 import android.content.Intent;
@@ -28,8 +31,13 @@ public class StoryNewActivity extends BaseActivity {
         int clipCount = AppConstants.DEFAULT_CLIP_COUNT;
         
         Project project;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	String currentdate = dateFormat.format(new Date());
+    	
     	project = new Project (this, clipCount);
+    	
     	project.setTitle(pName);
+    	project.setDate(currentdate);
         project.setReport(String.valueOf(pReport));
         project.save();
         

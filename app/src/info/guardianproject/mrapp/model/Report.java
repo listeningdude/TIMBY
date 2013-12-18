@@ -68,6 +68,7 @@ public class Report {
     public static Cursor getAsCursor(Context context, int id) {
         String selection = StoryMakerDB.Schema.Reports.ID + "=?";
         String[] selectionArgs = new String[] { "" + id };
+        
         return context.getContentResolver().query(
                 ReportsProvider.REPORTS_CONTENT_URI, null, selection,
                 selectionArgs, null);
@@ -88,7 +89,7 @@ public class Report {
 
     public static Cursor getAllAsCursor(Context context) {
         return context.getContentResolver().query(
-                ReportsProvider.REPORTS_CONTENT_URI, null, null, null, null);
+                ReportsProvider.REPORTS_CONTENT_URI, null, null, null, StoryMakerDB.Schema.Reports.ID+" DESC");
     }
 
     public static ArrayList<Report> getAllAsList(Context context) {
@@ -98,8 +99,7 @@ public class Report {
             do {
                 reports.add(new Report(context, cursor));
             } while (cursor.moveToNext());
-        }
-        
+        }        
         cursor.close();
         return reports;
     }

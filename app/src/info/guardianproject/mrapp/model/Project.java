@@ -18,6 +18,7 @@ public class Project {
     protected int id;
     protected String title;
     protected String report;
+    protected String date;
     
     protected String thumbnailPath;
     protected int storyType;
@@ -68,12 +69,13 @@ public class Project {
         mSceneCount = sceneCount;
     }
 
-    public Project(Context context, int id, String title, String report, String thumbnailPath, int storyType, String templatePath) {
+    public Project(Context context, int id, String title, String report, String thumbnailPath, int storyType, String date, String templatePath) {
         super();
         this.context = context;
         this.id = id;
         this.title = title;
         this.report = report;
+        this.date = date;
         this.thumbnailPath = thumbnailPath;
         this.storyType = storyType;
         this.templatePath = templatePath;
@@ -93,6 +95,8 @@ public class Project {
                         .getColumnIndex(StoryMakerDB.Schema.Projects.COL_THUMBNAIL_PATH)),
                 cursor.getInt(cursor
                         .getColumnIndex(StoryMakerDB.Schema.Projects.COL_STORY_TYPE)),
+                cursor.getString(cursor
+                        .getColumnIndex(StoryMakerDB.Schema.Projects.COL_DATE)),
                 cursor.getString(cursor
                         .getColumnIndex(StoryMakerDB.Schema.Projects.COL_TEMPLATE_PATH)));
 
@@ -189,6 +193,7 @@ public class Project {
         values.put(StoryMakerDB.Schema.Projects.COL_REPORT_ID, report);
         values.put(StoryMakerDB.Schema.Projects.COL_THUMBNAIL_PATH, thumbnailPath);
         values.put(StoryMakerDB.Schema.Projects.COL_STORY_TYPE, storyType);
+        values.put(StoryMakerDB.Schema.Projects.COL_DATE, date);
         values.put(StoryMakerDB.Schema.Projects.COL_TEMPLATE_PATH, templatePath);
         
         return values;
@@ -316,6 +321,7 @@ public class Project {
     public String getTitle() {
         return title;
     }
+   
     public String getReport() {
         return report;
     }
@@ -328,6 +334,12 @@ public class Project {
     }
     public void setReport(String report) {
         this.report = report;
+    }
+    public String getDate() {
+        return date;
+    }
+    public void setDate(String date) {
+        this.date = date;
     }
     /**
      * @return the thumbnailPath
@@ -355,7 +367,7 @@ public class Project {
     public String getTemplatePath() {
         return templatePath;
     }
-
+    
     public void setTemplatePath(String template) {
         this.templatePath = template;
     }

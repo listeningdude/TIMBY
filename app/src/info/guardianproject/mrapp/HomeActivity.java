@@ -10,6 +10,7 @@ import info.guardianproject.mrapp.server.LoginPreferencesActivity;
 import info.guardianproject.mrapp.ui.MyCard;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 import info.guardianproject.mrapp.login.*;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,6 +20,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 
 import net.hockeyapp.android.CrashManager;
@@ -28,6 +30,9 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.ProgressDialog;
 import org.holoeverywhere.widget.Toast;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
@@ -90,6 +95,7 @@ public class HomeActivity extends BaseActivity {
            
         }
         checkCreds();
+        
         setContentView(R.layout.activity_home_screen);
         
         // action bar stuff
@@ -98,6 +104,10 @@ public class HomeActivity extends BaseActivity {
         checkForTor();
         
         //checkForUpdates();
+        
+        new getSectors().execute();
+        new getCategories().execute();
+        
         load_new_report = (RelativeLayout)findViewById(R.id.load_new_report);
         load_new_report.setOnClickListener(new View.OnClickListener() {
 
@@ -140,9 +150,68 @@ public class HomeActivity extends BaseActivity {
 			}
 		});
     }
-    
-    
-    
+    class getSectors extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute(); 
+        }
+        protected String doInBackground(String... args) {
+        	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+	        String token = settings.getString("token",null);
+	        String user_id = settings.getString("user_id",null);
+	        
+        	UserFunctions userFunction = new UserFunctions();
+			JSONArray json = userFunction.getSectors(token, user_id);
+			try {
+				
+				for(int i=0;i<json.length();i++){
+					String str = json.getString(i).replace("[", "");
+					str = str.replace("]", "");
+					 JSONObject json_data = new JSONObject(str);
+					 
+				}
+							
+				}catch(JSONException e){
+					e.printStackTrace();
+				}
+        	return null;
+        }
+        protected void onPostExecute(String file_url) {
+            
+        }
+	}
+    class getCategories extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute(); 
+        }
+        protected String doInBackground(String... args) {
+        	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+	        String token = settings.getString("token",null);
+	        String user_id = settings.getString("user_id",null);
+	        
+        	UserFunctions userFunction = new UserFunctions();
+			JSONArray json = userFunction.getCategories(token, user_id);
+			try {
+				
+				for(int i=0;i<json.length();i++){
+					String str = json.getString(i).replace("[", "");
+					str = str.replace("]", "");
+					 JSONObject json_data = new JSONObject(str);
+					
+				}
+							
+				}catch(JSONException e){
+					e.printStackTrace();
+				}
+        	return null;
+        }
+        protected void onPostExecute(String file_url) {
+            
+        }
+	}
     @Override
 	public void onResume() {
 		super.onResume();
