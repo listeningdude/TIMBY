@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -105,9 +106,6 @@ public class HomeActivity extends BaseActivity {
         
         //checkForUpdates();
         
-        new getSectors().execute();
-        new getCategories().execute();
-        
         load_new_report = (RelativeLayout)findViewById(R.id.load_new_report);
         load_new_report.setOnClickListener(new View.OnClickListener() {
 
@@ -165,12 +163,20 @@ public class HomeActivity extends BaseActivity {
 			JSONArray json = userFunction.getSectors(token, user_id);
 			try {
 				
+				SharedPreferences prefs = PreferenceManager
+				        .getDefaultSharedPreferences(getApplicationContext());
+				JSONArray sectors = new JSONArray();
+								
 				for(int i=0;i<json.length();i++){
 					String str = json.getString(i).replace("[", "");
 					str = str.replace("]", "");
 					 JSONObject json_data = new JSONObject(str);
-					 
+					 sectors.put(json_data.get("sector"));
 				}
+				Editor editor = prefs.edit();
+				editor.putString("sectors", sectors.toString());
+				
+				editor.commit();
 							
 				}catch(JSONException e){
 					e.printStackTrace();
@@ -195,13 +201,20 @@ public class HomeActivity extends BaseActivity {
         	UserFunctions userFunction = new UserFunctions();
 			JSONArray json = userFunction.getCategories(token, user_id);
 			try {
-				
+				SharedPreferences prefs = PreferenceManager
+				        .getDefaultSharedPreferences(getApplicationContext());
+				JSONArray categories = new JSONArray();
+								
 				for(int i=0;i<json.length();i++){
 					String str = json.getString(i).replace("[", "");
 					str = str.replace("]", "");
 					 JSONObject json_data = new JSONObject(str);
-					
+					 categories.put(json_data.get("category"));
 				}
+				Editor editor = prefs.edit();
+				editor.putString("categories", categories.toString());
+				
+				editor.commit();
 							
 				}catch(JSONException e){
 					e.printStackTrace();
@@ -747,6 +760,9 @@ public class HomeActivity extends BaseActivity {
         {
         	Intent intent = new Intent(this,LoginPreferencesActivity.class);
         	startActivity(intent);
+        }else{
+        	new getSectors().execute();
+            new getCategories().execute();
         }
     }
     

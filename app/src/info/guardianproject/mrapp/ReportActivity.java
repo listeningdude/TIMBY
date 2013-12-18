@@ -1,9 +1,11 @@
 package info.guardianproject.mrapp;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.holoeverywhere.widget.*;
+import org.json.JSONArray;
 
 import info.guardianproject.mrapp.R;
 import info.guardianproject.mrapp.db.StoryMakerDB.Schema.Reports;
@@ -11,13 +13,16 @@ import info.guardianproject.mrapp.model.GPSTracker;
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.model.Report;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -60,11 +65,14 @@ public class ReportActivity extends BaseActivity {
         setContentView(R.layout.activity_new_story);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
-
+        
         txtNewStoryDesc = (TextView)findViewById(R.id.txtNewStoryDesc);
         editTextStoryName = (EditText)findViewById(R.id.editTextStoryName);
+        
         spinnerSector = (Spinner)findViewById(R.id.spinnerSector);
+        setSectors();        
         spinnerIssue = (Spinner)findViewById(R.id.spinnerIssue);
+        setCategories();                
         editTextDesc = (EditText)findViewById(R.id.editTextDescription);
         editTextEntity = (EditText)findViewById(R.id.editTextEntity);
         rGroup = (RadioGroup)findViewById(R.id.radioGroupStoryType);
@@ -189,7 +197,36 @@ public class ReportActivity extends BaseActivity {
 			}
 		});
     }
-    
+    public void setCategories(){
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    	try {
+    	    JSONArray jsonArray2 = new JSONArray(prefs.getString("categories", "[]"));
+    	    ArrayList<String> list=new ArrayList<String>();
+			for(int i=0;i<jsonArray2.length();i++)
+			{
+				list.add(jsonArray2.getString(i));
+			}
+			ArrayAdapter<String> spinnerMenu = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, list);
+			spinnerIssue.setAdapter(spinnerMenu);
+    	} catch (Exception e) {
+	    	    e.printStackTrace();
+	    	}
+	}
+    public void setSectors(){
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    	try {
+    	    JSONArray jsonArray2 = new JSONArray(prefs.getString("sectors", "[]"));
+    	    ArrayList<String> list=new ArrayList<String>();
+			for(int i=0;i<jsonArray2.length();i++)
+			{
+				list.add(jsonArray2.getString(i));
+			}
+			ArrayAdapter<String> spinnerMenu = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, list);
+			spinnerSector.setAdapter(spinnerMenu);
+    	} catch (Exception e) {
+	    	    e.printStackTrace();
+	    	}
+    }
     public void setSelectedItem(Spinner spinner,String string){
 		int index = 0;
 		for (int i = 0; i < spinner.getAdapter().getCount(); i++){

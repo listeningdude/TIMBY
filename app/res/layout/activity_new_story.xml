@@ -155,7 +155,6 @@
             android:id="@+id/spinnerSector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/sectors"
             android:background="@drawable/background_black_border_full"/>
 
         <Spinner
@@ -163,8 +162,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:entries="@array/issues"
-             android:background="@drawable/background_black_border_full"/>
+            android:background="@drawable/background_black_border_full"/>
 
         <EditText
             android:id="@+id/editTextEntity"
