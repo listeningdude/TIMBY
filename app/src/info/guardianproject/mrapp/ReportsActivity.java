@@ -146,6 +146,7 @@ public class ReportsActivity extends BaseActivity {
                 intent.putExtra("entity", report.getEntity());
                 intent.putExtra("location", report.getLocation());
                 intent.putExtra("rid", report.getId());
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		        startActivity(intent);
 			}
         	

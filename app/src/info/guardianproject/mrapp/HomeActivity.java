@@ -112,6 +112,7 @@ public class HomeActivity extends BaseActivity {
 
 			public void onClick(View view) {
 				Intent i = new Intent(getApplicationContext(),ReportActivity.class);
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);
 				
 			}
@@ -123,6 +124,7 @@ public class HomeActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(getApplicationContext(),ReportsActivity.class);
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);
 			}
 		});
@@ -134,6 +136,7 @@ public class HomeActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(getApplicationContext(),LessonsActivity.class);
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);
 			}
 		});
@@ -144,6 +147,7 @@ public class HomeActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(getApplicationContext(),SyncActivity.class);
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);
 				
 			}

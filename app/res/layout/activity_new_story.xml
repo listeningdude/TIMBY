@@ -173,7 +173,7 @@
             android:id="@+id/AddEntity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add entity" />
+            android:text="Add company/person" />
 
         <ListView
             android:id="@+id/EntitiesList"

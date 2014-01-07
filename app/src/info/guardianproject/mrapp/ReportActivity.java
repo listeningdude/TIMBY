@@ -138,7 +138,9 @@ OnItemLongClickListener{
             entity = i.getStringExtra("entity");
             description = i.getStringExtra("description");
             location = i.getStringExtra("location");
-            
+            if(location.equals("0, 0")){
+        		location = "Location not set";
+        	}
             editTextStoryName.setText(title);
             spinnerSector.setSelection(Integer.parseInt(sector)-1);
             spinnerIssue.setSelection(Integer.parseInt(issue)-1);
@@ -207,13 +209,14 @@ OnItemLongClickListener{
                         
                 }
 				story_mode = 2;
-				if (formValid()) {
+				//if (formValid()) {
 					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),datasource.toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
-				}else{
+				//}else{
 					//rGroup.clearCheck();
-				}
+				//}
+				
 			}
-        	
+			
         });
         
       
@@ -237,6 +240,7 @@ OnItemLongClickListener{
 		            public void onClick(View v) {		            	
 		            	Intent p = new Intent(getBaseContext(), ProjectsActivity.class);
 		            	p.putExtra("rid", rid);
+		            	p.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		            	startActivity(p);
 		            	
 		            }
@@ -309,17 +313,17 @@ OnItemLongClickListener{
     
     private boolean formValid ()
     {
-    	String pName = editTextStoryName.getText().toString();
+    	/*String pName = editTextStoryName.getText().toString();
     	
     	
     	if (pName == null || pName.length() == 0)
     	{
     		Toast.makeText(this, R.string.you_must_enter_a_project_name, Toast.LENGTH_SHORT).show();
     		return false;
-    	}/*else if(spinnerSector.getSelectedItemPosition()==0){
+    	}else if(spinnerSector.getSelectedItemPosition()==0){
     		Toast.makeText(this, "You must select a sector", Toast.LENGTH_SHORT).show();
     		return false;
-    	}*/
+    	}
     	else if(gpsInfo.getText().toString().equals("Location not set")){
     		Toast.makeText(this, "You must set location", Toast.LENGTH_SHORT).show();
     		return false;
@@ -327,7 +331,8 @@ OnItemLongClickListener{
     	else
     	{
     		return true;
-    	}
+    	}*/
+    	return true;
     }
     
     private int getSelectedStoryMode ()
@@ -339,17 +344,21 @@ OnItemLongClickListener{
     	   {
     	   case R.id.radioStoryType0:
     		   resultMode = Project.STORY_TYPE_VIDEO;
+    		   ((RadioButton)findViewById(R.id.radioStoryType0)).setChecked(false);
     		   break;
     	   case R.id.radioStoryType1:
     		   resultMode = Project.STORY_TYPE_PHOTO;
+    		   ((RadioButton)findViewById(R.id.radioStoryType1)).setChecked(false);
     		   break;
     		   
     	   case R.id.radioStoryType2:
     		   resultMode = Project.STORY_TYPE_AUDIO;
+    		   ((RadioButton)findViewById(R.id.radioStoryType2)).setChecked(false);
     		   break;
     		  	   
     	   case R.id.radioStoryType3:
     		   resultMode = Project.STORY_TYPE_ESSAY;
+    		   ((RadioButton)findViewById(R.id.radioStoryType3)).setChecked(false);
     		   break;
     		   
     	   }
@@ -359,7 +368,18 @@ OnItemLongClickListener{
     		
 
     private void launchProject(String title, int pIssue, int pSector, String pEntity, String pDesc, String pLocation, boolean update) {
-       
+    	
+    	
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	String currentdate = dateFormat.format(new Date());
+    	
+    	if(pLocation.equals("Location not set")){
+    		pLocation = "0, 0";
+    	}
+    	if (title == null || title.length() == 0)
+    	{
+    		title = "Captured at "+currentdate;
+    	}
     	pIssue = pIssue+1;
     	pSector = pSector+1;
     	
@@ -368,8 +388,7 @@ OnItemLongClickListener{
     	
     	Report report;
         if(rid==-1){
-        	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        	String currentdate = dateFormat.format(new Date());
+        	
         	report = new Report (this, 0, title, String.valueOf(pSector), String.valueOf(pIssue), pEntity, pDesc, pLocation, "0", currentdate);
          }else{
         	report = Report.get(this, rid);
@@ -401,6 +420,7 @@ OnItemLongClickListener{
 	        Intent intent = new Intent(getBaseContext(), StoryNewActivity.class);
 	        intent.putExtra("storymode", getSelectedStoryMode());
 	        intent.putExtra("rid", report.getId());
+	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        startActivity(intent);
         }else{
         	Toast.makeText(getBaseContext(), String.valueOf(rid)+" Updated successfully!", Toast.LENGTH_LONG).show();
@@ -421,6 +441,7 @@ OnItemLongClickListener{
             case android.R.id.home:
                 //NavUtils.navigateUpFromSameTask(this);
                 Intent i = new Intent(getBaseContext(), ReportsActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 finish();
             return true;

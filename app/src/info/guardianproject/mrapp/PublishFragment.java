@@ -338,7 +338,8 @@ public class PublishFragment extends Fragment {
 			//Done!
 	 	}
         mActivity.mMPM.mProject.save();
-        mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
+        //mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
+          mActivity.finish();
     }
 
     private void showLogin() {
