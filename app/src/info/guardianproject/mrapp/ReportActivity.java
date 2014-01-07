@@ -390,7 +390,7 @@ OnItemLongClickListener{
         	String e_t = datasource.get(i);
         	
         	Entity entity;
-        	entity = new Entity(this, 0, "", "", "", "", "");
+        	entity = new Entity(this, 0, "", "", 0, "", "");
         	entity.setEntity(e_t);
         	entity.setReport(String.valueOf(rid));
         	entity.setDate(report_date);

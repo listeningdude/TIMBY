@@ -265,6 +265,24 @@ public class UserFunctions {
 				return json;
 	}
 
+	public JSONObject updateEntity(String entityName, String serverID,
+			String token, String user_id, int entity_object_id) {
+			//Building Parameters
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("token", token));
+			params.add(new BasicNameValuePair("user_id", user_id));
+			params.add(new BasicNameValuePair("title", entityName));
+			params.add(new BasicNameValuePair("report_id", serverID));
+			params.add(new BasicNameValuePair("object_type", "entity"));
+			params.add(new BasicNameValuePair("object_id", String.valueOf(entity_object_id)));
+			params.add(new BasicNameValuePair("key", api_key));
+			params.add(new BasicNameValuePair("narrative", "(empty)"));
+			// getting JSON Object
+			JSONObject json = jsonParser.getJSONFromUrl(updateobjectURL, params);
+			// return json
+			return json;
+	}
+
 	
 	
 }

@@ -18,11 +18,11 @@ public class Entity {
     protected int id;
     protected String report_id;
     protected String entity;
-    protected String object_id;
+    protected int object_id;
     protected String sequence_id; 
     protected String date;
 
-    public Entity(Context context, int id, String report, String entity, String object_id, String sequence_id, String date) {
+    public Entity(Context context, int id, String report, String entity, int object_id, String sequence_id, String date) {
         super();
         this.context = context;
         this.id = id;
@@ -43,7 +43,7 @@ public class Entity {
                          .getColumnIndex(StoryMakerDB.Schema.Entities.COL_REPORT_ID)),
                 cursor.getString(cursor
                         .getColumnIndex(StoryMakerDB.Schema.Entities.COL_ENTITY)),
-                cursor.getString(cursor
+                cursor.getInt(cursor
                         .getColumnIndex(StoryMakerDB.Schema.Entities.COL_OBJECT_ID)),
                 cursor.getString(cursor
                         .getColumnIndex(StoryMakerDB.Schema.Entities.COL_SEQUENCE_ID)),
@@ -183,7 +183,7 @@ public class Entity {
     public String getEntity() {
         return entity;
     }
-    public String getObjectID() {
+    public int getObjectID() {
         return object_id;
     }
     public String getSequenceId() {
@@ -207,10 +207,12 @@ public class Entity {
     public void setDate(String date) {
         this.date = date;
     }
-    public void setObjectID(String objectid) {
+    public void setObjectID(int objectid) {
         this.object_id = objectid;
     }
     public void setSequenceId(String sequence) {
         this.sequence_id = sequence;
     }
+
+	
 }
