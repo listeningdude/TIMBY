@@ -186,11 +186,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:background="@drawable/background_black_border_full"
             android:ems="10"
+            android:gravity="top"
             android:hint="@string/description_field"
             android:inputType="textMultiLine"
-            android:textColor="@color/soft_red"
-				android:background="@drawable/background_black_border_full" >
+            android:textColor="@color/soft_red" >
 
             <requestFocus />
         </EditText>

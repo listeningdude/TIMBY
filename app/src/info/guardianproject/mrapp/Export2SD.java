@@ -1,5 +1,6 @@
 package info.guardianproject.mrapp;
 
+import info.guardianproject.mrapp.SyncActivity.checkToken;
 import info.guardianproject.mrapp.model.Media;
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.model.Report;
@@ -30,9 +31,11 @@ import org.holoeverywhere.widget.Toast;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 
 public class Export2SD extends Activity{
 	private ArrayList<Report> mListReports;
@@ -40,58 +43,84 @@ public class Export2SD extends Activity{
 	String data = "";
 	String ext;
 	int BUFFER = 2048;
+	ProgressDialog pDialog;
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		        
-		ext = String.valueOf(Environment.getExternalStorageDirectory());
-	 	ext += "/"+AppConstants.TAG;
-		//Begin "XML" file
-	 	
-		 data += "<?xml version='1.0' encoding='UTF-8'?>\n";
-		 data += "<reports>\n";
-		 mListReports = Report.getAllAsList(this);
-		 for (int i = 0; i < mListReports.size(); i++) {
-			 	data += "<report>\n";
-			 	Report report = mListReports.get(i);
-			 	data += "<id>"+String.valueOf(report.getId())+"</id>\n";
-			 	data += "<title>"+report.getTitle()+"</title>\n";
-			 	data += "<category>"+report.getIssue()+"</category>\n";
-			 	data += "<sector>"+report.getSector()+"</sector>\n";
-			 	data += "<entity>"+report.getEntity()+"</entity>\n";
-			 	data += "<location>"+report.getLocation()+"</location>\n";
-			 	data += "<report_date>"+report.getDate()+"</report_date>\n";
-			 	data += "<description>"+report.getDescription()+"</description>\n";
-			 	data += "<report_objects>\n";
-			 	mListProjects = Project.getAllAsList(this, report.getId());
-			 	for (int j = 0; j < mListProjects.size(); j++) {
-			 		Project project = mListProjects.get(j);
-				 	data += "<object>\n";
-				 	data += "<object_id>"+project.getId()+"</object_id>\n";
-				 	data += "<object_title>"+project.getTitle()+"</object_title>\n";
-				 	
-				 	Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
-				 	for (Media media: mediaList){
-				 		String path = media.getPath();
-				 		path = path.replace(ext, "");
-				 		data += "<object_media>"+path+"</object_media>\n";
-				 		data += "<object_type>"+media.getMimeType()+"</object_type>\n";
-				 	}
-					data += "</object>\n";
-			 	}
-			 	data += "</report_objects>\n";
-			 	data += "</report>\n";
-			}
-		 data += "</reports>";
-		//writeToFile(data);
-		//Now zip it!
-	
-		//zipFileAtPath(ext, String.valueOf(Environment.getExternalStorageDirectory())+"/timby.zip");
-		//Toast and end
+		//setContentView(R.layout.export);   
+		//pDialog = (ProgressDialog)findViewById(R.id.progressBar1);
 		
-		Toast.makeText(getBaseContext(), "Exported Successfully!", Toast.LENGTH_LONG).show();
-		finish();
+		new export2SD().execute();
+		
+		//Toast.makeText(getBaseContext(), "Exported Successfully!", Toast.LENGTH_LONG).show();
+		
 	}
+	
+	class export2SD extends AsyncTask<String, String, String> {
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pDialog = new ProgressDialog(Export2SD.this);
+			pDialog.setMessage("Exporting to SD Card");
+			pDialog.show();
+		}
+		protected String doInBackground(String... args) {
+			ext = String.valueOf(Environment.getExternalStorageDirectory());
+		 	ext += "/"+AppConstants.TAG;
+			//Begin "XML" file
+		 	
+			 data += "<?xml version='1.0' encoding='UTF-8'?>\n";
+			 data += "<reports>\n";
+			 mListReports = Report.getAllAsList(getApplicationContext());
+			 for (int i = 0; i < mListReports.size(); i++) {
+				 	data += "<report>\n";
+				 	Report report = mListReports.get(i);
+				 	data += "<id>"+String.valueOf(report.getId())+"</id>\n";
+				 	data += "<title>"+report.getTitle()+"</title>\n";
+				 	data += "<category>"+report.getIssue()+"</category>\n";
+				 	data += "<sector>"+report.getSector()+"</sector>\n";
+				 	data += "<entity>"+report.getEntity()+"</entity>\n";
+				 	data += "<location>"+report.getLocation()+"</location>\n";
+				 	data += "<report_date>"+report.getDate()+"</report_date>\n";
+				 	data += "<description>"+report.getDescription()+"</description>\n";
+				 	data += "<report_objects>\n";
+				 	mListProjects = Project.getAllAsList(getApplicationContext(), report.getId());
+				 	for (int j = 0; j < mListProjects.size(); j++) {
+				 		Project project = mListProjects.get(j);
+					 	data += "<object>\n";
+					 	data += "<object_id>"+project.getId()+"</object_id>\n";
+					 	data += "<object_title>"+project.getTitle()+"</object_title>\n";
+					 	
+					 	Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
+					 	for (Media media: mediaList){
+					 		String path = media.getPath();
+					 		path = path.replace(ext, "");
+					 		data += "<object_media>"+path+"</object_media>\n";
+					 		data += "<object_type>"+media.getMimeType()+"</object_type>\n";
+					 	}
+						data += "</object>\n";
+				 	}
+				 	data += "</report_objects>\n";
+				 	data += "</report>\n";
+				}
+			 data += "</reports>";
+			//writeToFile(data);
+			//Now zip it!
+		
+			zipFileAtPath(ext, String.valueOf(Environment.getExternalStorageDirectory())+"/timby.zip");
+			//Toast and end
+		
+			return null;
+		}
+	protected void onPostExecute(String file_url) {
+			pDialog.dismiss();
+			Toast.makeText(getBaseContext(), "Exported Successfully!", Toast.LENGTH_LONG).show();
+			finish();
+			
+		}
+	
+	}
+      
 	public static void writeToFile(final String fileContents) {
 		try {
             FileWriter out = new FileWriter(new File(Environment.getExternalStorageDirectory(), AppConstants.TAG+"/db.xml"));

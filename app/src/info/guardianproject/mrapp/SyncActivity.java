@@ -43,13 +43,13 @@ public class SyncActivity extends BaseActivity{
 	String pdate;
 	String entity;
 	*/
-	String serverID;
+	/*String serverID;
 	String entityName;
 	int esequence;
 	int rid;
 	int entityid;
 	int entity_object_id;
-
+*/
  	Button done;
  	TextView log;
 	@Override
@@ -99,48 +99,60 @@ public class SyncActivity extends BaseActivity{
 			String entity = report.getEntity();
 			String sector = report.getSector();
 			String date = report.getDate();
-			rid = report.getId();
+			int rid = report.getId();
 			String description = report.getDescription();
-			serverID = report.getServerId();
-			if(serverID.equals("0")){
+			int serverID = Integer.parseInt(report.getServerId());
+			if(serverID==0){
 				//report is not created yet, create and grab server id
 				//new createReport().execute();
-				ReportTaskParams params = new ReportTaskParams(title, issue, sector, entity, lat, lon, date, description);
+				ReportTaskParams params = new ReportTaskParams(rid, serverID, title, issue, sector, entity, lat, lon, date, description);
 			 	createReport myTask = new createReport();
 			 	myTask.execute(params);		 
 			}else{
 				//update report
 				//get report servid
 				//new updateReport().execute();
-				ReportTaskParams params = new ReportTaskParams(title, issue, sector, entity, lat, lon, date, description);
+				ReportTaskParams params = new ReportTaskParams(rid, serverID, title, issue, sector, entity, lat, lon, date, description);
 			 	updateReport myTask = new updateReport();
 			 	myTask.execute(params);		 
 			}
 		}
 	}
 	public void uploadEntities(int rid, int serverid){
-		serverID = String.valueOf(serverid);
+		String serverID = String.valueOf(serverid);
 		ArrayList<Entity> mListEntities;
 		mListEntities = Entity.getAllAsList(this, rid);
 	 	for (int j = 0; j < mListEntities.size(); j++) {
 	 		Entity entity = mListEntities.get(j);
-	 		entityName = entity.getEntity();
-	 		entityid = entity.getId();
-        	esequence = j;
-        	new createEntity().execute(); 		
+	 	    String entityName = entity.getEntity();
+	 		int entityid = entity.getId();
+	 		String entitydate = entity.getDate();
+        	int esequence = j+1;
+        	String report = entity.getReport();
+        	int entity_object_id = entity.getObjectID();
+        	//new createEntity().execute();
+        	
+        	EntityTaskParams params = new EntityTaskParams(entity_object_id, report, entityName, entityid, entitydate, esequence);
+		 	createEntity myTask = new createEntity();
+		 	myTask.execute(params);	
 	 	}
 	}
 	public void updateEntities(int rid, int serverid){
-		serverID = String.valueOf(serverid);
+		String serverID = String.valueOf(serverid);
 		ArrayList<Entity> mListEntities;
 		mListEntities = Entity.getAllAsList(this, rid);
 	 	for (int j = 0; j < mListEntities.size(); j++) {
 	 		Entity entity = mListEntities.get(j);
-	 		entityName = entity.getEntity();
-	 		entityid = entity.getId();
-	 		entity_object_id = entity.getObjectID();
-        	esequence = j;
-        	new updateEntity().execute(); 		
+	 		String entityName = entity.getEntity();
+		 	int entityid = entity.getId();
+		 	String entitydate = entity.getDate();
+	        int esequence = j+1;
+	        String report = entity.getReport();
+	        int entity_object_id = entity.getObjectID();
+        	//new updateEntity().execute(); 	
+        	EntityTaskParams params = new EntityTaskParams(entity_object_id, report, entityName, entityid, entitydate, esequence);
+		 	updateEntity myTask = new updateEntity();
+		 	myTask.execute(params);	
 	 	}
 	}
 	public void uploadMedia(int rid, int serverid){
@@ -212,6 +224,24 @@ public class SyncActivity extends BaseActivity{
 		 	myTask.execute(params);		 	
 		 }
 	}
+	private static class EntityTaskParams {
+	    String report;
+	    String entityName;
+	    int entityid;
+	    String entitydate;
+	    int esequence;
+	    int entity_object_id;
+	    
+	    EntityTaskParams(int entity_object_id, String report, String entityName, int entityid, String entitydate, int esequence) {
+	        this.report = report;
+	        this.entityName= entityName;
+	        this.entityid = entityid;
+	        this.entitydate = entitydate;
+	        this.esequence = esequence;
+	        this.entity_object_id = entity_object_id;
+	    }
+	}
+	
 	private static class ReportTaskParams {
 	    String title;
 	    String issue;
@@ -221,8 +251,10 @@ public class SyncActivity extends BaseActivity{
 	    String lon;
 	    String date;
 	    String description;
+	    int rid;
+	    int serverID;
 	    
-	    ReportTaskParams(String title, String issue, String sector, String entity, String lat, String lon, String date, String description) {
+	    ReportTaskParams(int rid, int serverID, String title, String issue, String sector, String entity, String lat, String lon, String date, String description) {
 	        this.title = title;
 	        this.issue = issue;
 	        this.sector = sector;
@@ -231,8 +263,11 @@ public class SyncActivity extends BaseActivity{
 	        this.lon=lon;
 	        this.date=date;
 	        this.description=description;
+	        this.rid = rid;
+	        this.serverID=serverID;
 	    }
 	}
+	
 	private static class MyTaskParams {
 	    String ppath;
 	    String ptype;
@@ -291,13 +326,13 @@ public class SyncActivity extends BaseActivity{
 				}
 			
 			
-        	return null;
+        	return ppath;
         }
        
-        protected void onPostExecute(String file_url) {
+        protected void onPostExecute(String ppath) {
             // dismiss the dialog after getting all products
             // pDialog.dismiss();
-        	log.append("---Updated media object \n");
+        	log.append("Updated media object "+ppath+"\n");
         	// pDialog.setVisibility(View.GONE);
         }
 	}
@@ -340,12 +375,12 @@ public class SyncActivity extends BaseActivity{
 				}
 			
 			
-        	return null;
+        	return ppath;
         }
-        protected void onPostExecute(String file_url) {
+        protected void onPostExecute(String ppath) {
             // dismiss the dialog after getting all products
            // pDialog.dismiss();
-        	log.append("---Uploaded media object\n");
+        	log.append("Uploaded media object "+ppath+"\n");
         	//pDialog.setVisibility(View.GONE);
         }
 	}
@@ -366,7 +401,7 @@ public class SyncActivity extends BaseActivity{
     	    String lon = params[0].lon;;
     	    String date = params[0].date;;
     	    String description = params[0].description;;
-    	    
+    	    int rid = params[0].rid;
         	UserFunctions userFunction = new UserFunctions();
 			JSONObject json = userFunction.newReport(token, user_id, title, issue, sector, entity, lat, lon, date, description);
 			Log.d("Values passed", "Token: "+token+" user id: "+user_id+" title "+title+" issue "+issue+" sector "+sector+" entity "+entity+" lat "+lat+" lon "+lon+" date "+date+" description "+description);
@@ -394,14 +429,14 @@ public class SyncActivity extends BaseActivity{
 				}
 			//Add to log
 			
-        	return null;
+			return title;
         }
         
 
-        protected void onPostExecute(String file_url) {
+        protected void onPostExecute(String title) {
             // dismiss the dialog after getting all products
            // pDialog.dismiss();
-        	log.append("Creating Report \n");
+        	log.append("Created report "+title+"\n");
         	//pDialog.setVisibility(View.GONE);
         }
 	}
@@ -422,17 +457,18 @@ public class SyncActivity extends BaseActivity{
     	    String lon = params[0].lon;;
     	    String date = params[0].date;;
     	    String description = params[0].description;
-    	    
+    	    int rid = params[0].rid;
+    	    int serverID = params[0].serverID;
         	UserFunctions userFunction = new UserFunctions();
-			JSONObject json = userFunction.updateReport(token, user_id, title, issue, sector, entity, lat, lon, date, description, serverID);
+			JSONObject json = userFunction.updateReport(token, user_id, title, issue, sector, entity, lat, lon, date, description, String.valueOf(serverID));
 			
 			try {
 				String res = json.getString(KEY_SUCCESS); 
 					if(res.equals("OK")){
 						JSONArray json_report = json.getJSONArray("message");//json.getJSONObject("message");
 						//Update objects
-						updateEntities(rid, Integer.parseInt(serverID));
-						updateMedia(rid, Integer.parseInt(serverID));
+						updateEntities(rid, serverID);
+						updateMedia(rid, serverID);
 					}else{
 						//Some error message. Not sure what yet.
 					}
@@ -440,14 +476,14 @@ public class SyncActivity extends BaseActivity{
 					e.printStackTrace();
 				}
 			//Add to log
-        	return null;
+        	return title;
         }
         
 
-        protected void onPostExecute(String file_url) {
+        protected void onPostExecute(String title) {
             // dismiss the dialog after getting all products
            // pDialog.dismiss();
-        	log.append("Updated report \n");
+        	log.append("Updated report "+title+"\n");
         	//pDialog.setVisibility(View.GONE);
         }
 	}
@@ -499,7 +535,7 @@ public class SyncActivity extends BaseActivity{
             loopReports();
         }
 	}
-	class createEntity extends AsyncTask<String, String, String> {
+	class createEntity extends AsyncTask<EntityTaskParams, String, String> {
 
         @Override
         protected void onPreExecute() {
@@ -507,10 +543,17 @@ public class SyncActivity extends BaseActivity{
             pDialog.setVisibility(View.VISIBLE); 
         }
         
-        protected String doInBackground(String... args) {
+        protected String doInBackground(EntityTaskParams... params) {
+        	String entityName = params[0].entityName;
+        	String serverID = params[0].report;
+        	String date= params[0].entitydate;
+    	    int esequence = params[0].esequence;
+    	    int entityid = params[0].entityid;
+    	   
+    	    
         	UserFunctions userFunction = new UserFunctions();
 			JSONObject json = userFunction.newEntity(entityName, serverID, token, user_id, date, String.valueOf(esequence));
-			Log.d("Values passed", "Entity: "+entityName+" ServerID : "+serverID);
+			Log.d("Values passed", "Entity: "+entityName+" ServerID : "+serverID+" Date: "+date+" Sequence: "+String.valueOf(esequence));
 			try {
 				String res = json.getString(KEY_SUCCESS); 
 					if(res.equals("OK")){
@@ -534,17 +577,17 @@ public class SyncActivity extends BaseActivity{
 				}
 			//Add to log
 			
-        	return null;
+			return entityName;
         }
         
-        protected void onPostExecute(String file_url) {
+        protected void onPostExecute(String entityName) {
             // dismiss the dialog after getting all products
            // pDialog.dismiss();
-        	log.append("--Creating Entity: "+entityName+"\n");
+        	log.append("Created entity "+entityName+"\n");
         	//pDialog.setVisibility(View.GONE);
         }
 	}
-	class updateEntity extends AsyncTask<String, String, String> {
+	class updateEntity extends AsyncTask<EntityTaskParams, String, String> {
 
         @Override
         protected void onPreExecute() {
@@ -552,7 +595,13 @@ public class SyncActivity extends BaseActivity{
             pDialog.setVisibility(View.VISIBLE); 
         }
         
-        protected String doInBackground(String... args) {
+        protected String doInBackground(EntityTaskParams... params) {
+        	String entityName = params[0].entityName;
+        	String serverID = params[0].report;
+        	String date= params[0].entitydate;
+    	    int esequence = params[0].esequence;
+    	    int entityid = params[0].entityid;
+    	    int entity_object_id = params[0].entity_object_id;
         	UserFunctions userFunction = new UserFunctions();
 			JSONObject json = userFunction.updateEntity(entityName, serverID, token, user_id, entity_object_id);
 			Log.d("Values passed", "Entity: "+entityName+" ServerID : "+serverID);
@@ -570,13 +619,13 @@ public class SyncActivity extends BaseActivity{
 				}
 			//Add to log
 			
-        	return null;
+        	return entityName;
         }
         
-        protected void onPostExecute(String file_url) {
+        protected void onPostExecute(String entityName) {
             // dismiss the dialog after getting all products
            // pDialog.dismiss();
-        	log.append("--Updating Entity: "+entityName+"\n");
+        	log.append("Updated entity "+entityName+"\n");
         	//pDialog.setVisibility(View.GONE);
         }
 	}

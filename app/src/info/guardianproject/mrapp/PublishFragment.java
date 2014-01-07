@@ -39,11 +39,13 @@ import redstone.xmlrpc.XmlRpcFault;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -82,6 +84,7 @@ public class PublishFragment extends Fragment {
     private String mMediaUploadAccount = null;
     private String mMediaUploadAccountKey = null;
     
+    ProgressDialog pDialog;
     EditText mTitle;
     EditText mDescription;
     
@@ -211,14 +214,31 @@ public class PublishFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    saveForm();
-                    
+                    //saveForm();
+                    new encryptAndSave().execute();
                     //setUploadAccount(); //triggers do publish! 
                 }
             });
         }
         return mView;
     }
+    class encryptAndSave extends AsyncTask<String, String, String> {
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pDialog = new ProgressDialog(getActivity());
+			pDialog.setMessage("Encrypting media");
+			pDialog.show();
+		}
+		protected String doInBackground(String... args) {
+			saveForm();
+			return null;
+		}
+	protected void onPostExecute(String file_url) {
+			pDialog.dismiss();
+			Toast.makeText(getActivity(), "Encrypted Successfully!", Toast.LENGTH_LONG).show();
+		}	
+	}
     
     Handler handlerUI = new Handler ()
     {

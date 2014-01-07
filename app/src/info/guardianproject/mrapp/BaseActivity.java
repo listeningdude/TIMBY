@@ -194,6 +194,7 @@ public class BaseActivity extends Activity {
             	
                 Intent i = new Intent(activity, Export2SD.class);
                 activity.startActivity(i);
+                mSlidingMenu.showContent(false);
             }
         });
         
