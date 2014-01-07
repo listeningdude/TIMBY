@@ -7,7 +7,10 @@
 	</style>
 
 <color name="light_grey">#e9ebe7</color>
-    
+    <style name="CustomTheme" parent="android:Theme">
+<item name="android:scrollbarTrackVertical">@drawable/add</item>
+<item name="android:scrollbarThumbVertical">@drawable/add</item>
+</style>
     <style name="AppTheme" parent="@style/Holo.Theme.Light.DarkActionBar" >
         <item name="android:windowBackground">@color/light_grey</item>
         <item name="android:colorBackground">@color/light_grey</item>

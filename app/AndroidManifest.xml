@@ -244,7 +244,11 @@
 		    android:multiprocess="true"
 		     android:exported="false"
 		    android:name="info.guardianproject.mrapp.db.ProjectsProvider"></provider>
-		      
+	  <provider
+	    android:authorities="info.guardianproject.mrapp.db.EntitiesProvider"
+	    android:multiprocess="true"
+	     android:exported="false"
+	    android:name="info.guardianproject.mrapp.db.EntitiesProvider"></provider>    
         <activity
             android:configChanges="keyboardHidden"
            android:name="net.micode.soundrecorder.SoundRecorder"

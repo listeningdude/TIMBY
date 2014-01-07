@@ -415,7 +415,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/red_button"
         android:gravity="center_vertical"
-        android:text="@string/action_publish" />
+        android:text="Add Caption" />
 
   </LinearLayout>
 </ScrollView>

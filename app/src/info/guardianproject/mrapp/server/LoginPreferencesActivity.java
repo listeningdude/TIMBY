@@ -1,12 +1,15 @@
 package info.guardianproject.mrapp.server;
 
 
+import java.util.Iterator;
+
 import info.guardianproject.mrapp.BaseActivity;
 import info.guardianproject.mrapp.HomeActivity;
 import info.guardianproject.mrapp.LessonsActivity;
 import info.guardianproject.mrapp.R;
 import info.guardianproject.mrapp.login.UserFunctions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +18,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -200,7 +204,139 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
     
     private void loginSuccess ()
     {
-            finish();
+    	new getSectors().execute();
+    	new getCategories().execute();
+        finish();
     }
+    class getSectors extends AsyncTask<String, String, String> {
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute(); 
+        }
+        protected String doInBackground(String... args) {
+        	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+	        String token = settings.getString("token",null);
+	        String user_id = settings.getString("user_id",null);
+	        
+        	UserFunctions userFunction = new UserFunctions();
+			JSONArray json = userFunction.getSectors(token, user_id);
+			Log.d("length", String.valueOf(json.length()));
+			
+			String str = json.toString();
+			str = str.replace("[[", "{\"items\": [");
+			str = str.replace("]]", "]}");
+			
+			JSONObject json2 = null;
+			try {
+				json2 = new JSONObject(str);
+			}catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//Log.d("length2", String.valueOf(json2.length()));
+			
+			
+			JSONArray jArrayObject = null;
+			try {
+				jArrayObject = json2.getJSONArray("items");
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			Log.d("length3", String.valueOf(jArrayObject.length()));
+			
+			
+			try {
+				
+				SharedPreferences prefs = PreferenceManager
+				        .getDefaultSharedPreferences(getApplicationContext());
+				JSONArray sectors = new JSONArray();
+			
+				for(int i=0;i<jArrayObject.length();i++){
+					String str2 = jArrayObject.getString(i);
+					Log.d("item", str2);
+					JSONObject json_data = new JSONObject(str2);
+					sectors.put(json_data.get("sector"));
+				}
+				
+				Editor editor = prefs.edit();
+				editor.putString("sectors", sectors.toString());
+				
+				editor.commit();
+							
+				}catch(JSONException e){
+					e.printStackTrace();
+				}
+        	return null;
+        }
+        protected void onPostExecute(String file_url) {
+            
+        }
+	}
+    class getCategories extends AsyncTask<String, String, String> {
+    	 @Override
+         protected void onPreExecute() {
+             super.onPreExecute(); 
+         }
+         protected String doInBackground(String... args) {
+         	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+ 	        String token = settings.getString("token",null);
+ 	        String user_id = settings.getString("user_id",null);
+ 	        
+         	UserFunctions userFunction = new UserFunctions();
+ 			JSONArray json = userFunction.getCategories(token, user_id);
+ 			Log.d("length", String.valueOf(json.length()));
+ 			
+ 			String str = json.toString();
+ 			str = str.replace("[[", "{\"items\": [");
+ 			str = str.replace("]]", "]}");
+ 			
+ 			JSONObject json2 = null;
+ 			try {
+ 				json2 = new JSONObject(str);
+ 			}catch (JSONException e) {
+ 				// TODO Auto-generated catch block
+ 				e.printStackTrace();
+ 			}
+ 			//Log.d("length2", String.valueOf(json2.length()));
+ 			
+ 			
+ 			JSONArray jArrayObject = null;
+ 			try {
+ 				jArrayObject = json2.getJSONArray("items");
+ 			} catch (JSONException e1) {
+ 				// TODO Auto-generated catch block
+ 				e1.printStackTrace();
+ 			}
+ 			Log.d("length3", String.valueOf(jArrayObject.length()));
+ 			
+ 			
+ 			try {
+ 				
+ 				SharedPreferences prefs = PreferenceManager
+ 				        .getDefaultSharedPreferences(getApplicationContext());
+ 				JSONArray categories = new JSONArray();
+ 			
+ 				for(int i=0;i<jArrayObject.length();i++){
+ 					String str2 = jArrayObject.getString(i);
+ 					Log.d("item", str2);
+ 					JSONObject json_data = new JSONObject(str2);
+ 					categories.put(json_data.get("category"));
+ 				}
+ 				
+ 				Editor editor = prefs.edit();
+ 				editor.putString("categories", categories.toString());
+ 				
+ 				editor.commit();
+ 							
+ 				}catch(JSONException e){
+ 					e.printStackTrace();
+ 				}
+         	return null;
+         }
+         protected void onPostExecute(String file_url) {
+             
+         }
+	}
 }

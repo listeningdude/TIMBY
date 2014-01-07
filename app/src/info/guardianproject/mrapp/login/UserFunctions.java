@@ -107,7 +107,7 @@ public class UserFunctions {
 	
 		params.add(new BasicNameValuePair("description", description));
 		
-		params.add(new BasicNameValuePair("company", entity));
+		//params.add(new BasicNameValuePair("company", entity));
 		
 		params.add(new BasicNameValuePair("report_date", date));
 	
@@ -138,7 +138,6 @@ public class UserFunctions {
 		params.add(new BasicNameValuePair("token", token));
 		params.add(new BasicNameValuePair("key", api_key));
 		JSONArray json = jsonParser.getJSONArrayFromURL(categoriesURL, params);
-
 		return json;
 	}
 	public JSONObject updateReport(String token, String user_id, String title,
@@ -156,10 +155,9 @@ public class UserFunctions {
 		
 			params.add(new BasicNameValuePair("sector", sector));
 		
-		
 			params.add(new BasicNameValuePair("description", description));
 			
-			params.add(new BasicNameValuePair("company", entity));
+			//params.add(new BasicNameValuePair("company", entity));
 			
 			params.add(new BasicNameValuePair("report_date", date));
 		
@@ -176,17 +174,16 @@ public class UserFunctions {
 			// return json
 			return json;
 		}
-	public JSONObject updateObject(String token, String user_id, String ptitle, String psequence, String preportid, String ptype, String pid, String pdate, String path) {
+	public JSONObject updateObject(String token, String user_id, String ptitle, String psequence, String preportid, String ptype, String optype, String pid, String pdate, String path) {
 		// TODO Auto-generated method stub
 		// Building Parameters
-		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("token", token));
 		params.add(new BasicNameValuePair("user_id", user_id));
 		params.add(new BasicNameValuePair("title", ptitle));
 		params.add(new BasicNameValuePair("sequence", psequence));
 		params.add(new BasicNameValuePair("report_id", preportid));
-		params.add(new BasicNameValuePair("object_type", ptype));
+		params.add(new BasicNameValuePair("object_type", optype));
 		params.add(new BasicNameValuePair("key", api_key));
 		params.add(new BasicNameValuePair("object_id", pid));
 		params.add(new BasicNameValuePair("report_date", pdate));
@@ -197,35 +194,23 @@ public class UserFunctions {
 		return json;
 	}	
 		//add media
-	public JSONObject newObject(String token, String user_id, String ptitle, String psequence, String preportid, String ptype, String pid, String pdate, String path) {
-			// TODO Auto-generated method stub
-			// Building Parameters
-			
-			/*List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("token", token));
-			params.add(new BasicNameValuePair("user_id", user_id));
-			params.add(new BasicNameValuePair("title", ptitle));
-			params.add(new BasicNameValuePair("sequence", psequence));
-			params.add(new BasicNameValuePair("report_id", preportid));
-			params.add(new BasicNameValuePair("object_type", ptype));
-			params.add(new BasicNameValuePair("key", api_key));
-			params.add(new BasicNameValuePair("object_id", pid));
-			params.add(new BasicNameValuePair("report_date", pdate));
-			params.add(new BasicNameValuePair("narrative", "(empty)"));
-			*/
+	public JSONObject newObject(String token, String user_id, String ptitle, String psequence, String preportid, String ptype, String optype, String pid, String pdate, String path) {
 			//add media
 			MultipartEntity mpEntity = new MultipartEntity();
 			try{
+				
 				ContentBody content = new FileBody(new File(path), ptype);
-				mpEntity.addPart("object", content);
+				Log.d("What's null?", String.valueOf(content)+"userid"+user_id+"ptitle"+ptitle+"psequence"+psequence+"preportid"+preportid+"ptype"+ptype+"optype"+optype+api_key+pdate);
+				
+				mpEntity.addPart("object"+psequence, content);
 				mpEntity.addPart("token", new StringBody(token));
 				mpEntity.addPart("user_id", new StringBody(user_id));
 				mpEntity.addPart("title", new StringBody(ptitle));
 				mpEntity.addPart("sequence", new StringBody(psequence));
 				mpEntity.addPart("report_id", new StringBody(preportid));
-				mpEntity.addPart("object_type", new StringBody(ptype));
+				mpEntity.addPart("object_type", new StringBody(optype));
 				mpEntity.addPart("key", new StringBody(api_key));
-				mpEntity.addPart("object_id", new StringBody(pid));
+				//mpEntity.addPart("object_id", new StringBody(pid));
 				mpEntity.addPart("report_date", new StringBody(pdate));
 				mpEntity.addPart("narrative", new StringBody("(empty)"));
 			} catch (IOException e) {
@@ -259,6 +244,25 @@ public class UserFunctions {
 		DatabaseHandler db = new DatabaseHandler(context);
 		db.resetTables();
 		return true;
+	}
+
+	public JSONObject newEntity(String entityName, String serverID, String token, String user_id, String pdate, String psequence) {
+		// TODO Auto-generated method stub
+		// Building Parameters
+				List<NameValuePair> params = new ArrayList<NameValuePair>();
+				params.add(new BasicNameValuePair("token", token));
+				params.add(new BasicNameValuePair("user_id", user_id));
+				params.add(new BasicNameValuePair("title", entityName));
+				params.add(new BasicNameValuePair("sequence", psequence));
+				params.add(new BasicNameValuePair("report_id", serverID));
+				params.add(new BasicNameValuePair("object_type", "entity"));
+				params.add(new BasicNameValuePair("key", api_key));
+				params.add(new BasicNameValuePair("report_date", pdate));
+				params.add(new BasicNameValuePair("narrative", "(empty)"));
+				// getting JSON Object
+				JSONObject json = jsonParser.getJSONFromUrl(insertobjectURL, params);
+				// return json
+				return json;
 	}
 
 	

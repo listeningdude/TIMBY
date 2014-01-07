@@ -2,31 +2,40 @@ package info.guardianproject.mrapp;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-
 import org.holoeverywhere.widget.*;
 import org.json.JSONArray;
 
 import info.guardianproject.mrapp.R;
-import info.guardianproject.mrapp.db.StoryMakerDB.Schema.Reports;
+import info.guardianproject.mrapp.model.Entity;
 import info.guardianproject.mrapp.model.GPSTracker;
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.model.Report;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 
+
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import android.widget.TextView;
@@ -36,7 +45,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 
-public class ReportActivity extends BaseActivity {
+public class ReportActivity extends BaseActivity implements OnClickListener,
+OnItemLongClickListener{
 
 	private RadioGroup rGroup;
 	private TextView txtNewStoryDesc;
@@ -44,7 +54,6 @@ public class ReportActivity extends BaseActivity {
 	private Spinner spinnerSector;
 	private Spinner spinnerIssue;
 	private EditText editTextDesc;
-	private EditText editTextEntity;
 	int rid;
 	String title;
 	String issue;
@@ -53,11 +62,20 @@ public class ReportActivity extends BaseActivity {
 	String location;
 	String entity;
 	Button done;
+	Button addEntity;
+	
+	ListView entitiesLV;
+    
 	ImageView setLocation;
 	ImageView view;
 	int story_mode;
 	TextView gpsInfo;
 	GPSTracker gpsT; 
+	
+    private ArrayList<String> datasource;
+    private MyAdapter adapter;
+    private Dialog dialog;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,13 +86,17 @@ public class ReportActivity extends BaseActivity {
         
         txtNewStoryDesc = (TextView)findViewById(R.id.txtNewStoryDesc);
         editTextStoryName = (EditText)findViewById(R.id.editTextStoryName);
+       
+        addEntity = (Button)findViewById(R.id.AddEntity);
+        entitiesLV = (ListView)findViewById(R.id.EntitiesList);
         
         spinnerSector = (Spinner)findViewById(R.id.spinnerSector);
         setSectors();        
         spinnerIssue = (Spinner)findViewById(R.id.spinnerIssue);
         setCategories();                
+        
         editTextDesc = (EditText)findViewById(R.id.editTextDescription);
-        editTextEntity = (EditText)findViewById(R.id.editTextEntity);
+        
         rGroup = (RadioGroup)findViewById(R.id.radioGroupStoryType);
         
         done = (Button)findViewById(R.id.done);
@@ -84,6 +106,30 @@ public class ReportActivity extends BaseActivity {
         
         Intent i = getIntent();
         rid = i.getIntExtra("rid", -1);
+        
+        
+      //entity
+        datasource = new ArrayList<String>();
+        adapter = new MyAdapter();
+        
+        entitiesLV.setAdapter(adapter);
+        entitiesLV.setOnItemLongClickListener(this);
+
+        addEntity.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                dialog = new Dialog(ReportActivity.this);
+                dialog.setContentView(R.layout.dialog_entities);
+                dialog.findViewById(R.id.button_cancel).setOnClickListener(
+                        ReportActivity.this);
+                dialog.findViewById(R.id.button_ok).setOnClickListener(
+                        ReportActivity.this);
+                dialog.setTitle("Add Entity");
+                dialog.show();
+            }
+        });
+        
         if(rid!=-1){
         
         	title = i.getStringExtra("title");
@@ -94,18 +140,37 @@ public class ReportActivity extends BaseActivity {
             location = i.getStringExtra("location");
             
             editTextStoryName.setText(title);
-            spinnerSector.setSelection(Integer.parseInt(sector));
-            spinnerIssue.setSelection(Integer.parseInt(issue));
+            spinnerSector.setSelection(Integer.parseInt(sector)-1);
+            spinnerIssue.setSelection(Integer.parseInt(issue)-1);
             //setSelectedItem(spinnerSector, sector);
            //setSelectedItem(spinnerIssue, issue);
             editTextDesc.setText(description);
-            editTextEntity.setText(entity);
+            
+            /*
+            String[] list1 = entity.split("\\s*,\\s*");
+            for(String file: list1) {
+                datasource.add(file);
+            }
+            
+            //datasource = Arrays.asList(entity.split("\\s*,\\s*"));
+            
+            */
+            
+            ArrayList<Entity> mListEntities;
+    		mListEntities = Entity.getAllAsList(this, rid);
+    	 	for (int j = 0; j < mListEntities.size(); j++) {
+    	 		Entity entity = mListEntities.get(j);
+    	 		datasource.add(entity.getEntity());
+    	 		
+    	 	}
+    	 	entitiesLV.setAdapter(adapter);
+            
             gpsInfo.setText(location);
             
             view.setVisibility(View.VISIBLE);
             done.setText("Update");
         }
-
+        
         //Button actions
         rGroup.setOnCheckedChangeListener(new OnCheckedChangeListener()
         {
@@ -143,11 +208,16 @@ public class ReportActivity extends BaseActivity {
                 }
 				story_mode = 2;
 				if (formValid()) {
-					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
+					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),datasource.toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
+				}else{
+					//rGroup.clearCheck();
 				}
 			}
         	
         });
+        
+      
+        
         
         done.setOnClickListener(new OnClickListener() {
             
@@ -155,7 +225,7 @@ public class ReportActivity extends BaseActivity {
             public void onClick(View v) {
             	
             	if (formValid()) {
-					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),editTextEntity.getText().toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), true);		
+					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),datasource.toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), true);		
             	}
             	
             }
@@ -208,7 +278,7 @@ public class ReportActivity extends BaseActivity {
 			}
 			ArrayAdapter<String> spinnerMenu = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, list);
 			spinnerIssue.setAdapter(spinnerMenu);
-    	} catch (Exception e) {
+    	}catch (Exception e) {
 	    	    e.printStackTrace();
 	    	}
 	}
@@ -246,8 +316,12 @@ public class ReportActivity extends BaseActivity {
     	{
     		Toast.makeText(this, R.string.you_must_enter_a_project_name, Toast.LENGTH_SHORT).show();
     		return false;
-    	}else if(spinnerSector.getSelectedItemPosition()==0){
+    	}/*else if(spinnerSector.getSelectedItemPosition()==0){
     		Toast.makeText(this, "You must select a sector", Toast.LENGTH_SHORT).show();
+    		return false;
+    	}*/
+    	else if(gpsInfo.getText().toString().equals("Location not set")){
+    		Toast.makeText(this, "You must set location", Toast.LENGTH_SHORT).show();
     		return false;
     	}
     	else
@@ -285,11 +359,18 @@ public class ReportActivity extends BaseActivity {
     		
 
     private void launchProject(String title, int pIssue, int pSector, String pEntity, String pDesc, String pLocation, boolean update) {
-        Report report;
+       
+    	pIssue = pIssue+1;
+    	pSector = pSector+1;
+    	
+    	pEntity = pEntity.replace("[", "");
+    	pEntity = pEntity.replace("]", "");
+    	
+    	Report report;
         if(rid==-1){
         	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         	String currentdate = dateFormat.format(new Date());
-        	report = new Report (this, 0, title, String.valueOf(pIssue), String.valueOf(pSector), pEntity, pDesc, pLocation, "0", currentdate);
+        	report = new Report (this, 0, title, String.valueOf(pSector), String.valueOf(pIssue), pEntity, pDesc, pLocation, "0", currentdate);
          }else{
         	report = Report.get(this, rid);
         	report.setTitle(title);
@@ -302,7 +383,20 @@ public class ReportActivity extends BaseActivity {
         report.save();
         
         rid = report.getId();
+        String report_date = report.getDate();
         
+        //save entities
+        for(int i=0; i<datasource.size();i++){
+        	String e_t = datasource.get(i);
+        	
+        	Entity entity;
+        	entity = new Entity(this, 0, "", "", "", "", "");
+        	entity.setEntity(e_t);
+        	entity.setReport(String.valueOf(rid));
+        	entity.setDate(report_date);
+        	entity.save();
+        }
+                
         if(update == false){
 	        Intent intent = new Intent(getBaseContext(), StoryNewActivity.class);
 	        intent.putExtra("storymode", getSelectedStoryMode());
@@ -317,7 +411,7 @@ public class ReportActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.activity_new_story, menu);
-        return true;
+        return false;
     }
 
     
@@ -334,4 +428,75 @@ public class ReportActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    
+    //entities
+    private class MyAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            // TODO Auto-generated method stub
+            return datasource.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            // TODO Auto-generated method stub
+            return datasource.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            // TODO Auto-generated method stub
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView view = (TextView) convertView;
+            if (null == view) {
+                view = new TextView(ReportActivity.this);
+                view.setPadding(10, 10, 10, 10);
+            }
+            view.setText(datasource.get(position));
+            return view;
+        }
+    }
+
+    @SuppressLint("NewApi")
+	@Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+        case R.id.button_cancel:
+            dialog.dismiss();
+            break;
+
+        case R.id.button_ok:
+            String text = ((EditText) dialog.findViewById(R.id.edit_box))
+                    .getText().toString();
+            if (null != text && 0 != text.compareTo("")) {
+                datasource.add(text);
+                
+                int minHeight = datasource.size()*50;
+                LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, minHeight);
+                entitiesLV.setLayoutParams(params);
+                                
+                dialog.dismiss();
+                adapter.notifyDataSetChanged();
+            }
+
+            break;
+        }
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> listView, View view,
+            int position, long column) {
+    	int minHeight = datasource.size()*50;
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, minHeight);
+        entitiesLV.setLayoutParams(params);
+        
+        datasource.remove(position);
+        adapter.notifyDataSetChanged();
+        return true;
+    }
 }

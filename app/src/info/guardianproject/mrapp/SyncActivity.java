@@ -1,6 +1,7 @@
 package info.guardianproject.mrapp;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
 
 import org.holoeverywhere.widget.Toast;
 import org.json.JSONArray;
@@ -8,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import info.guardianproject.mrapp.login.UserFunctions;
+import info.guardianproject.mrapp.model.Entity;
 import info.guardianproject.mrapp.model.Media;
 import info.guardianproject.mrapp.model.Project;
 import info.guardianproject.mrapp.model.Report;
@@ -19,6 +21,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -40,16 +43,18 @@ public class SyncActivity extends BaseActivity{
 	String pdate;
 	String entity;
 	String serverID;
+	String entityName;
+	int esequence;
 	int rid;
-	String ppath;
+	int entityid;
+	/*String ppath;
  	String ptype;
  	String ptitle;
  	String pid;
  	String psequence;
- 	String preportid;
+ 	String preportid;*/
  	Button done;
  	TextView log;
- 	String reporttitle;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,6 +108,7 @@ public class SyncActivity extends BaseActivity{
 			}
 			title = report.getTitle();
 			issue = report.getIssue();
+			entity = report.getEntity();
 			sector = report.getSector();
 			date = report.getDate();
 			rid = report.getId();
@@ -118,22 +124,58 @@ public class SyncActivity extends BaseActivity{
 			}
 		}
 	}
+	public void uploadEntities(int rid, int serverid){
+		serverID = String.valueOf(serverid);
+		/*
+		Report report = Report.get(this, rid);
+		String entity = report.getEntity();
+		String[] list1 = entity.split("\\s*,\\s*");
+        for(String file: list1) {
+        	entityName = file;
+        	esequence = 1;
+        	new createEntity().execute();
+        }
+        */
+		ArrayList<Entity> mListEntities;
+		mListEntities = Entity.getAllAsList(this, rid);
+	 	for (int j = 0; j < mListEntities.size(); j++) {
+	 		Entity entity = mListEntities.get(j);
+	 		entityName = entity.getEntity();
+	 		entityid = entity.getId();
+        	esequence = j;
+        	new createEntity().execute(); 		
+	 	}
+	}
 	public void uploadMedia(int rid, int serverid){
 		ArrayList<Project> mListProjects;
 		mListProjects = Project.getAllAsList(this, rid);
 	 	for (int j = 0; j < mListProjects.size(); j++) {
 	 		Project project = mListProjects.get(j);
+	 		
 	 		Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
 	 		Media media = mediaList[0];
 		 	
-	 		ppath = media.getPath();
-		 	ptype = media.getMimeType();
-		 	ptitle = project.getTitle();
-		 	pdate = project.getDate();
-		 	pid = String.valueOf(project.getId());
-		 	psequence = String.valueOf(j+1);
-		 	preportid = String.valueOf(serverid);
-		 	new createObject().execute();		 	
+	 		String ppath = media.getPath();
+	 		
+		 	String ptype = media.getMimeType();
+		 	
+		 	String optype = "video";
+		 	if(ptype.contains("image")){
+		 		optype = "image";
+		 	}else if(ptype.contains("video")){
+		 		optype = "video";
+		 	}else if(ptype.contains("audio")){
+		 		optype = "video";
+		 	}
+		 	String ptitle = project.getTitle();
+		 	String pdate = project.getDate();
+		 	String pid = String.valueOf(project.getId());
+		 	String psequence = String.valueOf(j+1);
+		 	String preportid = String.valueOf(serverid);
+		 	//new createObject().execute();		
+		 	MyTaskParams params = new MyTaskParams(ppath, ptype, optype, ptitle, pdate, pid, psequence, preportid);
+		 	createObject myTask = new createObject();
+		 	myTask.execute(params);	
 	 	}
 	}
 	public void updateMedia(int rid, int serverid){
@@ -141,30 +183,129 @@ public class SyncActivity extends BaseActivity{
 		mListProjects = Project.getAllAsList(this, rid);
 	 	for (int j = 0; j < mListProjects.size(); j++) {
 	 		Project project = mListProjects.get(j);
+	 		
 	 		Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
+	 		
 	 		Media media = mediaList[0];
+	 		
+	 		String ppath = media.getPath();
+	 		
+	 		String ptype = media.getMimeType();
 		 	
-	 		ppath = media.getPath();
-		 	ptype = media.getMimeType();
-		 	ptitle = project.getTitle();
-		 	pdate = project.getDate();
-		 	pid = String.valueOf(project.getId());
-		 	psequence = String.valueOf(j+1);
-		 	preportid = String.valueOf(serverid);
-		 	new updateObject().execute();		 	
-	 	}
+		 	String optype = "video";
+		 	if(ptype.contains("image")){
+		 		optype = "image";
+		 	}else if(ptype.contains("video")){
+		 		optype = "video";
+		 	}else if(ptype.contains("audio")){
+		 		optype = "video";
+		 	}
+		 	
+		 	String ptitle = project.getTitle();
+		 	String pdate = project.getDate();
+		 	String pid = String.valueOf(project.getId());
+		 	String psequence = String.valueOf(j+1);
+		 	String preportid = String.valueOf(serverid);
+		 	
+		 	//new updateObject().execute();	
+		 	
+		 	MyTaskParams params = new MyTaskParams(ppath, ptype, optype, ptitle, pdate, pid, psequence, preportid);
+		 	updateObject myTask = new updateObject();
+		 	myTask.execute(params);		 	
+		 }
 	}
-	class updateObject extends AsyncTask<String, String, String> {
+	private static class MyTaskParams {
+	    String ppath;
+	    String ptype;
+	    String optype;
+	    String ptitle;
+	    String pdate;
+	    String pid;
+	    String psequence;
+	    String preportid;
+	    MyTaskParams(String ppath, String ptype, String optype, String ptitle, String pdate, String pid, String psequence,String preportid) {
+	        this.ppath = ppath;
+	        this.pdate = pdate;
+	        this.ptype = ptype;
+	        this.optype = optype;
+	        this.pid = pid;
+	        this.pdate=pdate;
+	        this.psequence=psequence;
+	        this.preportid=preportid;
+	        this.ptitle=ptitle;
+	    }
+	}
+	class updateObject extends AsyncTask<MyTaskParams, String, String> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog.setVisibility(View.VISIBLE); 
+            //log.append("---Updating media: \n");
+            //pDialog.setVisibility(View.VISIBLE); 
         }
-        protected String doInBackground(String... args) {
+        protected String doInBackground(MyTaskParams... params) {
+        	String ppath = params[0].ppath;
+        	String optype = params[0].optype;
+        	String ptype = params[0].ptype;
+    	    String ptitle = params[0].ptitle;;
+    	    String pdate = params[0].pdate;;
+    	    String pid = params[0].pid;;
+    	    String psequence = params[0].psequence;;
+    	    String preportid = params[0].preportid;;
+    	    
         	UserFunctions userFunction = new UserFunctions();
-			JSONObject json = userFunction.updateObject(token, user_id, ptitle, psequence, preportid, ptype, pid, pdate, ppath);
+        	Log.d("j", String.valueOf(ppath));
+			JSONObject json = userFunction.updateObject(token, user_id, ptitle, psequence, preportid, ptype, optype, pid, pdate, ppath);
 		
+			try {
+				String res = json.getString(KEY_SUCCESS); 
+					if(res.equals("OK")){
+						//JSONObject json_report = json.getJSONObject("message");
+						//String objectid = json_report.getString(KEY_ID);
+						
+					}else{
+						//Some error message. Not sure what yet.
+						
+					}
+				}catch(JSONException e){
+					e.printStackTrace();
+				}
+			
+			
+        	return null;
+        }
+       
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog after getting all products
+            // pDialog.dismiss();
+        	log.append("---Updated media object \n");
+        	// pDialog.setVisibility(View.GONE);
+        }
+	}
+	class createObject extends AsyncTask<MyTaskParams, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //log.append("---Updating media: \n");
+            //pDialog.setVisibility(View.VISIBLE); 
+        }
+        protected String doInBackground(MyTaskParams... params) {
+        	String ppath = params[0].ppath;
+        	String optype = params[0].optype;
+        	String ptype = params[0].ptype;
+    	    String ptitle = params[0].ptitle;;
+    	    String pdate = params[0].pdate;;
+    	    String pid = params[0].pid;;
+    	    String psequence = params[0].psequence;;
+    	    String preportid = params[0].preportid;;
+    	    
+    	    Log.d("optype", optype);
+    	    Log.d("ptype", ptype);
+        	
+    	    UserFunctions userFunction = new UserFunctions();
+			JSONObject json = userFunction.newObject(token, user_id, ptitle, psequence, preportid, ptype, optype, pid, pdate, ppath);
+			
 			try {
 				String res = json.getString(KEY_SUCCESS); 
 					if(res.equals("OK")){
@@ -185,43 +326,8 @@ public class SyncActivity extends BaseActivity{
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
            // pDialog.dismiss();
-        	log.append("---Updated media: "+ppath+"\n");
-        	pDialog.setVisibility(View.GONE);
-        }
-	}
-	class createObject extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog.setVisibility(View.VISIBLE);
-        }
-        protected String doInBackground(String... args) {
-        	UserFunctions userFunction = new UserFunctions();
-			JSONObject json = userFunction.newObject(token, user_id, ptitle, psequence, preportid, ptype, pid, pdate, ppath);
-		
-			try {
-				String res = json.getString(KEY_SUCCESS); 
-					if(res.equals("OK")){
-						//JSONObject json_report = json.getJSONObject("message");
-						//String objectid = json_report.getString(KEY_ID);
-						
-					}else{
-						//Some error message. Not sure what yet.
-						
-					}
-				}catch(JSONException e){
-					e.printStackTrace();
-				}
-			
-			
-        	return null;
-        }
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog after getting all products
-           // pDialog.dismiss();
-        	log.append("---Uploaded: "+ppath+"\n");
-        	pDialog.setVisibility(View.GONE);
+        	log.append("---Uploaded media object\n");
+        	//pDialog.setVisibility(View.GONE);
         }
 	}
 	class createReport extends AsyncTask<String, String, String> {
@@ -235,7 +341,7 @@ public class SyncActivity extends BaseActivity{
         protected String doInBackground(String... args) {
         	UserFunctions userFunction = new UserFunctions();
 			JSONObject json = userFunction.newReport(token, user_id, title, issue, sector, entity, lat, lon, date, description);
-			
+			Log.d("Values passed", "Token: "+token+" user id: "+user_id+" title "+title+" issue "+issue+" sector "+sector+" entity "+entity+" lat "+lat+" lon "+lon+" date "+date+" description "+description);
 			try {
 				String res = json.getString(KEY_SUCCESS); 
 					if(res.equals("OK")){
@@ -246,14 +352,15 @@ public class SyncActivity extends BaseActivity{
 						Report report = Report.get(getApplicationContext(), rid);
 						report.setServerId(srid);
 						report.save();
-						reporttitle = report.getTitle();
-						//Upload corresponding media files :O
 						
+						//Upload corresponding media files :O
+						uploadEntities(report.getId(), Integer.parseInt(srid));
 						uploadMedia(report.getId(), Integer.parseInt(srid));
 					}else{
 						//Some error message. Not sure what yet.
 						
 					}
+					
 				}catch(JSONException e){
 					e.printStackTrace();
 				}
@@ -266,8 +373,8 @@ public class SyncActivity extends BaseActivity{
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
            // pDialog.dismiss();
-        	log.append("Created Report: "+reporttitle+"\n");
-        	pDialog.setVisibility(View.GONE);
+        	log.append("Creating Report: "+title+"\n");
+        	//pDialog.setVisibility(View.GONE);
         }
 	}
 	class updateReport extends AsyncTask<String, String, String> {
@@ -302,8 +409,8 @@ public class SyncActivity extends BaseActivity{
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
            // pDialog.dismiss();
-        	log.append("Updated Report: "+title+"\n");
-        	pDialog.setVisibility(View.GONE);
+        	log.append("Updating Report: "+title+"\n");
+        	//pDialog.setVisibility(View.GONE);
         }
 	}
 	class checkToken extends AsyncTask<String, String, String> {
@@ -315,8 +422,6 @@ public class SyncActivity extends BaseActivity{
             pDialog.setVisibility(View.VISIBLE);
             
         }
- 
-
         protected String doInBackground(String... args) {
 	
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -352,8 +457,53 @@ public class SyncActivity extends BaseActivity{
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
            // pDialog.dismiss();
-        	pDialog.setVisibility(View.GONE);
+        	//pDialog.setVisibility(View.GONE);
             loopReports();
+        }
+	}
+	class createEntity extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog.setVisibility(View.VISIBLE); 
+        }
+        
+        protected String doInBackground(String... args) {
+        	UserFunctions userFunction = new UserFunctions();
+			JSONObject json = userFunction.newEntity(entityName, serverID, token, user_id, date, String.valueOf(esequence));
+			Log.d("Values passed", "Entity: "+entityName+" ServerID : "+serverID);
+			try {
+				String res = json.getString(KEY_SUCCESS); 
+					if(res.equals("OK")){
+						JSONArray json_report = json.getJSONArray("message");//json.getJSONObject("message");
+						JSONObject details = json_report.getJSONObject(0);//json_report.getString(KEY_ID);
+						String object_id = String.valueOf(details.getString("object_id"));
+						String sequence_id = String.valueOf(details.getString("sequence_id"));
+						
+						//Update entity with object id and sequence id
+						Entity entity = Entity.get(getApplicationContext(), entityid);
+						entity.setObjectID(object_id);
+						entity.setSequenceId(sequence_id);
+						entity.save();
+					}else{
+						//Some error message. Not sure what yet.
+						
+					}
+					
+				}catch(JSONException e){
+					e.printStackTrace();
+				}
+			//Add to log
+			
+        	return null;
+        }
+        
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog after getting all products
+           // pDialog.dismiss();
+        	log.append("--Creating Entity: "+entityName+"\n");
+        	//pDialog.setVisibility(View.GONE);
         }
 	}
 }

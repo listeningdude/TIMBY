@@ -6,8 +6,8 @@ import android.content.Context;
 
 public class StoryMakerDB extends SQLiteOpenHelper {
 	
-    private static final int DB_VERSION = 13;
-    private static final String DB_NAME = "sm.db9";
+    private static final int DB_VERSION = 15;
+    private static final String DB_NAME = "sm.db15";
     
     public StoryMakerDB(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -21,6 +21,7 @@ public class StoryMakerDB extends SQLiteOpenHelper {
         db.execSQL(StoryMakerDB.Schema.Scenes.CREATE_TABLE_SCENES);
 		db.execSQL(StoryMakerDB.Schema.Lessons.CREATE_TABLE_LESSONS);
 		db.execSQL(StoryMakerDB.Schema.Media.CREATE_TABLE_MEDIA);
+		db.execSQL(StoryMakerDB.Schema.Entities.CREATE_TABLE_ENTITIES);
     }
     
     @Override
@@ -79,6 +80,32 @@ public class StoryMakerDB extends SQLiteOpenHelper {
                     + "ADD COLUMN "
                     + COL_STORY_TYPE + " integer"
                     + " DEFAULT 0";
+        }
+        public class Entities
+        {
+            public static final String NAME = "entities";
+            
+            public static final String ID = "_id";
+            public static final String COL_REPORT_ID = "report_id";
+            public static final String COL_ENTITY = "entity";
+            public static final String COL_OBJECT_ID = "object_id";
+            public static final String COL_SEQUENCE_ID = "sequence";
+            public static final String COL_DATE = "date";;
+            
+            private static final String CREATE_TABLE_ENTITIES = "create table " + NAME + " (" 
+                    + ID + " integer primary key autoincrement, " 
+                    + COL_REPORT_ID + " integer,"
+                    + COL_ENTITY + " text,"
+                    + COL_OBJECT_ID + " text,"
+                    + COL_SEQUENCE_ID + " text,"
+                    + COL_DATE + " text"
+                    + "); ";
+            /*
+            private static final String UPDATE_TABLE_ENTITIES = "alter table " + NAME + " " 
+                    + "ADD COLUMN "
+                    + COL_STORY_TYPE + " integer"
+                    + " DEFAULT 0";
+             */
         }
         public class Reports
         {

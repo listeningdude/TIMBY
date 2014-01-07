@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"   
+    android:layout_height="wrap_content"   
      android:background="#eaeae5"
     android:fillViewport="true" >
     
@@ -155,25 +155,31 @@
             android:id="@+id/spinnerSector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_black_border_full"/>
+            android:textColor="@color/soft_red"
+            android:popupBackground="@color/soft_green"
+            android:background="@drawable/background_black_border_full"
+            />
 
         <Spinner
             android:id="@+id/spinnerIssue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:textColor="@color/soft_red"
+             android:popupBackground="@color/soft_green"
             android:background="@drawable/background_black_border_full"/>
 
-        <EditText
-            android:id="@+id/editTextEntity"
+        <Button
+            android:id="@+id/AddEntity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ems="10"
-            android:hint="@string/company_or_person_field"
-            android:inputType="textPersonName"
-            android:textColor="@color/soft_red"
-				android:background="@drawable/background_black_border_full" />
+            android:text="Add entity" />
+
+        <ListView
+            android:id="@+id/EntitiesList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
 
         <EditText
             android:id="@+id/editTextDescription"

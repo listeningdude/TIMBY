@@ -96,7 +96,8 @@ public class HomeActivity extends BaseActivity {
            
         }
         checkCreds();
-        
+    	//new getSectors().execute();
+       // new getCategories().execute();
         setContentView(R.layout.activity_home_screen);
         
         // action bar stuff
@@ -148,83 +149,7 @@ public class HomeActivity extends BaseActivity {
 			}
 		});
     }
-    class getSectors extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute(); 
-        }
-        protected String doInBackground(String... args) {
-        	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-	        String token = settings.getString("token",null);
-	        String user_id = settings.getString("user_id",null);
-	        
-        	UserFunctions userFunction = new UserFunctions();
-			JSONArray json = userFunction.getSectors(token, user_id);
-			try {
-				
-				SharedPreferences prefs = PreferenceManager
-				        .getDefaultSharedPreferences(getApplicationContext());
-				JSONArray sectors = new JSONArray();
-								
-				for(int i=0;i<json.length();i++){
-					String str = json.getString(i).replace("[", "");
-					str = str.replace("]", "");
-					 JSONObject json_data = new JSONObject(str);
-					 sectors.put(json_data.get("sector"));
-				}
-				Editor editor = prefs.edit();
-				editor.putString("sectors", sectors.toString());
-				
-				editor.commit();
-							
-				}catch(JSONException e){
-					e.printStackTrace();
-				}
-        	return null;
-        }
-        protected void onPostExecute(String file_url) {
-            
-        }
-	}
-    class getCategories extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute(); 
-        }
-        protected String doInBackground(String... args) {
-        	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-	        String token = settings.getString("token",null);
-	        String user_id = settings.getString("user_id",null);
-	        
-        	UserFunctions userFunction = new UserFunctions();
-			JSONArray json = userFunction.getCategories(token, user_id);
-			try {
-				SharedPreferences prefs = PreferenceManager
-				        .getDefaultSharedPreferences(getApplicationContext());
-				JSONArray categories = new JSONArray();
-								
-				for(int i=0;i<json.length();i++){
-					String str = json.getString(i).replace("[", "");
-					str = str.replace("]", "");
-					 JSONObject json_data = new JSONObject(str);
-					 categories.put(json_data.get("category"));
-				}
-				Editor editor = prefs.edit();
-				editor.putString("categories", categories.toString());
-				
-				editor.commit();
-							
-				}catch(JSONException e){
-					e.printStackTrace();
-				}
-        	return null;
-        }
-        protected void onPostExecute(String file_url) {
-            
-        }
-	}
+   
     @Override
 	public void onResume() {
 		super.onResume();
@@ -761,15 +686,14 @@ public class HomeActivity extends BaseActivity {
         	Intent intent = new Intent(this,LoginPreferencesActivity.class);
         	startActivity(intent);
         }else{
-        	new getSectors().execute();
-            new getCategories().execute();
+
         }
     }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.activity_home, menu);
-        return true;
+        return false;
     }
 
 
