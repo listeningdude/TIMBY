@@ -67,16 +67,17 @@
 
     <EditText
         android:id="@+id/editTextDescribe"
+        android:capitalize="sentences"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider0"
+        android:background="@drawable/background_black_border_full"
         android:ems="10"
+        android:gravity="top"
         android:hint="Describe your capture..."
         android:inputType="textMultiLine"
-        android:lines="5" 
-         android:textColor="@color/soft_red"
-				android:background="@drawable/background_black_border_full"
-        >
+        android:lines="5"
+        android:textColor="@color/soft_red" >
 
         <requestFocus />
     </EditText>
