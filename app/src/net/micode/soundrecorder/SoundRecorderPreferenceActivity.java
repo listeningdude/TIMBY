@@ -16,7 +16,7 @@
 
 package net.micode.soundrecorder;
 
-import info.guardianproject.mrapp.R;
+import org.codeforafrica.timby.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;

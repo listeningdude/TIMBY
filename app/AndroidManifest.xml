@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="info.guardianproject.mrapp"
+    package="org.codeforafrica.timby"
     android:installLocation="auto"
     android:versionCode="92"
-    android:versionName="1.2.1" >
+    android:versionName="1.2.2" >
       <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="17" />
@@ -41,7 +41,7 @@
     
 
     <application
-        android:name=".StoryMakerApp"
+        android:name="org.codeforafrica.timby.StoryMakerApp"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.storymakerstyle"
@@ -50,14 +50,14 @@
 		android:supportsRtl="true"
          >
      
-        <activity android:name=".server.LoginActivity"
+        <activity android:name="org.codeforafrica.timby.server.LoginActivity"
             android:windowSoftInputMode="stateHidden"
               android:screenOrientation="portrait"
              android:configChanges="locale"
 
             >
         </activity>
-         <activity android:name=".server.LoginPreferencesActivity"
+         <activity android:name="org.codeforafrica.timby.server.LoginPreferencesActivity"
             android:windowSoftInputMode="stateHidden"
               android:screenOrientation="portrait"
              android:configChanges="locale"
@@ -66,11 +66,11 @@
         </activity>
         <!-- Entry for RegisterActivity.class -->
         <activity
-            android:name=".server.RegisterActivity"
+            android:name="org.codeforafrica.timby.server.RegisterActivity"
             android:label="Register New Account" >
         </activity>
         <activity
-            android:name=".HomeActivity"
+            android:name="org.codeforafrica.timby.HomeActivity"
             android:configChanges="locale"
             android:label="@string/app_name"
             android:launchMode="singleTop"
@@ -82,14 +82,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".StoryNewActivity"
+            android:name="org.codeforafrica.timby.StoryNewActivity"
             android:label="@string/title_activity_new_story" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
               <activity
-            android:name=".ProjectsActivity"
+            android:name="org.codeforafrica.timby.ProjectsActivity"
             android:configChanges="locale"
             android:label="@string/title_projects"
             android:launchMode="singleTop"
@@ -99,7 +99,7 @@
                 android:value=".HomeActivity" />
         </activity>
         <activity
-            android:name=".LessonsActivity"
+            android:name="org.codeforafrica.timby.LessonsActivity"
             android:configChanges="locale"
             android:label="@string/title_activity_lessons"
             android:launchMode="singleTop"
@@ -110,7 +110,7 @@
                 android:value=".HomeActivity" />
         </activity>
         <activity
-            android:name=".ReportsActivity"
+            android:name="org.codeforafrica.timby.ReportsActivity"
             android:configChanges="locale"
             android:label="Reports"
             android:launchMode="singleTop"
@@ -121,7 +121,7 @@
                 android:value=".HomeActivity" />
         </activity>
         <activity
-            android:name=".Export2SD"
+            android:name="org.codeforafrica.timby.Export2SD"
             android:configChanges="locale"
             android:label="Export to SD"
             android:launchMode="singleTop"
@@ -132,7 +132,7 @@
                 android:value=".HomeActivity" />
         </activity>
         <activity
-            android:name=".SyncActivity"
+            android:name="org.codeforafrica.timby.SyncActivity"
             android:configChanges="locale"
             android:label="Sync"
             android:launchMode="singleTop"
@@ -143,7 +143,7 @@
                 android:value=".HomeActivity" />
         </activity>
         <activity
-            android:name=".ReportActivity"
+            android:name="org.codeforafrica.timby.ReportActivity"
             android:configChanges="locale"
             android:label="Edit Report"
             android:launchMode="singleTop"
@@ -155,7 +155,7 @@
         </activity>
 
         <activity
-            android:name=".StoryTemplateChooserActivity"
+            android:name="org.codeforafrica.timby.StoryTemplateChooserActivity"
             android:label="@string/title_activity_choose_template"
             >
             <meta-data
@@ -163,7 +163,7 @@
                 android:value=".ProjectsActivity" />
         </activity>
         <activity
-            android:name=".StoryTemplateActivity"
+            android:name="org.codeforafrica.timby.StoryTemplateActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_story_template" >
             <meta-data
@@ -171,7 +171,7 @@
                 android:value=".ProjectsActivity" />
         </activity>
         <activity
-            android:name=".SceneEditorActivity"
+            android:name="org.codeforafrica.timby.SceneEditorActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_scene_editor" >
             <meta-data
@@ -179,7 +179,7 @@
                 android:value=".ProjectsActivity" />
         </activity>
         <activity
-            android:name=".StoryMakerCaptureActivitySimple"
+            android:name="org.codeforafrica.timby.StoryMakerCaptureActivitySimple"
             android:configChanges="orientation|screenSize"
             android:label="List of Media Items" >
             <meta-data
@@ -187,68 +187,68 @@
                 android:value=".ProjectsActivity" />
         </activity>
         <activity
-            android:name=".WelcomeActivity"
+            android:name="org.codeforafrica.timby.WelcomeActivity"
             android:label="@string/app_name"            
              >
         </activity>  
          <activity
-            android:name=".ProjectListActivity">
+            android:name="org.codeforafrica.timby.ProjectListActivity">
              <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
           <activity
-            android:name=".ProjectEditorActivity">
+            android:name="org.codeforafrica.timby.ProjectEditorActivity">
              <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ProjectListActivity" />
         </activity>
         <activity
-            android:name=".lessons.LessonViewActivity"
+            android:name="org.codeforafrica.timby.lessons.LessonViewActivity"
             >
               <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LessonsActivity" />
              </activity>
-        <activity android:name=".server.WebViewActivity" />
+        <activity android:name="org.codeforafrica.timby.server.WebViewActivity" />
         
            <activity
-            android:name=".media.MediaProjectManager"
+            android:name="org.codeforafrica.timby.media.MediaProjectManager"
           
             android:configChanges="orientation|keyboardHidden|screenSize" >   
             	      
         </activity>
-        <activity android:name=".MediaOutputPreferences" />
-        <activity android:name=".SimplePreferences" />
+        <activity android:name="org.codeforafrica.timby.MediaOutputPreferences" />
+        <activity android:name="org.codeforafrica.timby.SimplePreferences" />
         
-        <activity android:name=".media.OverlayCameraActivity" 
+        <activity android:name="org.codeforafrica.timby.media.OverlayCameraActivity" 
              android:screenOrientation="landscape"
             />
        
-         <activity android:name=".media.AudioRecorderActivity" />
+         <activity android:name="org.codeforafrica.timby.media.AudioRecorderActivity" />
 
-       <activity android:name=".server.OAuthAccessTokenActivity" />
+       <activity android:name="org.codeforafrica.timby.server.OAuthAccessTokenActivity" />
       
         <provider
-		    android:authorities="info.guardianproject.mrapp.db.LessonsProvider"
+		    android:authorities="org.codeforafrica.timby.db.LessonsProvider"
 		    android:multiprocess="true"
 		    android:exported="false"
-		    android:name="info.guardianproject.mrapp.db.LessonsProvider"></provider>
+		    android:name="org.codeforafrica.timby.db.LessonsProvider"></provider>
         <provider
-		    android:authorities="info.guardianproject.mrapp.db.ReportsProvider"
+		    android:authorities="org.codeforafrica.timby.db.ReportsProvider"
 		    android:multiprocess="true"
 		    android:exported="false"
-		    android:name="info.guardianproject.mrapp.db.ReportsProvider"></provider>
+		    android:name="org.codeforafrica.timby.db.ReportsProvider"></provider>
         <provider
-		    android:authorities="info.guardianproject.mrapp.db.ProjectsProvider"
+		    android:authorities="org.codeforafrica.timby.db.ProjectsProvider"
 		    android:multiprocess="true"
 		     android:exported="false"
-		    android:name="info.guardianproject.mrapp.db.ProjectsProvider"></provider>
+		    android:name="org.codeforafrica.timby.db.ProjectsProvider"></provider>
 	  <provider
-	    android:authorities="info.guardianproject.mrapp.db.EntitiesProvider"
+	    android:authorities="org.codeforafrica.timby.db.EntitiesProvider"
 	    android:multiprocess="true"
 	     android:exported="false"
-	    android:name="info.guardianproject.mrapp.db.EntitiesProvider"></provider>    
+	    android:name="org.codeforafrica.timby.db.EntitiesProvider"></provider>    
         <activity
             android:configChanges="keyboardHidden"
            android:name="net.micode.soundrecorder.SoundRecorder"
@@ -278,7 +278,7 @@
         <receiver
        android:icon="@drawable/ic_launcher"
        android:label="StoryMaker QuickStory"
-       android:name="QuickStoryWidgetProvider" >
+       android:name="org.codeforafrica.timby.QuickStoryWidgetProvider" >
        <intent-filter >
             <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
        </intent-filter>
