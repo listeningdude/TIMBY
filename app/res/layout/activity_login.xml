@@ -49,7 +49,7 @@
  
         <!-- Login Form -->
         <LinearLayout
-          xmlns:android="http://schemas.android.com/apk/res/android"
+          
           android:orientation="vertical"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                 android:layout_marginBottom="20dip"
                 android:singleLine="true"
                 android:hint="username"
-                android:text="test"
+              
                 android:textColor="@color/soft_red"
 				android:background="@drawable/background_black_border_full" 
                 />
@@ -76,7 +76,7 @@
                 android:singleLine="true"
                 android:hint="password"
                 android:password="true"
-                android:text="timbytest"
+               
                 android:textColor="@color/soft_red"
 				android:background="@drawable/background_black_border_full" />
           <!-- Login button -->

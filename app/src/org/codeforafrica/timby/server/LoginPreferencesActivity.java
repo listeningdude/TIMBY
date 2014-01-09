@@ -48,6 +48,12 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 
     	private static String KEY_USER_ID = "user_id";
     	private static String KEY_TOKEN = "token";
+    	
+    	// Connection detector class
+        ConnectionDetector cd;
+        //flag for Internet connection status
+        Boolean isInternetPresent = false;
+        
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +104,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
     
     private void handleLogin ()
     {
-            txtStatus.setText("Connecting to server...");
+            txtStatus.setText("Attempting login...");
             
             new Thread(this).start();
     }
@@ -131,51 +137,51 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
     
     public void run ()
     {
-            String username = txtUser.getText().toString();
-            String password = txtPass.getText().toString();
-            UserFunctions userFunction = new UserFunctions();
-			
-			JSONObject json = userFunction.loginUser(username, password);
-
-			// check for login response
-			try {
-					String res = json.getString(KEY_SUCCESS); 
-					if(res.equals("OK")){
-						// user successfully logged in
-						// Store user details in SQLite Database
-						// DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-						JSONObject json_user = json.getJSONObject("message");
-						
-						// Clear all previous data in database
-						//userFunction.logoutUser(getApplicationContext());
-						//db.addUser(json_user.getString(KEY_USER_ID), json_user.getString(KEY_TOKEN));						
-						
-						saveCreds(json_user.getString(KEY_USER_ID), json_user.getString(KEY_TOKEN), username, password);
-						//Toast.makeText(getBaseContext(), "Login Successfull!", Toast.LENGTH_LONG).show();
-						
-						/* Launch Dashboard Screen
-						Intent dashboard = new Intent(getApplicationContext(), HomeActivity.class);
-						
-						// Close all views before launching Dashboard
-						dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						startActivity(dashboard);
-						
-						// Close Login Screen
-						finish();
-						*/
-						mHandler.sendEmptyMessage(0);
-					}else{
-						// Error in login
-						//txtStatus.setText(json.getString(KEY_ERROR_MSG));
-						Message msgErr= mHandler.obtainMessage(1);
-                        msgErr.getData().putString("err",json.getString(KEY_ERROR_MSG));
-                        mHandler.sendMessage(msgErr);
-                        //Log.e(AppConstants.TAG,"login err",e);
-					}
+	    	// creating connection detector class instance
+	        cd = new ConnectionDetector(getApplicationContext());
+	        
+			//get Internet status
+	        isInternetPresent = cd.isConnectingToInternet();
+	        
+	        if(!isInternetPresent){
+	        	//check for details on preferences
+	        	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+	            
+	            String username = settings.getString("username",null);
+	            String password = settings.getString("password",null);
+	            
+	            if((username.equals(txtUser.getText().toString()))&&(password.equals(txtPass.getText().toString()))){
+	            	
+	            	mHandler.sendEmptyMessage(0);
+				}else{   
+					Message msgErr= mHandler.obtainMessage(1);
+                    msgErr.getData().putString("err","Incorrect username and/or password!");
+                    mHandler.sendMessage(msgErr);
+				}
+	            
+	        }else{
+		        
+	            String username = txtUser.getText().toString();
+	            String password = txtPass.getText().toString();
+	            UserFunctions userFunction = new UserFunctions();
 				
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+				JSONObject json = userFunction.loginUser(username, password);
+				try {
+						String res = json.getString(KEY_SUCCESS); 
+						if(res.equals("OK")){
+							JSONObject json_user = json.getJSONObject("message");
+							saveCreds(json_user.getString(KEY_USER_ID), json_user.getString(KEY_TOKEN), username, password);
+							mHandler.sendEmptyMessage(0);
+						}else{
+							Message msgErr= mHandler.obtainMessage(1);
+	                        msgErr.getData().putString("err",json.getString(KEY_ERROR_MSG));
+	                        mHandler.sendMessage(msgErr);
+						}
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+	        }
            
     }
 
@@ -208,9 +214,17 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
     
     private void loginSuccess ()
     {
-    	new getSectors().execute();
-    	new getCategories().execute();
-    	
+    	// creating connection detector class instance
+        cd = new ConnectionDetector(getApplicationContext());
+        
+		//get Internet status
+        isInternetPresent = cd.isConnectingToInternet();
+        
+        if(isInternetPresent){
+	    	new getSectors().execute();
+	    	new getCategories().execute();
+	    }
+        
     	Intent intent = new Intent(LoginPreferencesActivity.this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

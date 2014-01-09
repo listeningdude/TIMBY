@@ -51,10 +51,10 @@ public class BaseActivity extends Activity {
         @Override
         public void run() {
             // Perform any required operation on disconnect
-        	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        	//SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         	
-        	settings.edit().clear();
-            settings.edit().commit();	
+        	//settings.edit().clear();
+            //settings.edit().commit();	
         	
             Intent i = new Intent(getBaseContext(), LoginPreferencesActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -210,9 +210,9 @@ public class BaseActivity extends Activity {
             @Override
             public void onClick(View v) {
             	// handleLogin ();
-            	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        	  	settings.edit().clear();
-                settings.edit().commit();	
+            	//SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        	  	//settings.edit().clear();
+                //settings.edit().commit();	
                 Intent i = new Intent(getBaseContext(), LoginPreferencesActivity.class);
                 startActivity(i);
                 finish();
@@ -259,10 +259,6 @@ public class BaseActivity extends Activity {
         initSlidingMenu();
 	}
 
-    private void handleLogin ()
-    {         
-            new Thread().start();
-    }
     public void run ()
     {
     	try {
