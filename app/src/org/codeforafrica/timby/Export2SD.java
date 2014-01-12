@@ -23,6 +23,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import org.codeforafrica.timby.SyncActivity.checkToken;
+import org.codeforafrica.timby.media.Encryption;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
 import org.codeforafrica.timby.model.Report;
@@ -136,8 +137,8 @@ public class Export2SD extends Activity{
         String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/db.xml";
  		
 		try{
-			cipher = createCipher(Cipher.ENCRYPT_MODE);
-			applyCipher(file, file+"_", cipher);
+			cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+			Encryption.applyCipher(file, file+"_", cipher);
 		}catch(Exception e){
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -153,34 +154,7 @@ public class Export2SD extends Activity{
 		
 		//Done!
     }
-	static Cipher createCipher(int mode) throws Exception {
-        PBEKeySpec keySpec = new PBEKeySpec("test".toCharArray());
-        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
-        SecretKey key = keyFactory.generateSecret(keySpec);
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update("input".getBytes());
-        byte[] digest = md.digest();
-        byte[] salt = new byte[8];
-        for (int i = 0; i < 8; ++i)
-          salt[i] = digest[i];
-        PBEParameterSpec paramSpec = new PBEParameterSpec(salt, 20);
-        Cipher cipher = Cipher.getInstance("PBEWithMD5AndDES");
-        cipher.init(mode, key, paramSpec);
-        return cipher;
-      }
 
-      static void applyCipher(String inFile, String outFile, Cipher cipher) throws Exception {
-        CipherInputStream in = new CipherInputStream(new FileInputStream(inFile), cipher);
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outFile));
-        int BUFFER_SIZE = 8;
-        byte[] buffer = new byte[BUFFER_SIZE];
-        int numRead = 0;
-        do {
-          numRead = in.read(buffer);
-          if (numRead > 0)
-            out.write(buffer, 0, numRead);
-        } while (numRead == 8);
-      }
 	public boolean zipFileAtPath(String sourcePath, String toLocation) {
 	    // ArrayList<String> contentList = new ArrayList<String>();
 	    File sourceFile = new File(sourcePath);

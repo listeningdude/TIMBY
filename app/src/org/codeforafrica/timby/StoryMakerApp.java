@@ -68,10 +68,10 @@ public class StoryMakerApp extends Application {
 		
 		SQLiteDatabase.loadLibs(this);
 
-//		boolean optOut = true;
-//		final SharedPreferences prefsAnalytics = getSharedPreferences(Globals.PREFERENCES_ANALYTICS, Activity.MODE_PRIVATE);
-//		optOut = !(prefsAnalytics.getBoolean(Globals.PREFERENCE_ANALYTICS_OPTIN, false));
-//		GoogleAnalytics.getInstance(this).setAppOptOut(optOut);
+		//boolean optOut = true;
+		//final SharedPreferences prefsAnalytics = getSharedPreferences(Globals.PREFERENCES_ANALYTICS, Activity.MODE_PRIVATE);
+		//optOut = !(prefsAnalytics.getBoolean(Globals.PREFERENCE_ANALYTICS_OPTIN, false));
+		//GoogleAnalytics.getInstance(this).setAppOptOut(optOut);
 		
 		initApp();
 		 

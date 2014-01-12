@@ -1,20 +1,23 @@
 package org.codeforafrica.timby;
 
 import org.codeforafrica.timby.R;
+import org.codeforafrica.timby.media.MediaProjectManager;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.holoeverywhere.app.AlertDialog;
-
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
@@ -39,6 +42,7 @@ public class ProjectsActivity extends BaseActivity {
 	private ArrayList<Project> mListProjects;
 	private ProjectArrayAdapter aaProjects;
 	int rid;
+	ProgressDialog pDialog;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,17 +56,38 @@ public class ProjectsActivity extends BaseActivity {
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
         
         mListView = (ListView)findViewById(R.id.projectslist);
+        
         initListView(mListView);
+        //new showList().execute();
     }
     
+    class showList extends AsyncTask<String, String, String> {
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pDialog = new ProgressDialog(ProjectsActivity.this);
+			pDialog.setMessage("Decrypting thumbnails...");
+			pDialog.show();
+		}
+		protected String doInBackground(String... args) {
+			mListProjects = Project.getAllAsList(ProjectsActivity.this, rid);
+	         aaProjects = new ProjectArrayAdapter(ProjectsActivity.this, 
+	           	   R.layout.list_project_row, mListProjects);
+	         
+	         mListView.setAdapter(aaProjects);
+			return null;
+		}
+	protected void onPostExecute(String file_url) {
+			pDialog.dismiss();	
+		}
+	}
     
-    
-    @Override
+   /* @Override
 	public void onResume() {
 		super.onResume();
 		refreshProjects();
 
-	}
+	}*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -181,11 +206,7 @@ public class ProjectsActivity extends BaseActivity {
     
     public void refreshProjects ()
     {
-    	 mListProjects = Project.getAllAsList(this, rid);
-         aaProjects = new ProjectArrayAdapter(this, 
-           	   R.layout.list_project_row, mListProjects);
-         
-         mListView.setAdapter(aaProjects);
+    	 new showList().execute();
     }
     
     
@@ -199,6 +220,71 @@ public class ProjectsActivity extends BaseActivity {
     	//should we delete project folders here too?
     }
     
+    private static class GetThumbnailParams {
+    	Context context;
+    	Media media;
+    	Project project;
+    	ImageView ivIcon;
+	    
+	    GetThumbnailParams(Context context, Media media, Project project,ImageView ivIcon) {
+	        this.context = context;
+	        this.media = media;
+	        this.project = project;
+	        this.ivIcon = ivIcon;
+	    }
+	}
+    class getThumbnail extends AsyncTask<GetThumbnailParams, String, String> {
+
+		@Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+			//pDialog = new ProgressDialog(ProjectsActivity.this);
+			//pDialog.setMessage("Decrypting thumbnail...");
+			//pDialog.show(); 
+        }
+        protected String doInBackground(GetThumbnailParams... params) {
+        	Context context = params[0].context;
+        	final Media media = params[0].media;
+        	final Project project = params[0].project;
+        	final ImageView ivIcon = params[0].ivIcon;
+        	
+        	
+            ProjectsActivity.this.runOnUiThread(new Runnable() 
+                  {
+                       public void run() 
+                       {
+                    	   Bitmap bmp = Media.getThumbnail(ProjectsActivity.this,media,project);
+               				if (bmp != null)
+               					ivIcon.setImageBitmap(bmp);
+               				
+               				//Delete decrypted file
+               				String filepath = media.getPath();
+                 			String[] fileparts = filepath.split("\\.");
+                 			String filename = fileparts[0];
+                 			String fileext = fileparts[1];
+                 			String tempFile = filename+"2."+fileext;
+                 			File temp = new File(tempFile);
+                 			temp.delete();
+                 			//If file is video delete thumbnail as well
+                 			if(media.getMimeType().contains("video")){
+
+                 	            File fileThumb = new File(MediaProjectManager.getExternalProjectFolder(project, ProjectsActivity.this), media.getId() + "2.jpg");
+                 	            fileThumb.delete();
+                 			}
+                 			
+                       }
+
+          });
+        	
+        	
+        	return null;
+        }
+       
+        protected void onPostExecute(String ppath) {
+            //pDialog.dismiss();
+        }
+	}
+        
     class ProjectArrayAdapter extends ArrayAdapter {
     	
     	Context context; 
@@ -212,7 +298,7 @@ public class ProjectsActivity extends BaseActivity {
             this.context = context;
             this.projects = projects;
         }
-
+        
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View row = convertView;
@@ -223,8 +309,6 @@ public class ProjectsActivity extends BaseActivity {
             {
                 LayoutInflater inflater = ((Activity)context).getLayoutInflater();
                 row = inflater.inflate(layoutResourceId, parent, false);
-                
-                
             }
             
             tv = (TextView)row.findViewById(R.id.title);
@@ -246,9 +330,12 @@ public class ProjectsActivity extends BaseActivity {
             	for (Media media: mediaList)
             		if (media != null)
             		{
-            			Bitmap bmp = Media.getThumbnail(ProjectsActivity.this,media,project);
-            			if (bmp != null)
-            				ivIcon.setImageBitmap(bmp);
+            			GetThumbnailParams params = new GetThumbnailParams(ProjectsActivity.this,media,project, ivIcon);
+            		 	getThumbnail myTask = new getThumbnail();
+            		 	myTask.execute(params);	
+            			//Bitmap bmp = Media.getThumbnail(ProjectsActivity.this,media,project);
+            			//if (bmp != null)
+            			//	ivIcon.setImageBitmap(bmp);
             			break;
             		}
             }

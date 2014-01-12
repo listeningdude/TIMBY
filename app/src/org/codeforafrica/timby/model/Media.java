@@ -1,9 +1,20 @@
 package org.codeforafrica.timby.model;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
 
 import org.ffmpeg.android.MediaUtils;
 
@@ -12,6 +23,7 @@ import org.codeforafrica.timby.AppConstants;
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.db.ProjectsProvider;
 import org.codeforafrica.timby.db.StoryMakerDB;
+import org.codeforafrica.timby.media.Encryption;
 import org.codeforafrica.timby.media.MediaProjectManager;
 
 import android.content.ContentValues;
@@ -401,8 +413,9 @@ public class Media {
         }
         else if (media.getMimeType().startsWith("video"))
         {
-            File fileThumb = new File(MediaProjectManager.getExternalProjectFolder(project, context), media.getId() + "_thumb.jpg");
-            
+        	
+            File fileThumb = new File(MediaProjectManager.getExternalProjectFolder(project, context), media.getId() + "2.jpg");
+            /*
             if (fileThumb.exists())
             {
 
@@ -412,10 +425,26 @@ public class Media {
             }
             else
             {
+            */
             	try
             	{
-	                Bitmap bmp = MediaUtils.getVideoFrame(new File(media.getPath()).getCanonicalPath(), -1);
-	                
+            		String filepath = media.getPath();
+         			String[] fileparts = filepath.split("\\.");
+         			String filename = fileparts[0];
+         			String fileext = fileparts[1];
+         			String tempFile = filename+"2."+fileext;
+         			
+         			 Cipher cipher;
+         			
+                     try{
+             			cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
+             			Encryption.applyCipher(filepath, tempFile, cipher);
+             		}catch(Exception e){
+             			e.printStackTrace();
+             		}
+                     
+	                Bitmap bmp = MediaUtils.getVideoFrame(new File(tempFile).getCanonicalPath(), -1);
+	                /*
 	                if (bmp != null)
 	                {
 		                try {
@@ -423,7 +452,7 @@ public class Media {
 		                } catch (FileNotFoundException e) {
 		                    Log.e(AppConstants.TAG, "could not cache video thumb", e);
 		                }
-	                }
+	                }*/
 	                
 	                return bmp;
             	}
@@ -437,14 +466,32 @@ public class Media {
             		Log.e(AppConstants.TAG,"Could not generate thumbnail - OutofMemory!: " + media.getPath());
             		return null;
             	}
-            }
+            //}
         }
         else if (media.getMimeType().startsWith("image"))
         {
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = IMAGE_SAMPLE_SIZE * 2; //images will be bigger than video or audio
-        
-            return BitmapFactory.decodeFile(media.getPath(), options);
+            
+           
+            String filepath = media.getPath();
+			String[] fileparts = filepath.split("\\.");
+			String filename = fileparts[0];
+			String fileext = fileparts[1];
+			String tempFile = filename+"2."+fileext;
+			
+			
+			
+			 Cipher cipher;
+			
+            try{
+    			cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
+    			Encryption.applyCipher(filepath, tempFile, cipher);
+    		}catch(Exception e){
+    			e.printStackTrace();
+    		}
+            
+            return BitmapFactory.decodeFile(tempFile, options);
         }
         else if (media.getMimeType().startsWith("audio"))
         {
@@ -484,4 +531,5 @@ public class Media {
             return BitmapFactory.decodeResource(context.getResources(), R.drawable.thumb_complete,options);
         }
     }
+    
 }

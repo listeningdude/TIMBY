@@ -43,7 +43,8 @@ public final static String TAG = "TIMBY";
 	public final static String TOR_PROXY_HOST = "localhost";
 	public final static int TOR_PROXY_PORT = 9050;
 	
-	
+	public final static String ENCRYPTION_KEY="PBEWithMD5AndDES";
+		
 	public final static class MimeTypes {
 		public final static String THREEGPP_AUDIO = "audio/3gpp";
 	//	public final static String OGG = "audio/ogg";
