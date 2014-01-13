@@ -8,21 +8,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.security.MessageDigest;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
-
-import org.codeforafrica.timby.SyncActivity.checkToken;
 import org.codeforafrica.timby.media.Encryption;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
@@ -32,14 +22,12 @@ import org.holoeverywhere.widget.Toast;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.View;
 
 public class Export2SD extends Activity{
 	private ArrayList<Report> mListReports;
@@ -51,7 +39,7 @@ public class Export2SD extends Activity{
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.export);   
+		setContentView(R.layout.export);   
 		//pDialog = (ProgressDialog)findViewById(R.id.progressBar1);
 		
 		new export2SD().execute();
@@ -69,6 +57,7 @@ public class Export2SD extends Activity{
 			pDialog.show();
 		}
 		protected String doInBackground(String... args) {
+			
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	        String user_id = settings.getString("user_id",null); 
 			
@@ -77,40 +66,44 @@ public class Export2SD extends Activity{
 			//Begin "XML" file
 			 mListReports = Report.getAllAsList(getApplicationContext());
 			 for (int i = 0; i < mListReports.size(); i++) {
-				 	data += "<?xml version='1.0' encoding='UTF-8'?>\n";
-				 	data += "<user_id>"+user_id+"</user_id>";
-				 	data += "<reports>\n";
-				 	data += "<report>\n";
-				 	Report report = mListReports.get(i);
-				 	data += "<id>"+String.valueOf(report.getId())+"</id>\n";
-				 	data += "<title>"+report.getTitle()+"</title>\n";
-				 	data += "<category>"+report.getIssue()+"</category>\n";
-				 	data += "<sector>"+report.getSector()+"</sector>\n";
-				 	data += "<entity>"+report.getEntity()+"</entity>\n";
-				 	data += "<location>"+report.getLocation()+"</location>\n";
-				 	data += "<report_date>"+report.getDate()+"</report_date>\n";
-				 	data += "<description>"+report.getDescription()+"</description>\n";
-				 	data += "<report_objects>\n";
-				 	mListProjects = Project.getAllAsList(getApplicationContext(), report.getId());
-				 	for (int j = 0; j < mListProjects.size(); j++) {
-				 		Project project = mListProjects.get(j);
-					 	data += "<object>\n";
-					 	data += "<object_id>"+project.getId()+"</object_id>\n";
-					 	data += "<object_title>"+project.getTitle()+"</object_title>\n";
-					 	
-					 	Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
-					 	for (Media media: mediaList){
-					 		String path = media.getPath();
-					 		path = path.replace(ext, "");
-					 		data += "<object_media>"+path+"</object_media>\n";
-					 		data += "<object_type>"+media.getMimeType()+"</object_type>\n";
+				 	//check if report actually exists
+				 	if(mListReports.get(i)!=null){
+					 	data += "<?xml version='1.0' encoding='UTF-8'?>\n";
+					 	data += "<user_id>"+user_id+"</user_id>";
+					 	data += "<reports>\n";
+					 	data += "<report>\n";
+					 	Report report = mListReports.get(i);
+					 	data += "<id>"+String.valueOf(report.getId())+"</id>\n";
+					 	data += "<title>"+report.getTitle()+"</title>\n";
+					 	data += "<category>"+report.getIssue()+"</category>\n";
+					 	data += "<sector>"+report.getSector()+"</sector>\n";
+					 	data += "<entity>"+report.getEntity()+"</entity>\n";
+					 	data += "<location>"+report.getLocation()+"</location>\n";
+					 	data += "<report_date>"+report.getDate()+"</report_date>\n";
+					 	data += "<description>"+report.getDescription()+"</description>\n";
+					 	data += "<report_objects>\n";
+					 	mListProjects = Project.getAllAsList(getApplicationContext(), report.getId());
+					 	for (int j = 0; j < mListProjects.size(); j++) {
+					 		Project project = mListProjects.get(j);
+						 	data += "<object>\n";
+						 	data += "<object_id>"+project.getId()+"</object_id>\n";
+						 	data += "<object_title>"+project.getTitle()+"</object_title>\n";
+						 	
+						 	Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
+						 	for (Media media: mediaList){
+						 		String path = media.getPath();
+						 		path = path.replace(ext, "");
+						 		data += "<object_media>"+path+"</object_media>\n";
+						 		data += "<object_type>"+media.getMimeType()+"</object_type>\n";
+						 	}
+							data += "</object>\n";
 					 	}
-						data += "</object>\n";
+					 	data += "</report_objects>\n";
+					 	data += "</report>\n";
+					 	data += "</reports>";
+					 	
+					 	writeToFile(data, i);
 				 	}
-				 	data += "</report_objects>\n";
-				 	data += "</report>\n";
-				 	data += "</reports>";
-					writeToFile(data, i);
 				}
 			 
 			//Now zip it!
@@ -123,9 +116,7 @@ public class Export2SD extends Activity{
 			pDialog.dismiss();
 			Toast.makeText(getBaseContext(), "Exported Successfully!", Toast.LENGTH_LONG).show();
 			finish();
-			
 		}
-	
 	}
       
 	public static void writeToFile(final String fileContents, final int reportId) {

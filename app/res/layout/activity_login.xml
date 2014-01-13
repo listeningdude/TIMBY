@@ -71,7 +71,8 @@
                 android:password="true"
                	android:padding="10dp"
                 android:textColor="@color/soft_red"
-				android:background="#ffffff"  />
+				android:background="#ffffff" 
+				android:text="timbytest" />
           <!-- Login button -->
 
           <Button

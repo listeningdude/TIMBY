@@ -36,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -61,8 +62,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.LinearLayout.LayoutParams;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -70,7 +74,7 @@ import com.fima.cardsui.views.CardUI;
 //import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.viewpagerindicator.CirclePageIndicator;
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements OnClickListener{
 
     
     private ProgressDialog mLoading;
@@ -83,7 +87,8 @@ public class HomeActivity extends BaseActivity {
     RelativeLayout load_lessons;
     RelativeLayout load_reports;
     RelativeLayout load_sync;
-
+    
+    private Dialog dialog;
     @Override
     public void onCreate(Bundle savedInstanceState) {
     
@@ -143,19 +148,45 @@ public class HomeActivity extends BaseActivity {
 			}
 		});
         load_sync = (RelativeLayout)findViewById(R.id.load_sync);
-        load_sync.setOnClickListener(new View.OnClickListener() {
+        load_sync.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplicationContext(),SyncActivity.class);
-				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
+				//Intent i = new Intent(getApplicationContext(),SyncActivity.class);
+				//i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				//startActivity(i);
+	            dialog = new Dialog(HomeActivity.this);
+                dialog.setContentView(R.layout.dialog_sync);
+                dialog.findViewById(R.id.button_sync).setOnClickListener(
+                        HomeActivity.this);
+                dialog.findViewById(R.id.button_export).setOnClickListener(
+                        HomeActivity.this);
+                dialog.setTitle("Choose Action");
+                dialog.show();
 				
 			}
 		});
     }
-   
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+        case R.id.button_sync:
+        	dialog.dismiss();
+        	Intent i = new Intent(getApplicationContext(),SyncActivity.class);
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
+            break;
+            
+        case R.id.button_export:
+        	dialog.dismiss();
+        	Intent i2 = new Intent(getApplicationContext(), Export2SD.class);
+        	i2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i2);
+            break;
+        }
+    }
+
     @Override
 	public void onResume() {
 		super.onResume();
