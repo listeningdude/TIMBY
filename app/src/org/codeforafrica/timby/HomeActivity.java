@@ -97,7 +97,7 @@ public class HomeActivity extends BaseActivity {
         } catch (NameNotFoundException e) {
            
         }
-        checkCreds();
+        //checkCreds();
     	//new getSectors().execute();
        // new getCategories().execute();
         setContentView(R.layout.activity_home_screen);
