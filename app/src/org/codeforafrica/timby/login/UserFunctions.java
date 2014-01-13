@@ -205,7 +205,7 @@ public class UserFunctions {
 				ContentBody content = new FileBody(new File(path), ptype);
 				Log.d("What's null?", String.valueOf(content)+"userid"+user_id+"ptitle"+ptitle+"psequence"+psequence+"preportid"+preportid+"ptype"+ptype+"optype"+optype+api_key+pdate);
 				
-				mpEntity.addPart("object"+psequence, content);
+				mpEntity.addPart("userfile", content);
 				mpEntity.addPart("token", new StringBody(token));
 				mpEntity.addPart("user_id", new StringBody(user_id));
 				mpEntity.addPart("title", new StringBody(ptitle));

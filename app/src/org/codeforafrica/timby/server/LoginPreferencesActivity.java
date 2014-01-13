@@ -27,10 +27,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,6 +45,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
         private TextView txtStatus;
         private EditText txtUser;
         private EditText txtPass;
+        private CheckBox showPassword;
     	private static String KEY_SUCCESS = "status";
     	private static String KEY_ERROR_MSG = "message";
 
@@ -64,7 +67,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
         txtStatus = (TextView)findViewById(R.id.login_error);
         txtUser = (EditText)findViewById(R.id.loginUsername);
         txtPass = (EditText)findViewById(R.id.loginPassword);
-        
+        showPassword = (CheckBox)findViewById(R.id.showPassword);
         getCreds();
         
         getSupportActionBar().hide();
@@ -87,7 +90,18 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
                         }
                 
         });
-        
+        showPassword.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(showPassword.isChecked()){
+					txtPass.setInputType(InputType.TYPE_CLASS_TEXT);
+		        }else{
+		        	txtPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+		        }
+			}
+		});
                
       //Link to Lessions
        Button btnLessons = (Button)findViewById(R.id.link_to_skip);

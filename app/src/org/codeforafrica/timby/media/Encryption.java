@@ -53,6 +53,7 @@ public class Encryption  {
         out.write(buffer, 0, numRead);
     } while (numRead == 8);
     	out.close();
+    	
   }
 
 }

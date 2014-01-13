@@ -1,7 +1,10 @@
 package org.codeforafrica.timby;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
+
+import javax.crypto.Cipher;
 
 import org.holoeverywhere.widget.Toast;
 import org.json.JSONArray;
@@ -10,6 +13,7 @@ import org.json.JSONObject;
 
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.login.UserFunctions;
+import org.codeforafrica.timby.media.Encryption;
 import org.codeforafrica.timby.model.Entity;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
@@ -195,6 +199,25 @@ public class SyncActivity extends BaseActivity{
 		 	}else if(ptype.contains("audio")){
 		 		optype = "video";
 		 	}
+		 	//decrypt file
+		 	String filepath = ppath;
+		 	String tempFile = ppath+"_";
+		 	
+ 			 Cipher cipher;
+             try{
+     			cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
+     			Encryption.applyCipher(filepath, tempFile, cipher);
+     		}catch(Exception e){
+     			e.printStackTrace();
+     		}
+           //Then delete original file
+     		File oldfile = new File(ppath);
+     		oldfile.delete();
+     		
+     		//Then remove _ on encrypted file
+     		File newfile = new File(tempFile);
+     		newfile.renameTo(new File(ppath));
+     		
 		 	String ptitle = project.getTitle();
 		 	String pdate = project.getDate();
 		 	String pid = String.valueOf(project.getId());

@@ -42,7 +42,7 @@
 
     <application
         android:name="org.codeforafrica.timby.StoryMakerApp"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/timby_hold_icon"
         android:label="@string/app_name"
         android:theme="@style/Theme.storymakerstyle"
         android:largeHeap="true"

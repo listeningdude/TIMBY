@@ -37,7 +37,7 @@ public final static String TAG = "TIMBY";
 
 	public final static int DEFAULT_CLIP_COUNT = 1;
 	
-	public final static String HOCKEY_APP_ID = "b5b37e4bfd65abdc3791f41d4dee339d";
+	public final static String HOCKEY_APP_ID = "a9918f698864aa1601d6617df3dfc048";
 	
 	
 	public final static String TOR_PROXY_HOST = "localhost";
