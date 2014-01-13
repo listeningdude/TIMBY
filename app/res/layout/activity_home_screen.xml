@@ -1,50 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/light_cream"
+    android:fillViewport="true"
+    android:orientation="vertical" >
+
+        <!--  Header  Starts-->
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.10"
+            android:orientation="vertical"
+            android:paddingBottom="5dip"
+            android:paddingTop="70dip" >
+
+                <!-- Logo Start-->
+
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center|center"
+                    android:src="@drawable/timby_logo" />
+            </LinearLayout>
+<TableLayout
     android:id="@+id/tableLayout1"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:stretchColumns="*"
-    android:background="#ffffff" >
+    android:background="#ffffff" 
+    android:layout_weight="0.6">
 
     <TableRow
         android:id="@+id/tableRow3"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_weight="0.5"
-        android:padding="5dip" >
+        android:layout_weight="0.5" >
  		<RelativeLayout
             android:id="@+id/load_new_report"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginRight="2dp"
             android:layout_weight="0.50"
-            android:background="@color/soft_blue"
+            android:background="@drawable/purple_button"
             android:clickable="true" >
 
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="@string/add" />
-
+            
             <ImageView
                 android:id="@+id/imageView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/textView1"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:src="@drawable/add" />
-
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_new_report" />
+			<TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/imageView1"
+                android:textColor="#ffffff"
+                android:text="@string/add" />
+            
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/load_reports"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:background="@color/soft_orange"
+            android:background="@color/light_blue"
             android:clickable="true" >
 
             <TextView
@@ -52,17 +78,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
+                android:layout_below="@+id/imageView2"
+                android:textColor="#ffffff"
                 android:text="@string/view" />
 
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/textView2"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="22dp"
-                android:src="@drawable/reports" />
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_reports" />
 
         </RelativeLayout>
  
@@ -72,16 +98,14 @@
         android:id="@+id/tableRow4"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_weight="0.5"
-        android:padding="5dip" >
+        android:layout_weight="0.5">
  
         <RelativeLayout
             android:id="@+id/load_lessons"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginRight="2dp"
             android:layout_weight="0.50"
-            android:background="@color/softer_orange"
+            android:background="@color/red"
             android:clickable="true" >
 
             <TextView
@@ -89,17 +113,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
+                android:layout_below="@+id/imageView3"
+                android:textColor="#ffffff"
                 android:text="@string/help" />
 
             <ImageView
                 android:id="@+id/imageView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/TextView02"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="22dp"
-                android:src="@drawable/info" />
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_help" />
 
         </RelativeLayout>
 
@@ -108,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.39"
-            android:background="@color/soft_green" 
+            android:background="@color/soft_orange" 
             android:clickable="true">
 
             <TextView
@@ -116,20 +140,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
+                android:layout_below="@+id/imageView4"
+                android:textColor="#ffffff"
                 android:text="@string/sync" />
 
             <ImageView
                 android:id="@+id/imageView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/TextView01"
+                
+                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="22dp"
-                android:src="@drawable/sync" />
+                android:src="@drawable/icon_sync" />
 
         </RelativeLayout>
 
     </TableRow>
  
 </TableLayout>
+   </LinearLayout>

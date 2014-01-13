@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<color name="red">#ff0000</color>
+<color name="red">#f15b2a</color>
 <color name="green">#00ff00</color>
 <color name="blue">#0000ff</color>
 <color name="transparent_black">#33333333</color>
  <color name="menu_background">#c6c4c4</color>
  <color name="background_light">#c6c4c4</color>
- <color name="light_blue">#58ACFA</color>
+ <color name="light_blue">#67b6dc</color>
  <color name="soft_green">#ADC96B</color>
  <color name="soft_blue">#81C6DD</color>
  <color name="soft_grey">#DCDDD8</color>
  <color name="soft_red">#9E3B33</color>
- <color name="soft_orange">#E48743</color>
+ <color name="soft_orange">#fabc17</color>
  <color name="softer_orange">#E9B64D</color>
+ <color name="light_cream">#f0e4d4</color>
+ <color name="soft_purple">#7d4199</color>
 </resources>

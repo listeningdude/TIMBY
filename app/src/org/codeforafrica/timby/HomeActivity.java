@@ -691,6 +691,7 @@ public class HomeActivity extends BaseActivity {
         {
         	Intent intent = new Intent(this,LoginPreferencesActivity.class);
         	startActivity(intent);
+        	//finish();
         }else{
 
         }

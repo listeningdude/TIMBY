@@ -267,8 +267,7 @@ public class ProjectsActivity extends BaseActivity {
                  			temp.delete();
                  			//If file is video delete thumbnail as well
                  			if(media.getMimeType().contains("video")){
-
-                 	            File fileThumb = new File(MediaProjectManager.getExternalProjectFolder(project, ProjectsActivity.this), media.getId() + "2.jpg");
+                 				File fileThumb = new File(MediaProjectManager.getExternalProjectFolder(project, ProjectsActivity.this), media.getId() + "2.jpg");
                  	            fileThumb.delete();
                  			}
                  			

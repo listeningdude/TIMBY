@@ -33,9 +33,11 @@ import org.holoeverywhere.widget.Toast;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
@@ -67,14 +69,17 @@ public class Export2SD extends Activity{
 			pDialog.show();
 		}
 		protected String doInBackground(String... args) {
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+	        String user_id = settings.getString("user_id",null); 
+			
 			ext = String.valueOf(Environment.getExternalStorageDirectory());
 		 	ext += "/"+AppConstants.TAG;
 			//Begin "XML" file
-		 	
-			 data += "<?xml version='1.0' encoding='UTF-8'?>\n";
-			 data += "<reports>\n";
 			 mListReports = Report.getAllAsList(getApplicationContext());
 			 for (int i = 0; i < mListReports.size(); i++) {
+				 	data += "<?xml version='1.0' encoding='UTF-8'?>\n";
+				 	data += "<user_id>"+user_id+"</user_id>";
+				 	data += "<reports>\n";
 				 	data += "<report>\n";
 				 	Report report = mListReports.get(i);
 				 	data += "<id>"+String.valueOf(report.getId())+"</id>\n";
@@ -104,11 +109,11 @@ public class Export2SD extends Activity{
 				 	}
 				 	data += "</report_objects>\n";
 				 	data += "</report>\n";
+				 	data += "</reports>";
+					writeToFile(data, i);
 				}
-			 data += "</reports>";
-			//writeToFile(data);
+			 
 			//Now zip it!
-		
 			zipFileAtPath(ext, String.valueOf(Environment.getExternalStorageDirectory())+"/timby.zip");
 			//Toast and end
 		
@@ -123,9 +128,9 @@ public class Export2SD extends Activity{
 	
 	}
       
-	public static void writeToFile(final String fileContents) {
+	public static void writeToFile(final String fileContents, final int reportId) {
 		try {
-            FileWriter out = new FileWriter(new File(Environment.getExternalStorageDirectory(), AppConstants.TAG+"/db.xml"));
+            FileWriter out = new FileWriter(new File(Environment.getExternalStorageDirectory(), AppConstants.TAG+"/"+String.valueOf(reportId)+"/db.xml"));
             out.write(fileContents);
             out.close();
         } catch (IOException e) {
@@ -134,7 +139,7 @@ public class Export2SD extends Activity{
          //Encrypt db.xml
 		 
         Cipher cipher;
-        String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/db.xml";
+        String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/"+String.valueOf(reportId)+"/db.xml";
  		
 		try{
 			cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);

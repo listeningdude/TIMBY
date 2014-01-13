@@ -67,8 +67,9 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
         
         getCreds();
         
-        getSupportActionBar();
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
+        getSupportActionBar().hide();
+        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
+        
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new OnClickListener ()
         {
