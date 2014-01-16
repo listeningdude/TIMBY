@@ -20,7 +20,7 @@
 
     <style name="Theme.storymakerstyle" parent="@style/Holo.Theme.Light.DarkActionBar">
                   <item name="android:windowAnimationStyle">@null</item>
-        
+       
         <item name="actionBarItemBackground">@drawable/selectable_background_storymakerstyle</item>
         <item name="popupMenuStyle">@style/storymakerstyle_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/storymakerstyle_DropDownListView</item>
@@ -36,7 +36,7 @@
         <item name="android:actionBarStyle">@style/storymakerstyle_solid_ActionBar</item>
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_storymakerstyle</item>
         
-                <!-- Light.DarkActionBar specific -->
+        <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.storymakerstyle.widget</item>
         <item name="android:actionBarWidgetTheme">@style/Theme.storymakerstyle.widget</item>
 

@@ -22,6 +22,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -38,10 +39,12 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.RelativeLayout;
 
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
@@ -49,8 +52,8 @@ import com.actionbarsherlock.view.MenuItem;
 public class ReportActivity extends BaseActivity implements OnClickListener,
 OnItemLongClickListener{
 
-	private RadioGroup rGroup;
-	private TextView txtNewStoryDesc;
+	//private RadioGroup rGroup;
+	//private TextView txtNewStoryDesc;
 	private EditText editTextStoryName;
 	private Spinner spinnerSector;
 	private Spinner spinnerIssue;
@@ -73,6 +76,12 @@ OnItemLongClickListener{
 	TextView gpsInfo;
 	GPSTracker gpsT; 
 	
+	RelativeLayout images;
+	RelativeLayout video;
+	RelativeLayout audio;
+	RelativeLayout gallery;
+	int resultMode;
+	
     private ArrayList<String> datasource;
     private MyAdapter adapter;
     private Dialog dialog;
@@ -83,9 +92,66 @@ OnItemLongClickListener{
         
         setContentView(R.layout.activity_new_story);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
+        ViewGroup actionBar = (ViewGroup) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar", "id", "android"));
+        View v = actionBar.getChildAt(0);
+        ActionBar.LayoutParams p = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        p.gravity= Gravity.CENTER;
+        v.setLayoutParams(p);
         
-        txtNewStoryDesc = (TextView)findViewById(R.id.txtNewStoryDesc);
+        TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+        title2.setTextColor(Color.parseColor("#7d4199"));
+        
+        //
+        images = (RelativeLayout)findViewById(R.id.images);
+        video = (RelativeLayout)findViewById(R.id.video);
+        audio = (RelativeLayout)findViewById(R.id.audio);
+        gallery = (RelativeLayout)findViewById(R.id.gallery);
+        
+        images.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//TODO Auto-generated method stub
+				story_mode = 2;
+				resultMode = Project.STORY_TYPE_PHOTO;
+				launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),datasource.toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
+				
+			}
+		});
+        video.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//TODO Auto-generated method stub
+				story_mode = 2;
+				resultMode = Project.STORY_TYPE_VIDEO;
+				launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),datasource.toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
+
+			}
+		});
+        audio.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//TODO Auto-generated method stub
+				story_mode = 2;
+				resultMode = Project.STORY_TYPE_AUDIO;
+				launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),datasource.toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
+			
+			}
+		});
+        
+        gallery.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//TODO Auto-generated method stub
+				Intent p = new Intent(getBaseContext(), ProjectsActivity.class);
+            	p.putExtra("rid", rid);
+            	p.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            	startActivity(p);
+			}
+		});
+        
+        
+        //txtNewStoryDesc = (TextView)findViewById(R.id.txtNewStoryDesc);
         editTextStoryName = (EditText)findViewById(R.id.editTextStoryName);
        
         addEntity = (Button)findViewById(R.id.AddEntity);
@@ -93,15 +159,16 @@ OnItemLongClickListener{
         
         spinnerSector = (Spinner)findViewById(R.id.spinnerSector);
         setSectors();        
+        
         spinnerIssue = (Spinner)findViewById(R.id.spinnerIssue);
         setCategories();                
         
         editTextDesc = (EditText)findViewById(R.id.editTextDescription);
         
-        rGroup = (RadioGroup)findViewById(R.id.radioGroupStoryType);
+        //rGroup = (RadioGroup)findViewById(R.id.radioGroupStoryType);
         
         done = (Button)findViewById(R.id.done);
-        view = (ImageView)findViewById(R.id.view);
+        //view = (ImageView)findViewById(R.id.view);
         setLocation = (ImageView)findViewById(R.id.imageView4);
         gpsInfo = (TextView)findViewById(R.id.textViewLocation);
         
@@ -132,7 +199,7 @@ OnItemLongClickListener{
         });
         
         if(rid!=-1){
-        
+        	getSupportActionBar().setTitle("Edit Report");
         	title = i.getStringExtra("title");
             sector = i.getStringExtra("sector");
             issue = i.getStringExtra("issue");
@@ -144,6 +211,7 @@ OnItemLongClickListener{
         	}
             editTextStoryName.setText(title);
             spinnerSector.setSelection(Integer.parseInt(sector));
+           
             spinnerIssue.setSelection(Integer.parseInt(issue));
             //setSelectedItem(spinnerSector, sector);
            //setSelectedItem(spinnerIssue, issue);
@@ -169,11 +237,12 @@ OnItemLongClickListener{
     	 	entitiesLV.setAdapter(adapter);
             
             gpsInfo.setText(location);
-            
-            view.setVisibility(View.VISIBLE);
+    
             done.setText("Update");
+        }else{
+        	getSupportActionBar().setTitle("Add Report");
         }
-        
+        /*
         //Button actions
         rGroup.setOnCheckedChangeListener(new OnCheckedChangeListener()
         {
@@ -219,9 +288,7 @@ OnItemLongClickListener{
 			}
 			
         });
-        
-      
-        
+        */
         
         done.setOnClickListener(new OnClickListener() {
             
@@ -235,17 +302,6 @@ OnItemLongClickListener{
             }
         });
         
-		view.setOnClickListener(new OnClickListener() {
-		            
-		            @Override
-		            public void onClick(View v) {		            	
-		            	Intent p = new Intent(getBaseContext(), ProjectsActivity.class);
-		            	p.putExtra("rid", rid);
-		            	p.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		            	startActivity(p);
-		            	
-		            }
-		        });
 		setLocation.setOnClickListener(new OnClickListener(){
 			@Override
             public void onClick(View v) {		
@@ -272,6 +328,7 @@ OnItemLongClickListener{
 			}
 		});
     }
+    
     public void setCategories(){
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     	try {
@@ -282,11 +339,13 @@ OnItemLongClickListener{
 			{
 				list.add(jsonArray2.getString(i));
 			}
+			
 			ArrayAdapter<String> spinnerMenu = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, list);
 			spinnerIssue.setAdapter(spinnerMenu);
+			
     	}catch (Exception e) {
-	    	    e.printStackTrace();
-	    	}
+    	    e.printStackTrace();
+    	}
 	}
     public void setSectors(){
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -337,7 +396,7 @@ OnItemLongClickListener{
     	}*/
     	return true;
     }
-    
+    /*
     private int getSelectedStoryMode ()
     {
     	   int checkedId = rGroup.getCheckedRadioButtonId();
@@ -368,7 +427,7 @@ OnItemLongClickListener{
     	   
     	   return resultMode;
     }
-    		
+    */		
 
     private void launchProject(String title, int pIssue, int pSector, String pEntity, String pDesc, String pLocation, boolean update) {
     	
@@ -422,22 +481,19 @@ OnItemLongClickListener{
                 
         if(update == false){
 	        Intent intent = new Intent(getBaseContext(), StoryNewActivity.class);
-	        intent.putExtra("storymode", getSelectedStoryMode());
+	        intent.putExtra("storymode", resultMode);
 	        intent.putExtra("rid", report.getId());
 	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        startActivity(intent);
         }else{
         	Toast.makeText(getBaseContext(), String.valueOf(rid)+" Updated successfully!", Toast.LENGTH_LONG).show();
+        	Intent i = new Intent(getApplicationContext(), ReportsActivity.class);
+        	i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        	startActivity(i);
+        	finish();        	
         }
          
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.activity_new_story, menu);
-        return false;
-    }
-
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -1,5 +1,6 @@
-<resources>
-
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar" />
-
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:homeAsUpIndicator">@drawable/ic_home_enabled</item>
+        <item name="android:textColor">@color/soft_purple</item>
+	</style>
 </resources>

@@ -557,10 +557,11 @@ public class SyncActivity extends BaseActivity{
 					if(res.equals("OK")){
 						
 					}else{
-						Toast.makeText(getApplicationContext(), "Token expired! Login and try again.", Toast.LENGTH_LONG).show();
+						//Toast.makeText(getApplicationContext(), "Token expired! Login and try again.", Toast.LENGTH_LONG).show();
 						Intent login = new Intent(getApplicationContext(), LoginPreferencesActivity.class);
 						login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(login);
+						finish();
 					}
 		        }catch (JSONException e) {
 					e.printStackTrace();

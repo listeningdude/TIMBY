@@ -68,8 +68,6 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout.LayoutParams;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.fima.cardsui.views.CardUI;
 //import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -108,8 +106,13 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         setContentView(R.layout.activity_home_screen);
         
         // action bar stuff
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
+       
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#f0e4d4")));
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+       
+        
         checkForTor();
         
         //checkForUpdates();
@@ -728,13 +731,9 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         }
     }
     
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.activity_home, menu);
-        return false;
-    }
+ 
 
-
+/*
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -773,7 +772,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         
 		return true;
 	}
-    
+    */
 	void collectAndSendLog(){
 		
 		File fileLog = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"storymakerlog.txt");

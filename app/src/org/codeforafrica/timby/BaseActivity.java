@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,6 +33,8 @@ import android.graphics.PixelFormat;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 //import com.google.analytics.tracking.android.EasyTracker;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.OnClosedListener;
@@ -241,6 +244,36 @@ public class BaseActivity extends Activity {
         
         
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.activity_actionbar_menu, menu);
+        
+        return true;
+    }
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.home)
+        {
+        	Intent intent = new Intent(getBaseContext(), HomeActivity.class);
+	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	        startActivity(intent);
+        }
+        if (item.getItemId() == R.id.settings)
+        {
+        	Intent intent = new Intent(this,SimplePreferences.class);
+    		this.startActivityForResult(intent, 9999);
+        }
+        if (item.getItemId() == R.id.logout)
+        {
+        	Intent intent = new Intent(getBaseContext(), LoginPreferencesActivity.class);
+	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	        startActivity(intent);
+        }
+       
+		return true;
+	}
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -345,12 +378,12 @@ public class BaseActivity extends Activity {
            Bitmap bmpCoach = BitmapFactory.decodeStream(ins);
            overlayView.setImageBitmap(bmpCoach);
            
-    	WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-    	        WindowManager.LayoutParams.MATCH_PARENT,
-    	        WindowManager.LayoutParams.MATCH_PARENT,
-    	        WindowManager.LayoutParams.TYPE_APPLICATION,
-    	        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-    	        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+           WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+	        WindowManager.LayoutParams.MATCH_PARENT,
+	        WindowManager.LayoutParams.MATCH_PARENT,
+	        WindowManager.LayoutParams.TYPE_APPLICATION,
+	        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+	        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
     	        PixelFormat.TRANSLUCENT);
 
     	getWindowManager().addView(overlayView, params);

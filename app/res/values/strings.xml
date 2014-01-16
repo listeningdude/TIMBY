@@ -9,11 +9,16 @@
 	<string name="sync">Sync Reports</string>
 	<string name="menu_export">Export to SD</string>
 	
+	<string name="add_picture">Image</string>
+	<string name="add_video">Video</string>
+	<string name="add_audio">Audio</string>
+	<string name="view_gallery">Gallery</string>
+	
 	<string name="capture_audio">Audio</string>
 	<string name="capture_video">Video</string>
 	<string name="capture_picture">Picture</string>
 	<string name="company_or_person_field">Company/Person</string>
-	<string name="description_field">Add descriptive text here\nWho, What, Where, Why&#8230;</string>
+	<string name="description_field">Tell us what is happening</string>
     <string name="set_location">Set Location</string>
     <string name="done">Done</string>
     <string name="edit">Edit</string>
