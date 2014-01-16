@@ -33,6 +33,7 @@ public class UserFunctions {
 	private static String logoutURL = "https://timby.org/mobileapi/api/logout";
 	private static String sectorsURL = "https://timby.org/mobileapi/api/getsectors";
 	private static String categoriesURL = "https://timby.org/mobileapi/api/getcategories";
+	private static String entitiesURL = "https://timby.org/mobileapi/api/getentities";
 	private static String tokenCheckURL = "https://timby.org/mobileapi/api/tokencheck";
 	private static String createreportURL = "https://timby.org/mobileapi/api/createreport";	
 	private static String updatereportURL = "https://timby.org/mobileapi/api/updatereport";	
@@ -284,6 +285,18 @@ public class UserFunctions {
 			JSONObject json = jsonParser.getJSONFromUrl(updateobjectURL, params);
 			// return json
 			return json;
+	}
+
+	public JSONArray getEntities(String token, String user_id) {
+		// TODO Auto-generated method stub
+		// Building Parameters
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("user_id", user_id));
+		params.add(new BasicNameValuePair("token", token));
+		params.add(new BasicNameValuePair("key", api_key));
+		JSONArray json = jsonParser.getJSONArrayFromURL(entitiesURL, params);
+		return json;
+
 	}
 
 	

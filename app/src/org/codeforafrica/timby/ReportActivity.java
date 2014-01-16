@@ -67,7 +67,7 @@ OnItemLongClickListener{
 	String entity;
 	Button done;
 	Button addEntity;
-	
+	String[] allEntities;
 	ListView entitiesLV;
     
 	ImageView setLocation;
@@ -182,13 +182,20 @@ OnItemLongClickListener{
         
         entitiesLV.setAdapter(adapter);
         entitiesLV.setOnItemLongClickListener(this);
-
+        
+        setEntities();
         addEntity.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                dialog = new Dialog(ReportActivity.this);
-                dialog.setContentView(R.layout.dialog_entities);
+            	 dialog = new Dialog(ReportActivity.this);
+                 dialog.setContentView(R.layout.dialog_entities);
+                 //Entities autocomplete 
+                 
+                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
+                         android.R.layout.simple_dropdown_item_1line, allEntities);
+                 AutoCompleteTextView textView = (AutoCompleteTextView)dialog.findViewById(R.id.edit_box);
+                 textView.setAdapter(adapter);
                 dialog.findViewById(R.id.button_cancel).setOnClickListener(
                         ReportActivity.this);
                 dialog.findViewById(R.id.button_ok).setOnClickListener(
@@ -328,6 +335,20 @@ OnItemLongClickListener{
 			}
 		});
     }
+    public void setEntities(){
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    	try {
+    	    JSONArray jsonArray2 = new JSONArray(prefs.getString("entities", "[]"));
+    	    
+			for(int i=0;i<jsonArray2.length();i++)
+			{
+				allEntities[i]=jsonArray2.getString(i);
+			}
+			
+    	}catch (Exception e) {
+    	    e.printStackTrace();
+    	}
+	}
     
     public void setCategories(){
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -552,7 +573,7 @@ OnItemLongClickListener{
             break;
 
         case R.id.button_ok:
-            String text = ((EditText) dialog.findViewById(R.id.edit_box))
+            String text = ((AutoCompleteTextView) dialog.findViewById(R.id.edit_box))
                     .getText().toString();
             if (null != text && 0 != text.compareTo("")) {
                 datasource.add(text);

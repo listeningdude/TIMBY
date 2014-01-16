@@ -238,6 +238,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
         if(isInternetPresent){
 	    	new getSectors().execute();
 	    	new getCategories().execute();
+	    	new getEntities().execute();
 	    }
         
     	Intent intent = new Intent(LoginPreferencesActivity.this, HomeActivity.class);
@@ -376,5 +377,71 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
          protected void onPostExecute(String file_url) {
              
          }
+	}
+    class getEntities extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute(); 
+        }
+        protected String doInBackground(String... args) {
+        	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+	        String token = settings.getString("token",null);
+	        String user_id = settings.getString("user_id",null);
+	        
+        	UserFunctions userFunction = new UserFunctions();
+			JSONArray json = userFunction.getEntities(token, user_id);
+			Log.d("length", String.valueOf(json.length()));
+			
+			String str = json.toString();
+			str = str.replace("[[", "{\"items\": [");
+			str = str.replace("]]", "]}");
+			
+			JSONObject json2 = null;
+			try {
+				json2 = new JSONObject(str);
+			}catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//Log.d("length2", String.valueOf(json2.length()));
+			
+			
+			JSONArray jArrayObject = null;
+			try {
+				jArrayObject = json2.getJSONArray("items");
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			Log.d("length3", String.valueOf(jArrayObject.length()));
+			
+			
+			try {
+				
+				SharedPreferences prefs = PreferenceManager
+				        .getDefaultSharedPreferences(getApplicationContext());
+				JSONArray sectors = new JSONArray();
+			
+				for(int i=0;i<jArrayObject.length();i++){
+					String str2 = jArrayObject.getString(i);
+					Log.d("item", str2);
+					JSONObject json_data = new JSONObject(str2);
+					sectors.put(json_data.get("entity"));
+				}
+				
+				Editor editor = prefs.edit();
+				editor.putString("entities", sectors.toString());
+				
+				editor.commit();
+							
+				}catch(JSONException e){
+					e.printStackTrace();
+				}
+        	return null;
+        }
+        protected void onPostExecute(String file_url) {
+            
+        }
 	}
 }
