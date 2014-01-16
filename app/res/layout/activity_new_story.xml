@@ -290,16 +290,14 @@
                 android:id="@+id/spinnerSector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_cream_grey_border"
-                android:popupBackground="@color/soft_purple"/>
+                android:background="@drawable/background_cream_grey_border" />
 
             <Spinner
                 android:id="@+id/spinnerIssue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/background_cream_grey_border"
-                android:popupBackground="@color/soft_purple"/>
+                android:background="@drawable/background_cream_grey_border"/>
 
             <Button
                 android:id="@+id/AddEntity"
