@@ -6,18 +6,22 @@
     android:fillViewport="true" >
 
   <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent" >
  
         <!--  Header  Starts-->
-        <LinearLayout android:id="@+id/header"
-                android:layout_width="fill_parent"
-                android:layout_weight="0.1"
-                android:layout_height="wrap_content"
-                android:paddingTop="70dip"
-                android:paddingBottom="5dip"
-                     android:orientation="vertical"
-                >
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/lyt_login"
+            android:layout_alignParentTop="true"
+            android:layout_weight="0.1"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingTop="20dp" >
+
                 <!-- Logo Start-->
 
                 <ImageView
@@ -25,60 +29,71 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_gravity="center|center"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:src="@drawable/timby_logo" />
           
-                 <TextView 
-                android:id="@+id/login_error"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"                
-                android:text="             "
-                android:gravity="center"
-                android:textSize="18dip"
-                android:textColor="#555555"/>         
+                 <TextView
+                     android:id="@+id/login_error"
+                     android:layout_width="fill_parent"
+                     android:layout_height="wrap_content"
+                     android:gravity="center"
+                     android:textColor="#555555"
+                     android:textSize="18dip" />
+         
                 <!-- Logo Ends -->
 
         </LinearLayout>
         <!--  Header Ends -->
       <!-- Login Form -->
+
         <LinearLayout
-          
-          android:orientation="vertical"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_weight="0.6"
-          android:padding="10dip"
-          android:layout_below="@id/header">
+            android:id="@+id/lyt_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:layout_weight="0.6"
+            android:orientation="vertical"
+            android:padding="20dp" >
+
           <!--  Email Label -->          
-          <EditText android:layout_width="fill_parent"
-              	android:id="@+id/loginUsername"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:layout_marginBottom="20dip"
-                android:singleLine="true"
-                android:hint="username"
-              	android:padding="10dp"
-                android:textColor="@color/soft_red"
-				android:background="#ffffff" 
-                />
+
+          <EditText
+              android:id="@+id/loginUsername"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="20dip"
+              android:layout_marginTop="5dip"
+              android:background="#ffffff"
+              android:hint="username"
+              android:padding="10dp"
+              android:singleLine="true"
+              android:textColor="@color/soft_purple" />
+
           <!--  Password Label -->          
-          <EditText android:layout_width="fill_parent"
-                android:id="@+id/loginPassword"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:layout_marginBottom="20dip"
-                android:singleLine="true"
-                android:hint="password"
-                android:password="true"
-               	android:padding="10dp"
-                android:textColor="@color/soft_red"
-				android:background="#ffffff" 
-				android:text="timbytest" />
+
+          <EditText
+              android:id="@+id/loginPassword"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="5dp"
+              android:layout_marginTop="5dip"
+              android:background="#ffffff"
+              android:hint="password"
+              android:padding="10dp"
+              android:password="true"
+              android:singleLine="true"
+              android:text="timbytest"
+              android:textColor="@color/soft_purple" />
+
           <!-- Login button -->
 
           <CheckBox
               android:id="@+id/showPassword"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:layout_marginBottom="15dp"
               android:text="Show password" />
 
           <Button
