@@ -191,7 +191,6 @@ OnItemLongClickListener{
             	 dialog = new Dialog(ReportActivity.this);
                  dialog.setContentView(R.layout.dialog_entities);
                  //Entities autocomplete 
-                 
                  ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
                          android.R.layout.simple_dropdown_item_1line, allEntities);
                  AutoCompleteTextView textView = (AutoCompleteTextView)dialog.findViewById(R.id.edit_box);
@@ -340,9 +339,11 @@ OnItemLongClickListener{
     	try {
     	    JSONArray jsonArray2 = new JSONArray(prefs.getString("entities", "[]"));
     	    
+    	    allEntities = new String[jsonArray2.length()];
 			for(int i=0;i<jsonArray2.length();i++)
 			{
 				allEntities[i]=jsonArray2.getString(i);
+				Log.d("entity"+String.valueOf(i), allEntities[i]);
 			}
 			
     	}catch (Exception e) {

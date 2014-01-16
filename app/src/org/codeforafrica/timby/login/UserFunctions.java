@@ -38,7 +38,6 @@ public class UserFunctions {
 	private static String createreportURL = "https://timby.org/mobileapi/api/createreport";	
 	private static String updatereportURL = "https://timby.org/mobileapi/api/updatereport";	
 	private static String insertobjectURL = "https://timby.org/mobileapi/api/insertobject";
-	//private static String insertobjectURL = "http://pichanoma.com/insertobject.php";
 	private static String updateobjectURL = "https://timby.org/mobileapi/api/updateobject";
 	private static String registerURL = "";
 	private static String api_key = AppConstants.API_KEY;

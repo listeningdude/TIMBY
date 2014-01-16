@@ -2,16 +2,13 @@ package org.codeforafrica.timby;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.model.Project;
 import org.codeforafrica.timby.model.Scene;
-
 import android.content.Intent;
 import android.os.Bundle;
 
 public class StoryNewActivity extends BaseActivity {
-
 	int rid;
 	int storymode;
     @Override
@@ -24,11 +21,8 @@ public class StoryNewActivity extends BaseActivity {
         setContentView(R.layout.activity_new_story);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
-        launchSimpleStory("", rid, storymode, true);
-  
+        launchSimpleStory("", rid, storymode, true);  
     }
-    
-
     private void launchSimpleStory(String pName,  int pReport, int storyMode, boolean autoCapture) {
         int clipCount = AppConstants.DEFAULT_CLIP_COUNT;
         
@@ -47,9 +41,9 @@ public class StoryNewActivity extends BaseActivity {
         scene.setProjectIndex(0);
         scene.setProjectId(project.getId());
         scene.save();
-    
+        
         String templateJsonPath = Project.getSimpleTemplateForMode(storyMode);
-       
+        
         project.setStoryType(storyMode);
         project.save();
         
@@ -60,7 +54,6 @@ public class StoryNewActivity extends BaseActivity {
         intent.putExtra("pid", project.getId());
         intent.putExtra("scene", 0);
         intent.putExtra("auto_capture", autoCapture);
-        
         startActivity(intent);
         finish();
     }

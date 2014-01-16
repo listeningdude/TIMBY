@@ -144,7 +144,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
         }
         
     }
-
+    
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
@@ -619,7 +619,6 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
     @Override
     protected void onActivityResult(int reqCode, int resCode, Intent intent) {
 
-    	
         if (resCode == RESULT_OK)
         {
             if (reqCode == REQ_OVERLAY_CAM)
@@ -664,9 +663,10 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
             		Log.e(AppConstants.TAG,"error handling capture response: " + mCapturePath,e);
             	}
             }
+        }else{
+        	mProject.delete();
+        	finish();
         }
+        
     }
-
-  
-    
 }

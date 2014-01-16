@@ -421,17 +421,18 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 				
 				SharedPreferences prefs = PreferenceManager
 				        .getDefaultSharedPreferences(getApplicationContext());
-				JSONArray sectors = new JSONArray();
+				JSONArray entities = new JSONArray();
 			
 				for(int i=0;i<jArrayObject.length();i++){
 					String str2 = jArrayObject.getString(i);
 					Log.d("item", str2);
 					JSONObject json_data = new JSONObject(str2);
-					sectors.put(json_data.get("entity"));
+					entities.put(json_data.get("entity"));
+					
 				}
 				
 				Editor editor = prefs.edit();
-				editor.putString("entities", sectors.toString());
+				editor.putString("entities", entities.toString());
 				
 				editor.commit();
 							

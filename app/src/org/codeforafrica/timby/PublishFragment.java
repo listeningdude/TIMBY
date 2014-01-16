@@ -294,6 +294,7 @@ public class PublishFragment extends Fragment {
        // applyCipher("file_to_decrypt", "decrypted_file", cipher);
         
         Media[] mediaList = mActivity.mMPM.mProject.getScenesAsArray()[0].getMediaAsArray();
+
 	 	for (Media media: mediaList){
 	 		String file = media.getPath();
 	 		Cipher cipher;
