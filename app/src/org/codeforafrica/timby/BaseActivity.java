@@ -260,11 +260,11 @@ public class BaseActivity extends Activity {
 	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        startActivity(intent);
         }
-        if (item.getItemId() == R.id.settings)
+        /*if (item.getItemId() == R.id.settings)
         {
         	Intent intent = new Intent(this,SimplePreferences.class);
     		this.startActivityForResult(intent, 9999);
-        }
+        }*/
         if (item.getItemId() == R.id.logout)
         {
         	Intent intent = new Intent(getBaseContext(), LoginPreferencesActivity.class);
