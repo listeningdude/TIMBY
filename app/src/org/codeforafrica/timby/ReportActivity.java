@@ -161,7 +161,7 @@ OnItemLongClickListener{
         setSectors();        
         
         spinnerIssue = (Spinner)findViewById(R.id.spinnerIssue);
-        setCategories();                
+        setCategories();
         
         editTextDesc = (EditText)findViewById(R.id.editTextDescription);
         
@@ -362,8 +362,9 @@ OnItemLongClickListener{
 				list.add(jsonArray2.getString(i));
 			}
 			
-			ArrayAdapter<String> spinnerMenu = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, list);
+			ArrayAdapter<String> spinnerMenu = new ArrayAdapter<String>(getApplicationContext(),  R.layout.spinner_report_new, list);
 			spinnerIssue.setAdapter(spinnerMenu);
+
 			
     	}catch (Exception e) {
     	    e.printStackTrace();
@@ -379,7 +380,7 @@ OnItemLongClickListener{
 			{
 				list.add(jsonArray2.getString(i));
 			}
-			ArrayAdapter<String> spinnerMenu = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, list);
+			ArrayAdapter<String> spinnerMenu = new ArrayAdapter<String>(getApplicationContext(),  R.layout.spinner_report_new, list);
 			spinnerSector.setAdapter(spinnerMenu);
     	} catch (Exception e) {
 	    	    e.printStackTrace();
