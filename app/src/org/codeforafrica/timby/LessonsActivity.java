@@ -27,6 +27,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings.PluginState;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -56,12 +57,16 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
            
         setContentView(R.layout.activity_lessons);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
-
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
+       
+        TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+        title2.setTextColor(getResources().getColor(R.color.soft_purple));
+        
     	mListView = new LessonListView(this, this);
         
         LessonSectionFragment fLessons = new LessonSectionFragment();
         fLessons.setListView(mListView);
+        mListView.setBackgroundColor(getResources().getColor(R.color.light_cream));
         
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
@@ -232,7 +237,7 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
         
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         	
         	mWebView = new WebView(getActivity());
         	mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);

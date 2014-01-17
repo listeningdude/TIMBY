@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:background="@color/light_blue"
+            android:background="@color/soft_green"
             android:clickable="true" >
 
             <TextView

@@ -20,6 +20,8 @@ import org.codeforafrica.timby.model.Project;
 import org.codeforafrica.timby.model.Report;
 import org.codeforafrica.timby.server.LoginPreferencesActivity;
 
+import com.actionbarsherlock.app.ActionBar;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -28,7 +30,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -62,9 +66,13 @@ public class SyncActivity extends BaseActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sync);
+		
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-	    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
-	      
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
+       
+        TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+        title2.setTextColor(getResources().getColor(R.color.soft_purple));
+	        
 		done = (Button)findViewById(R.id.close);
 		
 		log = (TextView)findViewById(R.id.logTextView);
@@ -154,7 +162,6 @@ public class SyncActivity extends BaseActivity{
         	String report = entity.getReport();
         	int entity_object_id = entity.getObjectID();
         	//new createEntity().execute();
-        	
         	EntityTaskParams params = new EntityTaskParams(entity_object_id, report, entityName, entityid, entitydate, esequence);
 		 	createEntity myTask = new createEntity();
 		 	myTask.execute(params);	

@@ -240,6 +240,7 @@ public class PublishFragment extends Fragment {
 	protected void onPostExecute(String file_url) {
 			pDialog.dismiss();
 			Toast.makeText(getActivity(), "Encrypted Successfully!", Toast.LENGTH_LONG).show();
+			getActivity().finish();
 		}	
 	}
     
@@ -316,7 +317,7 @@ public class PublishFragment extends Fragment {
 	 	}
         mActivity.mMPM.mProject.save();
         //mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
-          mActivity.finish();
+        //  mActivity.finish();
     }
 
     private void showLogin() {
