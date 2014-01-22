@@ -297,27 +297,15 @@ public class PublishFragment extends Fragment {
         
         Media[] mediaList = mActivity.mMPM.mProject.getScenesAsArray()[0].getMediaAsArray();
         
-        //Disable Encryption
-        /*
-	 	for (Media media: mediaList){
-	 		String file = media.getPath();
-	 		Cipher cipher;
-			try {
-				cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
-				Encryption.applyCipher(file, file+"_", cipher);
-			}catch (Exception e) {
-				// TODO Auto-generated catch block
-				Log.e("Encryption error", e.getLocalizedMessage());
-				e.printStackTrace();
-			}
-			//Then delete original file
-			File oldfile = new File(file);
-			oldfile.delete();
-			//Then remove _ on encrypted file
-			File newfile = new File(file+"_");
-			newfile.renameTo(new File(file));
-			//Done!
-	 	}*/
+        String filepath = mediaList[0].getPath();
+        
+        //Encrypt
+        Intent startMyService= new Intent(mActivity, EncryptionService.class);
+        startMyService.putExtra("filepath", filepath);
+        startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
+        mActivity.startService(startMyService);
+        //Create thumbnail
+                       
         mActivity.mMPM.mProject.save();
         //mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
         mActivity.finish();

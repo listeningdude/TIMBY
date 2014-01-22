@@ -320,32 +320,12 @@ public class SyncActivity extends BaseActivity{
 		 	}else if(ptype.contains("audio")){
 		 		optype = "video";
 		 	}
-		 	/*decrypt file
-		 	String filepath = ppath;
-		 	String tempFile = ppath+"_";
 		 	
-		 	String filepath = media.getPath();
- 			String[] fileparts = filepath.split("\\.");
- 			String filename = fileparts[0];
- 			String fileext = fileparts[1];
- 			String tempFile = filename+"2."+fileext;
- 			Cipher cipher;
-            try{
-     			cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
-     			Encryption.applyCipher(filepath, tempFile, cipher);
-     		}catch(Exception e){
-     			e.printStackTrace();
-     		}
-           
-           /* 
-           //Then rename original file original file
-     		File oldfile = new File(ppath);
-     		oldfile.delete();
-     		
-     		//Then remove _ on decrypted file
-     		File newfile = new File(tempFile);
-     		newfile.renameTo(new File(ppath));
-     		*/
+		 	Intent startMyService= new Intent(this, EncryptionService.class);
+	        startMyService.putExtra("filepath", ppath);
+	        startMyService.putExtra("mode", Cipher.DECRYPT_MODE);
+	        startService(startMyService);
+	        
 		 	String ptitle = project.getTitle();
 		 	String pdate = project.getDate();
 		 	String pid = String.valueOf(project.getId());

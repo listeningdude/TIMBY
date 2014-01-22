@@ -295,6 +295,7 @@
 	<activity android:name="net.hockeyapp.android.UpdateActivity" />
 	<service android:name=".SyncService" />
 	<service android:name=".Export2SDService" />
+	<service android:name=".EncryptionService" />
     </application>
 
 </manifest>

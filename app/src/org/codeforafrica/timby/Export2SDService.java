@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.crypto.Cipher;
+
 import org.codeforafrica.timby.Export2SD.export2SD;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
@@ -39,6 +41,7 @@ public class Export2SDService extends Service {
 	String data = "";
 	String ext;
 	int BUFFER = 2048;
+	
 	@Override
     public void onCreate() {
           super.onCreate();
@@ -135,6 +138,12 @@ public class Export2SDService extends Service {
 								File newfile = new File(file+"_");
 								newfile.renameTo(new File(file));
 								*/
+						 		
+						 		Intent startMyService= new Intent(Export2SDService.this, EncryptionService.class);
+						        startMyService.putExtra("filepath", file);
+						        startMyService.putExtra("mode", Cipher.DECRYPT_MODE);
+						        startService(startMyService);
+						        
 								if(media.getMimeType().contains("video")){
 									copyfile(file, ext+"/"+report.getId()+"/vid"+String.valueOf(j)+".mp4");
 									data += "<object_media>/"+report.getId()+"/vid"+String.valueOf(j)+".mp4</object_media>\n";
@@ -200,10 +209,10 @@ public class Export2SDService extends Service {
 	protected void onPostExecute(String file_url) {
 			
 			showNotification("Exported Successfully!");
-			endEncryption();
+			endExporting();
 		}
 	}
-      public void endEncryption(){
+      public void endExporting(){
     	  this.stopSelf();
       }
 	public static void writeToFile(final String fileContents) {
