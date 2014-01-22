@@ -33,12 +33,15 @@ import org.holoeverywhere.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.ActionMode;
@@ -118,16 +121,25 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
+        
+     // action bar stuff
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
+        
+        
+        
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        if (mMPM.mScene != null) {
+        /*if (mMPM.mScene != null) {
             actionBar.setTitle(mMPM.mScene.getTitle());
             
-        }
-
+        }*/
+        	actionBar.setTitle("Add Caption");
+        	TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+            title2.setTextColor(getResources().getColor(R.color.soft_purple));
         // For each of the sections in the app, add a tab to the action bar.
         //	actionBar.addTab(actionBar.newTab().setText("Media List").setTabListener(this));
-       //  actionBar.addTab(actionBar.newTab().setText(R.string.tab_order).setTabListener(this));
+        // actionBar.addTab(actionBar.newTab().setText(R.string.tab_order).setTabListener(this));
       //  if (mMPM.mProject.isTemplateStory()) {
             actionBar.addTab(actionBar.newTab().setText("Add Caption").setTabListener(this));
        // } else {
@@ -158,12 +170,12 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
         outState.putInt(STATE_SELECTED_NAVIGATION_ITEM,
                 getSupportActionBar().getSelectedNavigationIndex());
     }
-
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        getSupportMenuInflater().inflate(R.menu.activity_scene_editor, menu);
+       getSupportMenuInflater().inflate(R.menu.activity_scene_editor, menu);
         mMenu = menu;
         
         return true;
@@ -260,7 +272,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
             }
         }
     };
-    
+    */
     // FIXME move this into AddClipsFragment?
     public void addShotToScene ()
     {
@@ -666,6 +678,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
         }else{
         	mProject.delete();
         	finish();
+        	//Log.d("rescode", String.valueOf(resCode));
         }
         
     }

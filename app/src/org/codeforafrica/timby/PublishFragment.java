@@ -217,8 +217,8 @@ public class PublishFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    //saveForm();
-                    new encryptAndSave().execute();
+                    saveForm();
+                    //new encryptAndSave().execute();
                     //setUploadAccount(); //triggers do publish! 
                 }
             });
@@ -231,6 +231,7 @@ public class PublishFragment extends Fragment {
 			super.onPreExecute();
 			pDialog = new ProgressDialog(getActivity());
 			pDialog.setMessage("Encrypting media");
+			pDialog.setCancelable(false);
 			pDialog.show();
 		}
 		protected String doInBackground(String... args) {
@@ -295,7 +296,9 @@ public class PublishFragment extends Fragment {
        // applyCipher("file_to_decrypt", "decrypted_file", cipher);
         
         Media[] mediaList = mActivity.mMPM.mProject.getScenesAsArray()[0].getMediaAsArray();
-
+        
+        //Disable Encryption
+        /*
 	 	for (Media media: mediaList){
 	 		String file = media.getPath();
 	 		Cipher cipher;
@@ -314,10 +317,10 @@ public class PublishFragment extends Fragment {
 			File newfile = new File(file+"_");
 			newfile.renameTo(new File(file));
 			//Done!
-	 	}
+	 	}*/
         mActivity.mMPM.mProject.save();
         //mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
-        //  mActivity.finish();
+        mActivity.finish();
     }
 
     private void showLogin() {

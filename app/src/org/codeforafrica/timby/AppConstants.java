@@ -13,7 +13,7 @@ import android.widget.Toast;
 public class AppConstants {
 	
 public final static String TAG = "TIMBY";
-	public final static String API_KEY = "6b239b3568b209";
+	
 	public final static int IMAGE_EDITOR = 2;
 	public final static int VIDEO_EDITOR = 3;
 	public final static int REVIEW_MEDIA = 4;
@@ -30,20 +30,20 @@ public final static String TAG = "TIMBY";
     public final static String DEFAULT_AUDIO_CODEC = "aac";
     public final static String DEFAULT_FRAME_RATE = "29.97";
     
-    public final static int DEFAULT_WIDTH = 720;
+    public final static int DEFAULT_WIDTH = 576;
     public final static int DEFAULT_HEIGHT = 480;
     
 	
 
 	public final static int DEFAULT_CLIP_COUNT = 1;
 	
-	public final static String HOCKEY_APP_ID = "a9918f698864aa1601d6617df3dfc048";
+	
 	
 	
 	public final static String TOR_PROXY_HOST = "localhost";
 	public final static int TOR_PROXY_PORT = 9050;
 	
-	public final static String ENCRYPTION_KEY="PBEWithMD5AndDES";
+	
 		
 	public final static class MimeTypes {
 		public final static String THREEGPP_AUDIO = "audio/3gpp";

@@ -15,6 +15,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
 import org.codeforafrica.timby.AppConstants;
+import org.codeforafrica.timby.PrivateConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -29,19 +30,19 @@ import android.util.Log;
 public class UserFunctions {
 	
 	private JSONParser jsonParser;
-	private static String loginURL = "https://timby.org/mobileapi/api/login";
-	private static String logoutURL = "https://timby.org/mobileapi/api/logout";
-	private static String sectorsURL = "https://timby.org/mobileapi/api/getsectors";
-	private static String categoriesURL = "https://timby.org/mobileapi/api/getcategories";
-	private static String entitiesURL = "https://timby.org/mobileapi/api/getentities";
-	private static String tokenCheckURL = "https://timby.org/mobileapi/api/tokencheck";
-	private static String createreportURL = "https://timby.org/mobileapi/api/createreport";	
-	private static String updatereportURL = "https://timby.org/mobileapi/api/updatereport";	
-	private static String insertobjectURL = "https://timby.org/mobileapi/api/insertobject";
-	private static String updateobjectURL = "https://timby.org/mobileapi/api/updateobject";
+	private static String loginURL = PrivateConstants.API_PATH+"/login";
+	private static String logoutURL = PrivateConstants.API_PATH+"/logout";
+	private static String sectorsURL = PrivateConstants.API_PATH+"/getsectors";
+	private static String categoriesURL = PrivateConstants.API_PATH+"/getcategories";
+	private static String entitiesURL = PrivateConstants.API_PATH+"/getentities";
+	private static String tokenCheckURL = PrivateConstants.API_PATH+"/tokencheck";
+	private static String createreportURL = PrivateConstants.API_PATH+"/createreport";	
+	private static String updatereportURL = PrivateConstants.API_PATH+"/updatereport";	
+	private static String insertobjectURL = PrivateConstants.API_PATH+"/insertobject";
+	private static String updateobjectURL = PrivateConstants.API_PATH+"/updateobject";
 	private static String registerURL = "";
-	private static String api_key = AppConstants.API_KEY;
-
+	private static String api_key = PrivateConstants.API_KEY;
+	private static String[] api_keys = PrivateConstants.API_KEYS;
 	
 	// constructor
 	public UserFunctions(){
@@ -53,10 +54,10 @@ public class UserFunctions {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("user_name", username));
 		params.add(new BasicNameValuePair("password", password));
-		params.add(new BasicNameValuePair("key", api_key));
+		params.add(new BasicNameValuePair("key", getAPIKey_un(username)));
 		JSONObject json = jsonParser.getJSONFromUrl(loginURL, params);
 		// return json
-		// Log.e("JSON", json.toString());
+		 Log.e("api key", getAPIKey_un(username));
 		return json;
 	}
 	public JSONObject logoutUser(String username, String password){
@@ -118,7 +119,7 @@ public class UserFunctions {
 
 		params.add(new BasicNameValuePair("long", lon));
 	
-		params.add(new BasicNameValuePair("key", api_key));
+		params.add(new BasicNameValuePair("key", getAPIKey_id(user_id)));
 
 		// getting JSON Object
 		JSONObject json = jsonParser.getJSONFromUrl(createreportURL, params);
@@ -130,8 +131,9 @@ public class UserFunctions {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("user_id", user_id));
 		params.add(new BasicNameValuePair("token", token));
-		params.add(new BasicNameValuePair("key", api_key));
+		params.add(new BasicNameValuePair("key", getAPIKey_id(user_id)));
 		JSONArray json = jsonParser.getJSONArrayFromURL(sectorsURL, params);
+		Log.d("details passed", "user_id:"+user_id+" token:"+token+" key:"+getAPIKey_id(user_id));
 		return json;
 	}
 	public JSONArray getCategories(String token, String user_id){
@@ -139,7 +141,7 @@ public class UserFunctions {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("user_id", user_id));
 		params.add(new BasicNameValuePair("token", token));
-		params.add(new BasicNameValuePair("key", api_key));
+		params.add(new BasicNameValuePair("key", getAPIKey_id(user_id)));
 		JSONArray json = jsonParser.getJSONArrayFromURL(categoriesURL, params);
 		return json;
 	}
@@ -168,7 +170,7 @@ public class UserFunctions {
 
 			params.add(new BasicNameValuePair("long", lon));
 		
-			params.add(new BasicNameValuePair("key", api_key));
+			params.add(new BasicNameValuePair("key", getAPIKey_id(user_id)));
 			
 			params.add(new BasicNameValuePair("report_id", serverID));
 
@@ -187,7 +189,7 @@ public class UserFunctions {
 		params.add(new BasicNameValuePair("sequence", psequence));
 		params.add(new BasicNameValuePair("report_id", preportid));
 		params.add(new BasicNameValuePair("object_type", optype));
-		params.add(new BasicNameValuePair("key", api_key));
+		params.add(new BasicNameValuePair("key", getAPIKey_id(user_id)));
 		params.add(new BasicNameValuePair("object_id", pid));
 		params.add(new BasicNameValuePair("report_date", pdate));
 		params.add(new BasicNameValuePair("narrative", "(empty)"));
@@ -212,7 +214,7 @@ public class UserFunctions {
 				mpEntity.addPart("sequence", new StringBody(psequence));
 				mpEntity.addPart("report_id", new StringBody(preportid));
 				mpEntity.addPart("object_type", new StringBody(optype));
-				mpEntity.addPart("key", new StringBody(api_key));
+				mpEntity.addPart("key", new StringBody( getAPIKey_id(user_id)));
 				//mpEntity.addPart("object_id", new StringBody(pid));
 				mpEntity.addPart("report_date", new StringBody(pdate));
 				mpEntity.addPart("narrative", new StringBody("(empty)"));
@@ -259,7 +261,7 @@ public class UserFunctions {
 				params.add(new BasicNameValuePair("sequence", psequence));
 				params.add(new BasicNameValuePair("report_id", serverID));
 				params.add(new BasicNameValuePair("object_type", "entity"));
-				params.add(new BasicNameValuePair("key", api_key));
+				params.add(new BasicNameValuePair("key", getAPIKey_id(user_id)));
 				params.add(new BasicNameValuePair("report_date", pdate));
 				params.add(new BasicNameValuePair("narrative", "(empty)"));
 				// getting JSON Object
@@ -278,7 +280,7 @@ public class UserFunctions {
 			params.add(new BasicNameValuePair("report_id", serverID));
 			params.add(new BasicNameValuePair("object_type", "entity"));
 			params.add(new BasicNameValuePair("object_id", String.valueOf(entity_object_id)));
-			params.add(new BasicNameValuePair("key", api_key));
+			params.add(new BasicNameValuePair("key", getAPIKey_id(user_id)));
 			params.add(new BasicNameValuePair("narrative", "(empty)"));
 			// getting JSON Object
 			JSONObject json = jsonParser.getJSONFromUrl(updateobjectURL, params);
@@ -292,12 +294,26 @@ public class UserFunctions {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("user_id", user_id));
 		params.add(new BasicNameValuePair("token", token));
-		params.add(new BasicNameValuePair("key", api_key));
+		params.add(new BasicNameValuePair("key", getAPIKey_id(user_id)));
 		JSONArray json = jsonParser.getJSONArrayFromURL(entitiesURL, params);
 		return json;
 
 	}
 
-	
-	
+	public final static String getAPIKey_un(String username){
+		String key;
+		if(username.equals("test")){
+			key = api_keys[(0)];
+		}else{
+			int uid = Integer.parseInt(username.replace("timby", ""));
+			key = api_keys[(uid)];
+		}
+		return key;
+	}
+	public final static String getAPIKey_id(String username){
+		
+		String key = api_keys[(Integer.parseInt(username)-1)];
+		
+		return key;
+	}
 }

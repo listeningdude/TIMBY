@@ -103,7 +103,7 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
         
         
     }
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.activity_lessons, menu);
@@ -216,8 +216,8 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case 0: return getString(R.string.title_lessons_lessons).toUpperCase();
-                case 1: return getString(R.string.title_lessons_glossary).toUpperCase();
+                //case 0: return getString(R.string.title_lessons_lessons).toUpperCase();
+                //case 1: return getString(R.string.title_lessons_glossary).toUpperCase();
             }
             return null;
         }

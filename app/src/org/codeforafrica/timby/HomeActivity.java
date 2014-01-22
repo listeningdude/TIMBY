@@ -7,6 +7,7 @@ import org.codeforafrica.timby.model.Lesson;
 import org.codeforafrica.timby.model.LessonGroup;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
+import org.codeforafrica.timby.server.ConnectionDetector;
 import org.codeforafrica.timby.server.LoginActivity;
 import org.codeforafrica.timby.server.LoginPreferencesActivity;
 import org.codeforafrica.timby.ui.MyCard;
@@ -52,6 +53,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -85,7 +88,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
     RelativeLayout load_lessons;
     RelativeLayout load_reports;
     RelativeLayout load_sync;
-    
+  //Connection detector class
+    ConnectionDetector cd;
+    //flag for Internet connection status
+    Boolean isInternetPresent = false;
     private Dialog dialog;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +106,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         } catch (NameNotFoundException e) {
            
         }
+        cd = new ConnectionDetector(getApplicationContext());
         //checkCreds();
     	//new getSectors().execute();
        // new getCategories().execute();
@@ -171,22 +178,34 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 			}
 		});
     }
-
+   
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.button_sync:
-        	dialog.dismiss();
-        	Intent i = new Intent(getApplicationContext(),SyncActivity.class);
-			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(i);
+        	
+        	isInternetPresent = cd.isConnectingToInternet();
+  	       	if(!isInternetPresent){
+  	          	Toast.makeText(getBaseContext(), "You have no connection!", Toast.LENGTH_LONG).show();
+  	        }else{
+  	        	dialog.dismiss();
+  	        	startService(new Intent(HomeActivity.this,SyncService.class));
+  	        }   
+			   
+        	//Intent i = new Intent(getApplicationContext(),SyncActivity.class);
+			//i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			//startActivity(i);
+			
             break;
             
         case R.id.button_export:
         	dialog.dismiss();
+        	startService(new Intent(HomeActivity.this,Export2SDService.class));
+        	/*
         	Intent i2 = new Intent(getApplicationContext(), Export2SD.class);
         	i2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(i2);
             break;
+            */
         }
     }
 
@@ -900,12 +919,12 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 	}
 	
 	private void checkForCrashes() {
-	   CrashManager.register(this, AppConstants.HOCKEY_APP_ID);
+	   CrashManager.register(this, PrivateConstants.HOCKEY_APP_ID);
 	 }
 
 	 private void checkForUpdates() {
 	   // Remove this for store builds!
-	   UpdateManager.register(this, AppConstants.HOCKEY_APP_ID);
+	   UpdateManager.register(this, PrivateConstants.HOCKEY_APP_ID);
 	 }
 
     

@@ -91,8 +91,10 @@ OnItemLongClickListener{
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.activity_new_story);
+        
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
+         
         ViewGroup actionBar = (ViewGroup) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar", "id", "android"));
         View v = actionBar.getChildAt(0);
         ActionBar.LayoutParams p = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -100,7 +102,7 @@ OnItemLongClickListener{
         v.setLayoutParams(p);
         
         TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
-        title2.setTextColor(Color.parseColor("#7d4199"));
+        title2.setTextColor(getResources().getColor(R.color.soft_purple));
         
         //
         images = (RelativeLayout)findViewById(R.id.images);
@@ -143,10 +145,18 @@ OnItemLongClickListener{
 			@Override
 			public void onClick(View v) {
 				//TODO Auto-generated method stub
-				Intent p = new Intent(getBaseContext(), ProjectsActivity.class);
-            	p.putExtra("rid", rid);
-            	p.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            	startActivity(p);
+				
+				ArrayList<Project> mListProjects;
+	    		mListProjects = Project.getAllAsList(getApplicationContext(), rid);
+	    	 	
+	    		if(mListProjects.size()>0){
+					Intent p = new Intent(getBaseContext(), ProjectsActivity.class);
+	            	p.putExtra("rid", rid);
+	            	p.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            	startActivity(p);
+	    		}else{
+	    			Toast.makeText(getApplicationContext(), "No media added on this report yet!", Toast.LENGTH_LONG).show();
+	    		}
 			}
 		});
         
@@ -510,7 +520,7 @@ OnItemLongClickListener{
 	        startActivity(intent);
         }else{
         	Toast.makeText(getBaseContext(), String.valueOf(rid)+" Updated successfully!", Toast.LENGTH_LONG).show();
-        	Intent i = new Intent(getApplicationContext(), ReportsActivity.class);
+        	Intent i = new Intent(getApplicationContext(), HomeActivity.class);
         	i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         	startActivity(i);
         	finish();        	
@@ -523,7 +533,7 @@ OnItemLongClickListener{
         switch (item.getItemId()) {
             case android.R.id.home:
                 //NavUtils.navigateUpFromSameTask(this);
-                Intent i = new Intent(getBaseContext(), ReportsActivity.class);
+                Intent i = new Intent(getBaseContext(), HomeActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 finish();

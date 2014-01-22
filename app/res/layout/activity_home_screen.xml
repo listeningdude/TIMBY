@@ -103,7 +103,7 @@
         <RelativeLayout
             android:id="@+id/load_lessons"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="0.50"
             android:background="@color/red"
             android:clickable="true" >
@@ -130,7 +130,7 @@
         <RelativeLayout
             android:id="@+id/load_sync"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="0.39"
             android:background="@color/soft_orange" 
             android:clickable="true">

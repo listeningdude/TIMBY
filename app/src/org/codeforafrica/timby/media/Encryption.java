@@ -13,9 +13,13 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import org.codeforafrica.timby.AppConstants;
+import org.codeforafrica.timby.PrivateConstants;
 
-public class Encryption  {
+import android.app.Activity;
+
+public class Encryption {
   public static void main(String[] args) throws Exception{
+	  
     Cipher cipher = createCipher(Cipher.ENCRYPT_MODE);
     applyCipher("file_to_encrypt", "encrypted_file", cipher);
 
@@ -23,11 +27,9 @@ public class Encryption  {
     applyCipher("file_to_decrypt", "decrypted_file", cipher);
   }
   
-
-  
   public static Cipher createCipher(int mode) throws Exception {
     PBEKeySpec keySpec = new PBEKeySpec("test".toCharArray());
-    SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(AppConstants.ENCRYPTION_KEY);
+    SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
     SecretKey key = keyFactory.generateSecret(keySpec);
     MessageDigest md = MessageDigest.getInstance("MD5");
     md.update("input".getBytes());
@@ -42,18 +44,18 @@ public class Encryption  {
   }
 
   public static void applyCipher(String inFile, String outFile, Cipher cipher) throws Exception {
-    CipherInputStream in = new CipherInputStream(new FileInputStream(inFile), cipher);
+    
+	CipherInputStream in = new CipherInputStream(new FileInputStream(inFile), cipher);
     BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outFile));
-    int BUFFER_SIZE = 8;
+    int BUFFER_SIZE = 8192;
     byte[] buffer = new byte[BUFFER_SIZE];
     int numRead = 0;
     do {
       numRead = in.read(buffer);
-      if (numRead > 0)
+      if (numRead > 0){
         out.write(buffer, 0, numRead);
-    } while (numRead == 8);
-    	out.close();
-    	
-  }
-
+      }
+    } while (numRead == 8192);
+    	out.close();  	
+ }
 }

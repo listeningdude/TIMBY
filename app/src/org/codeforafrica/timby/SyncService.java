@@ -1,52 +1,34 @@
 package org.codeforafrica.timby;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executor;
 
-import javax.crypto.Cipher;
-
-import org.holoeverywhere.widget.Toast;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.login.UserFunctions;
-import org.codeforafrica.timby.media.Encryption;
-import org.codeforafrica.timby.media.MediaProjectManager;
 import org.codeforafrica.timby.model.Entity;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
 import org.codeforafrica.timby.model.Report;
 import org.codeforafrica.timby.server.ConnectionDetector;
-import org.codeforafrica.timby.server.LoginPreferencesActivity;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class SyncActivity extends BaseActivity{
+public class SyncService extends Service {
 	String token;
 	String user_id;
 	private static String KEY_SUCCESS = "status";
@@ -71,142 +53,54 @@ public class SyncActivity extends BaseActivity{
     ConnectionDetector cd;
     //flag for Internet connection status
     Boolean isInternetPresent = false;
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.sync);
-		
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
-        
-        TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
-        title2.setTextColor(getResources().getColor(R.color.soft_purple));
-	        
-		done = (Button)findViewById(R.id.close);
-		
-		log = (TextView)findViewById(R.id.logTextView);
-		
-		log.append("Initializing log...\n");
-		
-		pDialog = (ProgressBar)findViewById(R.id.progressBar1);
-		// creating connection detector class instance
-        cd = new ConnectionDetector(getApplicationContext());
-        
-		//get Internet status
-        isInternetPresent = cd.isConnectingToInternet();
-        
-        if(!isInternetPresent){
-        	Toast.makeText(getApplicationContext(), "You have no connection!", Toast.LENGTH_LONG).show();
-        }else{
-        	check_token = new checkToken().execute();
-        }
-		
-		int delay = 3000; // delay for 1 sec. 
-		int period = 1000; // repeat every 10 sec. 
-		final Timer timer = new Timer(); 
-		timer.scheduleAtFixedRate(new TimerTask(){ 
-		        public void run() 
-		        { 
-		        	checkTasks();
-		        	
-		        } 
-		    }, delay, period); 
-	        
-		
-			done.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					finish();
-				}
-			});
-	}
-	   @Override
-	    public boolean onCreateOptionsMenu(Menu menu) {
-	        getSupportMenuInflater().inflate(R.menu.activity_reports, menu);
-	        return true;
-	    }
-		@Override
-		public boolean onOptionsItemSelected(MenuItem item) {
-
-		switch (item.getItemId()) {
-	         case android.R.id.home:
-
-		        	NavUtils.navigateUpFromSameTask(this);
-		        	
-	             return true;
-	     }
-	     return super.onOptionsItemSelected(item);
-	  
+    Timer timer;
+    @Override
+    public IBinder onBind(Intent arg0) {
+          return null;
+    }
+    @Override
+    public void onCreate() {
+          super.onCreate();
+          
+          showNotification("You will be notified when syncing is complete!");
+          cd = new ConnectionDetector(getApplicationContext());
+        //get Internet status
+        //  isInternetPresent = cd.isConnectingToInternet();
+          
+         // if(!isInternetPresent){
+         // 	Toast.makeText(this, "You have no connection!", Toast.LENGTH_LONG).show();
+          //}else{
+          	check_token = new checkToken().execute();
+         // }
+          
+  		int delay = 3000; // delay for 1 sec. 
+  		int period = 1000; // repeat every 10 sec. 
+  		timer = new Timer(); 
+  		timer.scheduleAtFixedRate(new TimerTask(){ 
+  		        public void run() 
+  		        { 
+  		        	checkTasks();
+  		        } 
+  		    }, delay, period); 
+          
+    }
+    
+    @Override
+    public void onDestroy() {
+          super.onDestroy();
+          //Toast.makeText(this, "Service destroyed ...", Toast.LENGTH_LONG).show();
+    }
+    private void showNotification(String message) {
+    	 CharSequence text = message;
+    	 Notification notification = new Notification(R.drawable.timby_hold_icon, text, System.currentTimeMillis());
+    	 PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+    	                new Intent(this, HomeActivity.class), 0);
+    	notification.setLatestEventInfo(this, "Sync",
+    	      text, contentIntent);
+    	NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+		nm.notify("service started", 0, notification);
 		}
-		public void checkTasks(){
-			int tasks = 0;
-			if((create_Report!=null)){
-				if(create_Report.getStatus() == AsyncTask.Status.RUNNING){
-					tasks++;
-				}
-			}
-			if(update_Report!=null){
-				if(update_Report.getStatus() == AsyncTask.Status.RUNNING){
-					tasks++;
-				}
-			}
-			
-			if(create_Object!=null){
-				if(create_Object.getStatus() == AsyncTask.Status.RUNNING){
-					tasks++;
-				}
-			}
-			if(update_Object!=null){
-				if(update_Object.getStatus() == AsyncTask.Status.RUNNING){
-					tasks++;
-				}
-			}
-			
-			if(create_Entity!=null){
-				if(create_Object.getStatus() == AsyncTask.Status.RUNNING){
-					tasks++;
-				}
-			}
-			if(update_Entity!=null){
-				if(update_Entity.getStatus() == AsyncTask.Status.RUNNING){
-					tasks++;
-				}
-			}
-			if(check_token!=null){
-				if(check_token.getStatus() == AsyncTask.Status.RUNNING){
-					tasks++;
-				}
-			}
-			
-			if(tasks<1){
-				Handler refresh = new Handler(Looper.getMainLooper());
-				refresh.post(new Runnable() {
-				    public void run()
-				    {
-				    	pDialog.setVisibility(View.GONE);
-				    	//timer.cancel();
-	        			  //finish();
-	        		      //Toast.makeText(getApplicationContext(), "Finished sync!", Toast.LENGTH_SHORT).show();    
-	
-				    }
-				});
-			}else{
-				Handler refresh = new Handler(Looper.getMainLooper());
-				refresh.post(new Runnable() {
-				    public void run()
-				    {	
-	        			 //timer.cancel();
-	        			  //finish();
-	        		     // Toast.makeText(getApplicationContext(), "Not realy!", Toast.LENGTH_SHORT).show();    
-	
-				    }
-				});
-			}
-			Log.d("Tasks", String.valueOf(tasks));
-			//return tasks;
-		}
-	public void loopReports(){
+    public void loopReports(){
 		ArrayList<Report> mListReports;
 		mListReports = Report.getAllAsList(this);
 		for (int i = 0; i < mListReports.size(); i++) {
@@ -466,8 +360,8 @@ public class SyncActivity extends BaseActivity{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //log.append("---Updating media: \n");
-            pDialog.setVisibility(View.VISIBLE); 
+             //log.append("---Updating media: \n");
+            //pDialog.setVisibility(View.VISIBLE); 
         }
         protected String doInBackground(MyTaskParams... params) {
         	String ppath = params[0].ppath;
@@ -502,7 +396,7 @@ public class SyncActivity extends BaseActivity{
         }
        
         protected void onPostExecute(String ppath) {
-           log.append("Updated media object "+ppath+"\n");
+           //log.append("Updated media object "+ppath+"\n");
            checkTasks();
         }
 	}
@@ -512,7 +406,7 @@ public class SyncActivity extends BaseActivity{
         protected void onPreExecute() {
             super.onPreExecute(); 
             //log.append("---Updating media: \n");
-            pDialog.setVisibility(View.VISIBLE); 
+            //pDialog.setVisibility(View.VISIBLE); 
         }
         protected String doInBackground(MyTaskParams... params) {
         	String ppath = params[0].ppath;
@@ -561,7 +455,7 @@ public class SyncActivity extends BaseActivity{
         }
         protected void onPostExecute(String ppath) {
         	//Delete decrypted file and 
-        	log.append("Uploaded media object "+ppath+"\n");
+        	//log.append("Uploaded media object "+ppath+"\n");
         	checkTasks();
         }
 	}
@@ -570,7 +464,7 @@ public class SyncActivity extends BaseActivity{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog.setVisibility(View.VISIBLE); 
+            //pDialog.setVisibility(View.VISIBLE); 
         }
         
         protected String doInBackground(ReportTaskParams... params) {
@@ -597,11 +491,13 @@ public class SyncActivity extends BaseActivity{
 						report.setServerId(srid);
 						report.save();
 						
-						
+						//if(!isInternetPresent){
+				        //	Toast.makeText(getApplicationContext(), "You have no connection!", Toast.LENGTH_LONG).show();
+				       // }else{
 							//Upload corresponding media files :O
 							uploadEntities(report.getId(), Integer.parseInt(srid));
 							uploadMedia(report.getId(), Integer.parseInt(srid));
-				        
+				        //}
 					}else{
 						//Some error message. Not sure what yet.
 						
@@ -617,7 +513,7 @@ public class SyncActivity extends BaseActivity{
         
 
         protected void onPostExecute(String title) {
-        	log.append("Created report "+title+"\n");
+        	//log.append("Created report "+title+"\n");
         	checkTasks();
         }
 	}
@@ -626,7 +522,7 @@ public class SyncActivity extends BaseActivity{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog.setVisibility(View.VISIBLE); 
+            //pDialog.setVisibility(View.VISIBLE); 
         }
         
         protected String doInBackground(ReportTaskParams... params) {
@@ -647,13 +543,13 @@ public class SyncActivity extends BaseActivity{
 				String res = json.getString(KEY_SUCCESS); 
 					if(res.equals("OK")){
 						JSONArray json_report = json.getJSONArray("message");//json.getJSONObject("message");
-						if(!isInternetPresent){
-				        	Toast.makeText(getApplicationContext(), "You have no connection!", Toast.LENGTH_LONG).show();
-				        }else{
+						//if(!isInternetPresent){
+				        //	Toast.makeText(getApplicationContext(), "You have no connection!", Toast.LENGTH_LONG).show();
+				        //}else{
 							//Update objects
 							updateEntities(rid, serverID);
 							updateMedia(rid, serverID);
-				        }
+				        //}
 					}else{
 						//Some error message. Not sure what yet.
 					}
@@ -666,7 +562,7 @@ public class SyncActivity extends BaseActivity{
         
 
         protected void onPostExecute(String title) {
-        	log.append("Updated report "+title+"\n");
+        	//log.append("Updated report "+title+"\n");
         	checkTasks();
         }
 	}
@@ -676,7 +572,7 @@ public class SyncActivity extends BaseActivity{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog.setVisibility(View.VISIBLE);
+            //pDialog.setVisibility(View.VISIBLE);
             
         }
         protected String doInBackground(String... args) {
@@ -686,9 +582,15 @@ public class SyncActivity extends BaseActivity{
 	        user_id = settings.getString("user_id",null);
 	        
 	        if(token==null){
+	        	showNotification("Token expired! Log in with internet and try again!");
+	        	
+				//Toast.makeText(getApplicationContext(), "Token expired! Login and try syncing again.", Toast.LENGTH_LONG).show();
+
+	        	/*
 	        	Intent login = new Intent(getApplicationContext(), LoginPreferencesActivity.class);
 				login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(login);
+				*/
 	        }else{
 		        UserFunctions userFunction = new UserFunctions();
 		        JSONObject json = userFunction.checkTokenValidity(user_id, token);
@@ -696,17 +598,15 @@ public class SyncActivity extends BaseActivity{
 		        try{
 		        	String res = json.getString(KEY_SUCCESS); 
 					if(res.equals("OK")){
-						
+						loopReports();
 					}else{
-						runOnUiThread(new Runnable(){
-						    public void run(){
-								Toast.makeText(getApplicationContext(), "Token expired! Login and try syncing again.", Toast.LENGTH_LONG).show();
-						    }
-						});
-						Intent login = new Intent(getApplicationContext(), LoginPreferencesActivity.class);
-						login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						startActivity(login);
-						finish();
+						showNotification("Token Expired");
+						//Toast.makeText(getApplicationContext(), "Token expired! Login and try syncing again.", Toast.LENGTH_LONG).show();
+						//Intent login = new Intent(getApplicationContext(), LoginPreferencesActivity.class);
+						//login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						//startActivity(login);
+						//finish();
+						//destroy();
 					}
 		        }catch (JSONException e) {
 					e.printStackTrace();
@@ -717,11 +617,7 @@ public class SyncActivity extends BaseActivity{
         
 
         protected void onPostExecute(String file_url) {
-        	if(!isInternetPresent){
-            	Toast.makeText(getApplicationContext(), "You have no connection!", Toast.LENGTH_LONG).show();
-            }else{
-            	loopReports();
-            }
+
         }
 	}
 	class createEntity extends AsyncTask<EntityTaskParams, String, String> {
@@ -729,7 +625,7 @@ public class SyncActivity extends BaseActivity{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog.setVisibility(View.VISIBLE); 
+            //pDialog.setVisibility(View.VISIBLE); 
         }
         
         protected String doInBackground(EntityTaskParams... params) {
@@ -770,7 +666,7 @@ public class SyncActivity extends BaseActivity{
         }
         
         protected void onPostExecute(String entityName) {
-            log.append("Created entity "+entityName+"\n");
+            //log.append("Created entity "+entityName+"\n");
             checkTasks();
         }
 	}
@@ -779,7 +675,7 @@ public class SyncActivity extends BaseActivity{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog.setVisibility(View.VISIBLE); 
+            //pDialog.setVisibility(View.VISIBLE); 
         }
         
         protected String doInBackground(EntityTaskParams... params) {
@@ -809,8 +705,57 @@ public class SyncActivity extends BaseActivity{
         }
         
         protected void onPostExecute(String entityName) {
-            log.append("Updated entity "+entityName+"\n");
+            //log.append("Updated entity "+entityName+"\n");
             checkTasks();
         }
+        
+	}
+	public void checkTasks(){
+		int tasks = 0;
+		if((create_Report!=null)){
+			if(create_Report.getStatus() == AsyncTask.Status.RUNNING){
+				tasks++;
+			}
+		}
+		if(update_Report!=null){
+			if(update_Report.getStatus() == AsyncTask.Status.RUNNING){
+				tasks++;
+			}
+		}
+		
+		if(create_Object!=null){
+			if(create_Object.getStatus() == AsyncTask.Status.RUNNING){
+				tasks++;
+			}
+		}
+		if(update_Object!=null){
+			if(update_Object.getStatus() == AsyncTask.Status.RUNNING){
+				tasks++;
+			}
+		}
+		
+		if(create_Entity!=null){
+			if(create_Object.getStatus() == AsyncTask.Status.RUNNING){
+				tasks++;
+			}
+		}
+		if(update_Entity!=null){
+			if(update_Entity.getStatus() == AsyncTask.Status.RUNNING){
+				tasks++;
+			}
+		}
+		if(check_token!=null){
+			if(check_token.getStatus() == AsyncTask.Status.RUNNING){
+				tasks++;
+			}
+		}
+		
+		if(tasks<1){
+			//End
+			showNotification("Syncing complete!");
+			timer.cancel();
+			this.stopSelf();
+			
+		}
 	}
 }

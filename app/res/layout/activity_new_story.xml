@@ -130,7 +130,7 @@
 		                android:layout_height="20dp"
 		                android:src="@drawable/gallery"
 		                android:layout_gravity="center"
-		                android:clickable="true" />
+		                />
 					<TextView
 		                android:id="@+id/textView1"
 		                android:layout_width="wrap_content"
@@ -161,7 +161,8 @@
             android:hint="Title"
             android:padding="15dp"
             android:textColor="@color/soft_red"
-            android:textColorHint="@color/grey" />
+            android:textColorHint="@color/grey" 
+            style="@android:style/TextAppearance.Medium"/>
 
         <TextView
             android:id="@+id/textView2"
@@ -290,14 +291,16 @@
                 android:id="@+id/spinnerSector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_cream_grey_border" />
+                android:background="@drawable/background_cream_grey_border"
+                style="@android:style/TextAppearance.Medium" />
 
             <Spinner
                 android:id="@+id/spinnerIssue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/background_cream_grey_border"/>
+                android:background="@drawable/background_cream_grey_border"
+                style="@android:style/TextAppearance.Medium"/>
 
             <Button
                 android:id="@+id/AddEntity"
@@ -308,12 +311,14 @@
                 android:text="Company/Person"
                 android:gravity="left"
                 android:padding="15dp"
+                style="@android:style/TextAppearance.Medium"
                 android:textColor="@color/grey" />
 
             <ListView
                 android:id="@+id/EntitiesList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                style="@android:style/TextAppearance.Medium" >
             </ListView>
 
             <EditText
@@ -327,6 +332,7 @@
                 android:gravity="top"
                 android:padding="15dp"
                 android:hint="@string/description_field"
+                style="@android:style/TextAppearance.Medium"
                 android:inputType="textMultiLine"
                 android:textColor="@color/soft_red" />
 
@@ -346,7 +352,7 @@
                     android:layout_toRightOf="@+id/imageView4"
                     android:text="Location not set"
                     android:textColor="#686868"
-                    android:padding="15dp"
+                    android:padding="10dp"
                    	style="@android:style/TextAppearance.Medium"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"

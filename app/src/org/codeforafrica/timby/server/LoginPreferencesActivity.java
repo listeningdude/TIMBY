@@ -165,14 +165,47 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	            String username = settings.getString("username",null);
 	            String password = settings.getString("password",null);
 	            
-	            if((username.equals(txtUser.getText().toString()))&&(password.equals(txtPass.getText().toString()))){
+	            if((username!=null)&&(password!=null)){
+	            	 if((username.equals(txtUser.getText().toString()))&&(password.equals(txtPass.getText().toString()))){
+		            	
+		            	mHandler.sendEmptyMessage(0);
+					}else{   
+						Message msgErr= mHandler.obtainMessage(1);
+	                    msgErr.getData().putString("err","Incorrect username and/or password!");
+	                    mHandler.sendMessage(msgErr);
+					}
+	            }else{
+	            	String user = txtUser.getText().toString();
+	            	String pass = txtPass.getText().toString();
 	            	
-	            	mHandler.sendEmptyMessage(0);
-				}else{   
-					Message msgErr= mHandler.obtainMessage(1);
-                    msgErr.getData().putString("err","Incorrect username and/or password!");
-                    mHandler.sendMessage(msgErr);
-				}
+	            	if(user.startsWith("timby")){
+	            		if(pass.equals(user+"afric")){
+	            			int userid = Integer.parseInt(user.replace("timby", ""));
+	            			userid = userid+1;
+	            			
+							saveCreds(String.valueOf(userid), "empty", user, pass);
+	            			mHandler.sendEmptyMessage(0);
+						}else{   
+							Message msgErr= mHandler.obtainMessage(1);
+		                    msgErr.getData().putString("err","Incorrect password!");
+		                    mHandler.sendMessage(msgErr);
+						}
+	            	}else if(user.equals("test")){
+	            		if(pass.equals("timbytest")){
+	            			saveCreds("1", "empty", user, pass);
+	            			mHandler.sendEmptyMessage(0);
+						}else{   
+							Message msgErr= mHandler.obtainMessage(1);
+		                    msgErr.getData().putString("err","Incorrect password!");
+		                    mHandler.sendMessage(msgErr);
+						}
+	            	}else{
+	            		Message msgErr= mHandler.obtainMessage(1);
+	                    msgErr.getData().putString("err","Incorrect username and/or password!");
+	                    mHandler.sendMessage(msgErr);
+	            	}
+	            	
+	            }
 	            
 	        }else{
 		        
@@ -239,6 +272,10 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	    	new getSectors().execute();
 	    	new getCategories().execute();
 	    	new getEntities().execute();
+	    }else{
+	    	getPresetSectors();
+	    	getPresetCategories();
+	    	getPresetEntities();
 	    }
         
     	Intent intent = new Intent(LoginPreferencesActivity.this, HomeActivity.class);
@@ -246,6 +283,69 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
         startActivity(intent);
         
         finish();
+    }
+    public void getPresetSectors(){
+    	//First check if not done already
+    	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    	String sectors_current = settings.getString("sectors",null);
+    	if(sectors_current==null){
+	    	SharedPreferences prefs = PreferenceManager
+			        .getDefaultSharedPreferences(getApplicationContext());
+	    	    	
+			JSONArray sectors = new JSONArray();
+			
+	    	String[] sectors_string= getResources().getStringArray(R.array.sectors);
+	    	for(int n=0; n<sectors_string.length;n++){
+	    			String str2 = sectors_string[n];
+					sectors.put(str2);
+	    	}
+	    	Editor editor = prefs.edit();
+			editor.putString("sectors", sectors.toString());
+			
+			editor.commit();
+    	}
+    }
+    public void getPresetCategories(){
+    	//First check if not done already
+    	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    	String categories_current = settings.getString("categories",null);
+    	if(categories_current==null){
+	    	SharedPreferences prefs = PreferenceManager
+			        .getDefaultSharedPreferences(getApplicationContext());
+	    	    	
+			JSONArray sectors = new JSONArray();
+			
+	    	String[] sectors_string= getResources().getStringArray(R.array.categories);
+	    	for(int n=0; n<sectors_string.length;n++){
+	    			String str2 = sectors_string[n];
+					sectors.put(str2);
+	    	}
+	    	Editor editor = prefs.edit();
+			editor.putString("categories", sectors.toString());
+			
+			editor.commit();
+    	}
+    }
+    public void getPresetEntities(){
+    	//First check if not done already
+    	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    	String categories_current = settings.getString("entities",null);
+    	if(categories_current==null){
+	    	SharedPreferences prefs = PreferenceManager
+			        .getDefaultSharedPreferences(getApplicationContext());
+	    	    	
+			JSONArray sectors = new JSONArray();
+			
+	    	String[] sectors_string= getResources().getStringArray(R.array.entities);
+	    	for(int n=0; n<sectors_string.length;n++){
+	    			String str2 = sectors_string[n];
+					sectors.put(str2);
+	    	}
+	    	Editor editor = prefs.edit();
+			editor.putString("entities", sectors.toString());
+			
+			editor.commit();
+    	}
     }
     class getSectors extends AsyncTask<String, String, String> {
 
@@ -380,10 +480,6 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	}
     class getEntities extends AsyncTask<String, String, String> {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute(); 
-        }
         protected String doInBackground(String... args) {
         	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	        String token = settings.getString("token",null);
@@ -441,7 +537,11 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 				}
         	return null;
         }
-        protected void onPostExecute(String file_url) {
+        @Override
+		protected void onPreExecute() {
+		    super.onPreExecute(); 
+		}
+		protected void onPostExecute(String file_url) {
             
         }
 	}

@@ -21,6 +21,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.NavUtils;
+import android.view.KeyEvent;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -91,7 +93,7 @@ public class BaseActivity extends Activity {
         super.onStop();
         stopDisconnectTimer();
     }
-    
+
     public void initSlidingMenu ()
     {
 

@@ -1,23 +1,38 @@
 package org.codeforafrica.timby;
 
 import org.codeforafrica.timby.R;
+import org.codeforafrica.timby.media.MediaProjectManager;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
 import org.codeforafrica.timby.model.Report;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.holoeverywhere.app.AlertDialog;
+import org.json.JSONArray;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,29 +44,91 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
 public class ReportsActivity extends BaseActivity {
 	ListView mListView;
 	private ArrayList<Report> mListReports;
 	private ReportArrayAdapter aaReports;
+	ProgressDialog pDialog;
+	getThumbnail get_thumbnail=null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projects);
         // action bar stuff
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
+         
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
+        getSupportActionBar().setTitle("View Reports");
+        TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+        title2.setTextColor(getResources().getColor(R.color.soft_purple));
+	     
         
         mListView = (ListView)findViewById(R.id.projectslist);
+        /*pDialog = new ProgressDialog(ReportsActivity.this);
+		pDialog.setMessage("Getting thumbnails...");
+		pDialog.setCancelable(false);
+		pDialog.show(); 
+        */
         initListView(mListView);
+        
+        int delay = 3000; // delay for 1 sec. 
+		int period = 3000; // repeat every 10 sec. 
+		final Timer timer = new Timer(); 
+		timer.scheduleAtFixedRate(new TimerTask(){ 
+		        public void run() 
+		        { 
+		        	if(checkTasks()<1){
+		        		Handler refresh = new Handler(Looper.getMainLooper());
+						refresh.post(new Runnable() {
+						    public void run()
+						    {
+		        			  //pDialog.dismiss();
+		        			  timer.cancel();
+		        			  //finish();
+		        		      //Toast.makeText(getApplicationContext(), "Something", Toast.LENGTH_SHORT).show();    
+		        		   }
+		        		}); 
+		             }
+		        } 
+		    }, delay, period); 
     }
+    public int checkTasks(){
+		int tasks = 0;
+		if((get_thumbnail!=null)){
+			if(get_thumbnail.getStatus() == AsyncTask.Status.RUNNING){
+				tasks++;
+			}
+		}
+		
+		Log.d("Tasks", String.valueOf(tasks));
+		return tasks;
+	}
+    class showList extends AsyncTask<String, String, String> {
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			
+		}
+		protected String doInBackground(String... args) {
+			
+			mListReports = Report.getAllAsList(ReportsActivity.this);
+	        aaReports = new ReportArrayAdapter(ReportsActivity.this, R.layout.list_report_row, mListReports);
+	         
+	       //  mListView.setAdapter(aaReports);
+			return null;
+		}
+	protected void onPostExecute(String file_url) {
+			mListView.setAdapter(aaReports);
+			
+		}
+	}
+    /*
     @Override
 	public void onResume() {
 		super.onResume();
 		refreshReports();
 	}
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.activity_reports, menu);
@@ -66,18 +143,26 @@ public class ReportsActivity extends BaseActivity {
 	        	NavUtils.navigateUpFromSameTask(this);
 	        	
              return true;
-         case R.id.menu_new_project:
- 		
-			 startActivity(new Intent(this, ReportActivity.class));
-
-             return true;
      }
  		
      return super.onOptionsItemSelected(item);
   
 	}
     
-	
+	*/
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                //NavUtils.navigateUpFromSameTask(this);
+                Intent i = new Intent(getBaseContext(), HomeActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 	private void showPreferences ()
 	{
 		Intent intent = new Intent(this,SimplePreferences.class);
@@ -112,7 +197,7 @@ public class ReportsActivity extends BaseActivity {
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             final Report report = mListReports.get(arg2);
             AlertDialog.Builder builder = new AlertDialog.Builder(ReportsActivity.this);
-            builder.setMessage(R.string.delete_project_)
+            builder.setMessage("Delete report?")
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
 
                         @Override
@@ -158,12 +243,8 @@ public class ReportsActivity extends BaseActivity {
     }
     
     public void refreshReports ()
-    {
-    	
-    	 mListReports = Report.getAllAsList(this);
-         aaReports = new ReportArrayAdapter(this, R.layout.list_project_row, mListReports);
-         
-         mListView.setAdapter(aaReports);
+    {    	
+    	 new showList().execute();
     }
     
     private void deleteReport (Report report)
@@ -205,22 +286,173 @@ public class ReportsActivity extends BaseActivity {
             }
             
             tv = (TextView)row.findViewById(R.id.title);
-            
             Report report = reports.get(position);
-            int totalprojects = Project.getAllAsList(((Activity)context), report.getId()).size();
-            tv.setText(report.getTitle());       
+            tv.setText(report.getTitle()); 
             
-            tv = (TextView)row.findViewById(R.id.description);
+            tv = (TextView)row.findViewById(R.id.sector);
+            tv.setText(report.getSector());
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        	try {
+        	    JSONArray jsonArray2 = new JSONArray(prefs.getString("sectors", "[]"));
+        	    if(report.getSector().equals("0")){
+        	    	tv.setText("Sector not set");
+        	    }else{
+        	    tv.setText(jsonArray2.getString(Integer.parseInt(report.getSector())));
+        	    }
+        	}catch (Exception e) {
+        	    e.printStackTrace();
+        	}
+        	
+            tv = (TextView)row.findViewById(R.id.category);
+            tv.setText(report.getIssue());
+                   	try {
+        	    JSONArray jsonArray2 = new JSONArray(prefs.getString("categories", "[]"));
+        	    if(report.getIssue().equals("0")){
+        	    	tv.setText("Category not set");
+        	    }else{
+        	    tv.setText(jsonArray2.getString(Integer.parseInt(report.getIssue())));
+        	    }
+        	}catch (Exception e) {
+        	    e.printStackTrace();
+        	}
+        	
+            tv = (TextView)row.findViewById(R.id.date);            
+            tv.setText(report.getDate());
             
-        	tv.setText(String.valueOf(totalprojects)+" files(s)");   	
+           // int totalprojects = Project.getAllAsList(((Activity)context), report.getId()).size();
+                  
             
+           // tv = (TextView)row.findViewById(R.id.files);
+            
+            //tv.setText(String.valueOf(totalprojects)+" files(s)");   	
+            
+            //Thumbnail Business
+            ArrayList<Project> mListProjects;
+    		mListProjects = Project.getAllAsList(getApplicationContext(), report.getId());
+    	 	
+    		if(mListProjects.size()>0){
+	    		Project project = mListProjects.get(0);
+	    	 	
+	    	 	ImageView ivIcon = (ImageView)row.findViewById(R.id.imageView1);
+	            
+	            // FIXME default to use first scene
+	            Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
+	            
+	            if (mediaList != null && mediaList.length > 0)    
+	            {
+	            	for (Media media: mediaList)
+	            		if (media != null)
+	            		{
+	            			GetThumbnailParams params = new GetThumbnailParams(ReportsActivity.this,media,project, ivIcon);
+	            		 	get_thumbnail = new getThumbnail();
+	            		 	get_thumbnail.execute(params);	
+	            			//Bitmap bmp = Media.getThumbnail(ProjectsActivity.this,media,project);
+	            			//if (bmp != null)
+	            			//	ivIcon.setImageBitmap(bmp);
+	            			break;
+	            		}
+	            }
+	            int vids =0;
+	            int pics =0;
+	            int auds =0;
+	            TextView tvVids = (TextView)row.findViewById(R.id.textVid);
+	            ImageView imVids = (ImageView)row.findViewById(R.id.imageVid);
+	            
+	            TextView tvAuds = (TextView)row.findViewById(R.id.textAud);
+	            ImageView imAuds = (ImageView)row.findViewById(R.id.imageAud);
+	            
+	            TextView tvPics = (TextView)row.findViewById(R.id.textPic);
+	            ImageView imPics = (ImageView)row.findViewById(R.id.imageCam);
+	            //Get MIME types
+	        	for (int j = 0; j < mListProjects.size(); j++) {
+	    	 		Project project2 = mListProjects.get(j);
+	    	 		
+	    	 		Media[] mediaList2 = project2.getScenesAsArray()[0].getMediaAsArray();
+	    	 		Media media = mediaList2[0];
+	    	 		
+	    		 	String ptype = media.getMimeType();
+	    		 	if(ptype.contains("image")){
+	    		 		pics++;
+	    		 		tvPics.setText(String.valueOf(pics));
+	    		 		imPics.setImageResource(R.drawable.pics_);
+	    		 		
+	    		 	}else if(ptype.contains("video")){
+	    		 		vids++;
+	    		 		tvVids.setText(String.valueOf(vids));
+	    		 		imVids.setImageResource(R.drawable.vids_);
+	    		 		
+	    		 	}else if(ptype.contains("audio")){
+	    		 		auds++;
+	    		 		tvAuds.setText(String.valueOf(auds));
+	    		 		imAuds.setImageResource(R.drawable.auds_);
+	    		 	}
+	        	}
+	        	
+    		}
             return row;
         }
         
     }
+ 
+    private static class GetThumbnailParams {
+    	Context context;
+    	Media media;
+    	Project project;
+    	ImageView ivIcon;
+	    
+	    GetThumbnailParams(Context context, Media media, Project project,ImageView ivIcon) {
+	        this.context = context;
+	        this.media = media;
+	        this.project = project;
+	        this.ivIcon = ivIcon;
+	    }
+	}
+    class getThumbnail extends AsyncTask<GetThumbnailParams, String, String> {
 
+		@Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+			
+        }
+        protected String doInBackground(GetThumbnailParams... params) {
+        	Context context = params[0].context;
+        	final Media media = params[0].media;
+        	final Project project = params[0].project;
+        	final ImageView ivIcon = params[0].ivIcon;
+        	//
+     	   final Bitmap bmp = Media.getThumbnail(ReportsActivity.this,media,project);
+     	   
+            ReportsActivity.this.runOnUiThread(new Runnable() 
+                  {
+                       public void run() 
+                       {
+                    	   
+               				if (bmp != null)
+               					ivIcon.setImageBitmap(bmp);
+               				/*
+               				//Delete decrypted file
+               				String filepath = media.getPath();
+                 			String[] fileparts = filepath.split("\\.");
+                 			String filename = fileparts[0];
+                 			String fileext = fileparts[1];
+                 			String tempFile = filename+"2."+fileext;
+                 			File temp = new File(tempFile);
+                 			temp.delete();
+                 			
+                 			//If file is video delete thumbnail as well
+                 			if(media.getMimeType().contains("video")){
+                 				File fileThumb = new File(MediaProjectManager.getExternalProjectFolder(project, ReportsActivity.this), media.getId() + "2.jpg");
+                 	            fileThumb.delete();
+                 			}
+                 			*/
+                       	  }
+                       });
+        	return null;
+        }
+       
+        protected void onPostExecute(String ppath) {
+            
+        }
+	}
 
-   
-    
-    
 }

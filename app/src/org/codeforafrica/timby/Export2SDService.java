@@ -1,6 +1,5 @@
 package org.codeforafrica.timby;
 
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -15,50 +14,57 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.crypto.Cipher;
-import org.codeforafrica.timby.media.Encryption;
+import org.codeforafrica.timby.Export2SD.export2SD;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
 import org.codeforafrica.timby.model.Report;
 import org.holoeverywhere.widget.Toast;
 
-
-import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.app.Service;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class Export2SD extends Activity{
+public class Export2SDService extends Service {
 	private ArrayList<Report> mListReports;
 	private ArrayList<Project> mListProjects;
 	String data = "";
 	String ext;
 	int BUFFER = 2048;
-	ProgressDialog pDialog;
 	@Override
-	public void onCreate(Bundle savedInstanceState){
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.export);   
-		//pDialog = (ProgressDialog)findViewById(R.id.progressBar1);
-		
-		new export2SD().execute();
-		
-		//Toast.makeText(getBaseContext(), "Exported Successfully!", Toast.LENGTH_LONG).show();
-		
+    public void onCreate() {
+          super.onCreate();
+          showNotification("You will be notified when exporting is complete!");
+          new export2SD().execute();
 	}
-	
+	private void showNotification(String message) {
+   	 CharSequence text = message;
+   	 Notification notification = new Notification(R.drawable.timby_hold_icon, text, System.currentTimeMillis());
+   	 PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+   	                new Intent(this, HomeActivity.class), 0);
+   	notification.setLatestEventInfo(this, "Export to SD",
+   	      text, contentIntent);
+   	NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+		nm.notify("service started", 1, notification);
+		}
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	class export2SD extends AsyncTask<String, String, String> {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			pDialog = new ProgressDialog(Export2SD.this);
-			pDialog.setMessage("Exporting to SD Card");
-			pDialog.setCancelable(false);
-			pDialog.show();
+
 		}
 		protected String doInBackground(String... args) {
 			
@@ -192,12 +198,14 @@ public class Export2SD extends Activity{
 			}
 	}	
 	protected void onPostExecute(String file_url) {
-			pDialog.dismiss();
-			Toast.makeText(getBaseContext(), "Exported Successfully!", Toast.LENGTH_LONG).show();
-			finish();
+			
+			showNotification("Exported Successfully!");
+			endEncryption();
 		}
 	}
-      
+      public void endEncryption(){
+    	  this.stopSelf();
+      }
 	public static void writeToFile(final String fileContents) {
 		try {
 	            FileWriter out = new FileWriter(new File(Environment.getExternalStorageDirectory(), AppConstants.TAG+"/db.xml"));

@@ -66,7 +66,6 @@ public class VideoCamera extends Activity implements OnClickListener, SurfaceHol
 
     private void prepareRecorder() {
         recorder.setPreviewDisplay(holder.getSurface());
-
         try {
             recorder.prepare();
         } catch (IllegalStateException e) {

@@ -428,6 +428,8 @@ public class Media {
             */
             	try
             	{
+            		//Disable encryption
+            		/*
             		String filepath = media.getPath();
          			String[] fileparts = filepath.split("\\.");
          			String filename = fileparts[0];
@@ -435,24 +437,12 @@ public class Media {
          			String tempFile = filename+"2."+fileext;
          			
          			 Cipher cipher;
-         			
-                     try{
-             			cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
-             			Encryption.applyCipher(filepath, tempFile, cipher);
-             		}catch(Exception e){
-             			e.printStackTrace();
-             		}
+         			 cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
+             		 Encryption.applyCipher(filepath, tempFile, cipher);
+             		*/
                      
-	                Bitmap bmp = MediaUtils.getVideoFrame(new File(tempFile).getCanonicalPath(), -1);
-	                /*
-	                if (bmp != null)
-	                {
-		                try {
-		                    bmp.compress(Bitmap.CompressFormat.PNG, 70, new FileOutputStream(fileThumb));
-		                } catch (FileNotFoundException e) {
-		                    Log.e(AppConstants.TAG, "could not cache video thumb", e);
-		                }
-	                }*/
+	                Bitmap bmp = MediaUtils.getVideoFrame(new File(media.getPath()).getCanonicalPath(), -1);
+	              
 	                
 	                return bmp;
             	}
@@ -473,7 +463,7 @@ public class Media {
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = IMAGE_SAMPLE_SIZE * 2; //images will be bigger than video or audio
             
-           
+            /*
             String filepath = media.getPath();
 			String[] fileparts = filepath.split("\\.");
 			String filename = fileparts[0];
@@ -490,8 +480,8 @@ public class Media {
     		}catch(Exception e){
     			e.printStackTrace();
     		}
-            
-            return BitmapFactory.decodeFile(tempFile, options);
+            */
+            return BitmapFactory.decodeFile(media.getPath(), options);
         }
         else if (media.getMimeType().startsWith("audio"))
         {

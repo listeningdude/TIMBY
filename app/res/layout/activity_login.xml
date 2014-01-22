@@ -84,7 +84,6 @@
               android:padding="10dp"
               android:password="true"
               android:singleLine="true"
-              android:text="timbytest"
               android:textColor="@color/soft_purple" />
 
           <!-- Login button -->

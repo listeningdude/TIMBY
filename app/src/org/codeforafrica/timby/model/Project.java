@@ -22,7 +22,8 @@ public class Project {
     protected String title;
     protected String report;
     protected String date;
-    
+    protected int object_id;
+    protected String sequence_id; 
     protected String thumbnailPath;
     protected int storyType;
     protected String templatePath;
@@ -72,7 +73,7 @@ public class Project {
         mSceneCount = sceneCount;
     }
 
-    public Project(Context context, int id, String title, String report, String thumbnailPath, int storyType, String date, String templatePath) {
+    public Project(Context context, int id, String title, String report, String thumbnailPath, int storyType, String date, String templatePath, int object_id, String sequence_id) {
         super();
         this.context = context;
         this.id = id;
@@ -82,6 +83,8 @@ public class Project {
         this.thumbnailPath = thumbnailPath;
         this.storyType = storyType;
         this.templatePath = templatePath;
+        this.object_id = object_id;
+        this.sequence_id = sequence_id;
     }
 
     public Project(Context context, Cursor cursor) {
@@ -101,7 +104,11 @@ public class Project {
                 cursor.getString(cursor
                         .getColumnIndex(StoryMakerDB.Schema.Projects.COL_DATE)),
                 cursor.getString(cursor
-                        .getColumnIndex(StoryMakerDB.Schema.Projects.COL_TEMPLATE_PATH)));
+                        .getColumnIndex(StoryMakerDB.Schema.Projects.COL_TEMPLATE_PATH)),
+                cursor.getInt(cursor
+                        .getColumnIndex(StoryMakerDB.Schema.Projects.COL_OBJECT_ID)),
+                cursor.getString(cursor
+                        .getColumnIndex(StoryMakerDB.Schema.Projects.COL_SEQUENCE_ID)));
 
         calculateMaxSceneCount();
 
@@ -198,6 +205,8 @@ public class Project {
         values.put(StoryMakerDB.Schema.Projects.COL_STORY_TYPE, storyType);
         values.put(StoryMakerDB.Schema.Projects.COL_DATE, date);
         values.put(StoryMakerDB.Schema.Projects.COL_TEMPLATE_PATH, templatePath);
+        values.put(StoryMakerDB.Schema.Projects.COL_OBJECT_ID, object_id);
+        values.put(StoryMakerDB.Schema.Projects.COL_SEQUENCE_ID, sequence_id);
         
         return values;
     }
@@ -374,7 +383,18 @@ public class Project {
     public void setTemplatePath(String template) {
         this.templatePath = template;
     }
-    
+    public void setObjectID(int objectid) {
+        this.object_id = objectid;
+    }
+    public void setSequenceId(String sequence) {
+        this.sequence_id = sequence;
+    }
+    public int getObjectID() {
+        return object_id;
+    }
+    public String getSequenceId() {
+        return sequence_id;
+    }
     public static String getSimpleTemplateForMode (int storyMode)
     {
     	 String lang = StoryMakerApp.getCurrentLocale().getLanguage();
