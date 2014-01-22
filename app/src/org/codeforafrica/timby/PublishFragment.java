@@ -2,6 +2,7 @@ package org.codeforafrica.timby;
 
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.media.Encryption;
+import org.codeforafrica.timby.media.MediaProjectManager;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
 import org.codeforafrica.timby.server.LoginActivity;
@@ -36,6 +37,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.ffmpeg.android.MediaUtils;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.Spinner;
 import redstone.xmlrpc.XmlRpcFault;
@@ -50,6 +52,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -299,13 +302,33 @@ public class PublishFragment extends Fragment {
         
         String filepath = mediaList[0].getPath();
         
+        
+        //Create thumbnail
+        Bitmap videoThumb = null;
+        if(mediaList[0].getMimeType().contains("video")){
+           try {
+        	   videoThumb = MediaUtils.getVideoFrame(new File(filepath).getCanonicalPath(), -1);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+           try {
+               String filename = mediaList[0].getId()+"2.jpg";
+               String f = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/thumbs/";
+               FileOutputStream out = new FileOutputStream(f+filename);
+               videoThumb.compress(Bitmap.CompressFormat.JPEG, 90, out);
+               out.close();
+		       } catch (Exception e) {
+		               e.printStackTrace();
+		       }
+        }
+        
         //Encrypt
         Intent startMyService= new Intent(mActivity, EncryptionService.class);
         startMyService.putExtra("filepath", filepath);
         startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
         mActivity.startService(startMyService);
-        //Create thumbnail
-                       
+        
         mActivity.mMPM.mProject.save();
         //mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
         mActivity.finish();
