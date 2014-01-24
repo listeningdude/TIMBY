@@ -525,10 +525,7 @@ public class SyncActivity extends BaseActivity{
 						project.setObjectID(object_id);
 						project.setSequenceId(sequence_id);
 						project.save();
-						/*
-             			File temp = new File(ppath);
-             			temp.delete();
-             			*/
+						
 					}else{
 						//Some error message. Not sure what yet.
 					}

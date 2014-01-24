@@ -20,6 +20,7 @@ import org.ffmpeg.android.MediaUtils;
 
 
 import org.codeforafrica.timby.AppConstants;
+import org.codeforafrica.timby.EncryptionService;
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.db.ProjectsProvider;
 import org.codeforafrica.timby.db.StoryMakerDB;
@@ -28,10 +29,12 @@ import org.codeforafrica.timby.media.MediaProjectManager;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 public class Media {
@@ -413,74 +416,69 @@ public class Media {
         }
         else if (media.getMimeType().startsWith("video"))
         {
-        	
-            File fileThumb = new File(MediaProjectManager.getExternalProjectFolder(project, context), media.getId() + "2.jpg");
-            /*
-            if (fileThumb.exists())
-            {
+            String filename = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/thumbs/"+media.getId()+".jpg";
 
+            File fileThumb = new File(filename);
+            
                 final BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inSampleSize = IMAGE_SAMPLE_SIZE;
-                return BitmapFactory.decodeFile(fileThumb.getAbsolutePath(), options);
-            }
-            else
-            {
-            */
-            	try
-            	{
-            		//Disable encryption
-            		/*
-            		String filepath = media.getPath();
-         			String[] fileparts = filepath.split("\\.");
-         			String filename = fileparts[0];
-         			String fileext = fileparts[1];
-         			String tempFile = filename+"2."+fileext;
-         			
-         			 Cipher cipher;
-         			 cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
-             		 Encryption.applyCipher(filepath, tempFile, cipher);
-             		*/
-                     
-	                Bitmap bmp = MediaUtils.getVideoFrame(new File(media.getPath()).getCanonicalPath(), -1);
-	              
-	                
-	                return bmp;
-            	}
-            	catch (Exception e)
-            	{
-            		Log.w(AppConstants.TAG,"Could not generate thumbnail: " + media.getPath(),e);
-            		return null;
-            	}
-            	catch (OutOfMemoryError oe)
-            	{
-            		Log.e(AppConstants.TAG,"Could not generate thumbnail - OutofMemory!: " + media.getPath());
-            		return null;
-            	}
-            //}
+            /*
+                //Decrypt    
+            Intent startMyService= new Intent(context, EncryptionService.class);
+            startMyService.putExtra("filepath", filename);
+            startMyService.putExtra("mode", Cipher.DECRYPT_MODE);
+            context.startService(startMyService);
+             */
+                /*
+                String file = filename;
+		 		Cipher cipher;
+				try {
+					cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
+					Encryption.applyCipher(file, file+"_", cipher);
+				}catch (Exception e) {
+					// TODO Auto-generated catch block
+					Log.e("Encryption error", e.getLocalizedMessage());
+					e.printStackTrace();
+				}
+				//Then delete original file
+				File oldfile = new File(file);
+				oldfile.delete();
+				//Then remove _ on encrypted file
+				File newfile = new File(file+"_");
+				newfile.renameTo(new File(file));
+				*/
+            return BitmapFactory.decodeFile(fileThumb.getAbsolutePath(), options);
+            
         }
         else if (media.getMimeType().startsWith("image"))
         {
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = IMAGE_SAMPLE_SIZE * 2; //images will be bigger than video or audio
-            
             /*
-            String filepath = media.getPath();
-			String[] fileparts = filepath.split("\\.");
-			String filename = fileparts[0];
-			String fileext = fileparts[1];
-			String tempFile = filename+"2."+fileext;
-			
-			
-			
-			 Cipher cipher;
-			
-            try{
-    			cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
-    			Encryption.applyCipher(filepath, tempFile, cipher);
-    		}catch(Exception e){
-    			e.printStackTrace();
-    		}
+          //Decrypt    
+            Intent startMyService= new Intent(context, EncryptionService.class);
+            startMyService.putExtra("filepath", media.getPath());
+            startMyService.putExtra("mode", Cipher.DECRYPT_MODE);
+            context.startService(startMyService);
             */
+            /*
+            String file = media.getPath();
+	 		Cipher cipher;
+			try {
+				cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
+				Encryption.applyCipher(file, file+"_", cipher);
+			}catch (Exception e) {
+				// TODO Auto-generated catch block
+				Log.e("Encryption error", e.getLocalizedMessage());
+				e.printStackTrace();
+			}
+			//Then delete original file
+			File oldfile = new File(file);
+			oldfile.delete();
+			//Then remove _ on encrypted file
+			File newfile = new File(file+"_");
+			newfile.renameTo(new File(file));
+			*/
             return BitmapFactory.decodeFile(media.getPath(), options);
         }
         else if (media.getMimeType().startsWith("audio"))

@@ -191,8 +191,16 @@ public class MediaProjectManager implements MediaManager {
     	            Log.e("TIMBY: ", "Problem creating file");
     	        }
     	    }
-	    	mFileExternDir.mkdirs();
-	    
+    	    
+    	    File mThumbsDir = new File(Environment.getExternalStorageDirectory(), AppConstants.TAG+"/thumbs");
+    	    if (!mThumbsDir.exists()) {
+    	        if (!mThumbsDir.mkdirs()) {
+    	            Log.e("TIMBY: ", "Problem creating thumbnails folder");
+    	        }
+    	    }
+    	    
+    	    mFileExternDir.mkdirs();
+    	    mThumbsDir.mkdirs();
     	}
     	
     }

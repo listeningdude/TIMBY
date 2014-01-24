@@ -1,8 +1,6 @@
 package org.codeforafrica.timby;
 
 import org.codeforafrica.timby.R;
-import org.codeforafrica.timby.media.Encryption;
-import org.codeforafrica.timby.media.MediaProjectManager;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
 import org.codeforafrica.timby.server.LoginActivity;
@@ -13,30 +11,16 @@ import org.codeforafrica.timby.server.Authorizer.AuthorizationListener;
 import org.codeforafrica.timby.server.soundcloud.SoundCloudUploader;
 
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
 import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.ffmpeg.android.MediaUtils;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.Spinner;
@@ -305,6 +289,7 @@ public class PublishFragment extends Fragment {
         
         //Create thumbnail
         Bitmap videoThumb = null;
+        String filename=null;
         if(mediaList[0].getMimeType().contains("video")){
            try {
         	   videoThumb = MediaUtils.getVideoFrame(new File(filepath).getCanonicalPath(), -1);
@@ -313,21 +298,27 @@ public class PublishFragment extends Fragment {
 				e.printStackTrace();
 			}
            try {
-               String filename = mediaList[0].getId()+"2.jpg";
-               String f = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/thumbs/";
-               FileOutputStream out = new FileOutputStream(f+filename);
+               filename = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/thumbs/"+mediaList[0].getId()+".jpg";
+               FileOutputStream out = new FileOutputStream(filename);
                videoThumb.compress(Bitmap.CompressFormat.JPEG, 90, out);
                out.close();
 		       } catch (Exception e) {
 		               e.printStackTrace();
 		       }
+           //Encrypt thumbnail
+           Intent startMyService= new Intent(mActivity, EncryptionService.class);
+           startMyService.putExtra("filepath", filename);
+           startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
+           mActivity.startService(startMyService);
         }
         
-        //Encrypt
+        //Encrypt file
+        
         Intent startMyService= new Intent(mActivity, EncryptionService.class);
         startMyService.putExtra("filepath", filepath);
         startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
         mActivity.startService(startMyService);
+        
         
         mActivity.mMPM.mProject.save();
         //mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));

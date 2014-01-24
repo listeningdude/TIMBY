@@ -17,6 +17,7 @@ import java.util.zip.ZipOutputStream;
 import javax.crypto.Cipher;
 
 import org.codeforafrica.timby.Export2SD.export2SD;
+import org.codeforafrica.timby.media.Encryption;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
 import org.codeforafrica.timby.model.Report;
@@ -45,7 +46,7 @@ public class Export2SDService extends Service {
 	@Override
     public void onCreate() {
           super.onCreate();
-          showNotification("You will be notified when exporting is complete!");
+          showNotification("Exporting to SD...");
           new export2SD().execute();
 	}
 	private void showNotification(String message) {
@@ -119,38 +120,37 @@ public class Export2SDService extends Service {
 						 		String path = media.getPath();
 						 		
 						 		String file = path;
-						 		/*
-						 		//Decrypt files
+						 		
+						 		//Decrypt file
 						 		Cipher cipher;
-								try{
+								try {
 									cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
 									Encryption.applyCipher(file, file+"_", cipher);
-								}catch(Exception e){
+								}catch (Exception e) {
 									// TODO Auto-generated catch block
+									Log.e("Encryption error", e.getLocalizedMessage());
 									e.printStackTrace();
 								}
-								
 								//Then delete original file
 								File oldfile = new File(file);
 								oldfile.delete();
-								
 								//Then remove _ on encrypted file
 								File newfile = new File(file+"_");
 								newfile.renameTo(new File(file));
-								*/
-						 		
+								
+						 		/*						 		
 						 		Intent startMyService= new Intent(Export2SDService.this, EncryptionService.class);
 						        startMyService.putExtra("filepath", file);
 						        startMyService.putExtra("mode", Cipher.DECRYPT_MODE);
-						        startService(startMyService);
+						        startService(startMyService);*/
 						        
-								if(media.getMimeType().contains("video")){
-									copyfile(file, ext+"/"+report.getId()+"/vid"+String.valueOf(j)+".mp4");
-									data += "<object_media>/"+report.getId()+"/vid"+String.valueOf(j)+".mp4</object_media>\n";
-								}else{
-									path = path.replace(ext, "");
-							 		data += "<object_media>"+path+"</object_media>\n";
-								}
+								//if(media.getMimeType().contains("video")){
+								//	copyfile(file, ext+"/"+report.getId()+"/vid"+String.valueOf(j)+".mp4");
+								//	data += "<object_media>/"+report.getId()+"/vid"+String.valueOf(j)+".mp4</object_media>\n";
+								//}else{
+								path = path.replace(ext, "");
+							 	data += "<object_media>"+path+"</object_media>\n";
+								//}
 						 		data += "<object_type>"+media.getMimeType()+"</object_type>\n";
 						 	}
 							data += "</object>\n";
@@ -161,56 +161,100 @@ public class Export2SDService extends Service {
 				 	}
 				}
 			 data += "</reports>";
+			 
 			 writeToFile(data);
+			 
 			//Delete old file
 			 File zipFile = new File(String.valueOf(getSD())+"/timby.zip");
 			 zipFile.delete();
 			//Now create new zip
 			zipFileAtPath(ext, String.valueOf(getSD())+"/timby.zip");
-			//Toast and end
 			
-			//Delete old files and clear
-			//File oldFiles = new File(ext);
-			//oldFiles.delete();
-			//Delete all reports
+			//encrypt zip file
+			String file = String.valueOf(getSD())+"/timby.zip";
 			
+			Cipher cipher;
+			try {
+				cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+				Encryption.applyCipher(file, file+"_", cipher);
+			}catch (Exception e) {
+				// TODO Auto-generated catch block
+				Log.e("Encryption error", e.getLocalizedMessage());
+				e.printStackTrace();
+			}
+			//Then delete original file
+			File oldfile = new File(file);
+			oldfile.delete();
+			//Then remove _ on encrypted file
+			File newfile = new File(file+"_");
+			newfile.renameTo(new File(file));
+			
+			//Re-encrypt everything
+			reEncrypt_everything();
 			
 			return null;
 		}
-		private void copyfile(String srFile, String dtFile){
-			try{
-			  File f1 = new File(srFile);
-			  File f2 = new File(dtFile);
-			  InputStream in = new FileInputStream(f1);
-
-			  //For Append the file.
-			  //OutputStream out = new FileOutputStream(f2,true);
-
-			  //For Overwrite the file.
-			  OutputStream out = new FileOutputStream(f2);
-
-			  byte[] buf = new byte[1024];
-			  int len;
-			  while ((len = in.read(buf)) > 0){
-			    out.write(buf, 0, len);
-			  }
-			  in.close();
-			  out.close();
-			  System.out.println("File copied.");
-			}
-			catch(FileNotFoundException ex){
-			  System.out.println(ex.getMessage() + " in the specified directory.");
-			  System.exit(0);
-			}
-			catch(IOException e){
-			  System.out.println(e.getMessage());      
-			}
-	}	
+		
 	protected void onPostExecute(String file_url) {
 			
 			showNotification("Exported Successfully!");
 			endExporting();
 		}
+	}
+	public void reEncrypt_everything(){
+		mListReports = Report.getAllAsList(getApplicationContext());
+		 for (int i = 0; i < mListReports.size(); i++) {
+			 	if(mListReports.get(i)!=null){
+				 	Report report = mListReports.get(i);
+				 	mListProjects = Project.getAllAsList(getApplicationContext(), report.getId());
+				 	for (int j = 0; j < mListProjects.size(); j++) {
+				 		Project project = mListProjects.get(j);
+					 	Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
+					 	for (Media media: mediaList){
+					 		String path = media.getPath();
+					 		/*
+					 		Intent startMyService= new Intent(Export2SDService.this, EncryptionService.class);
+					        startMyService.putExtra("filepath", path);
+					        startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
+					        startService(startMyService);
+					        */
+					 		String file = path;
+					 		Cipher cipher;
+							try {
+								cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+								Encryption.applyCipher(file, file+"_", cipher);
+							}catch (Exception e) {
+								// TODO Auto-generated catch block
+								Log.e("Encryption error", e.getLocalizedMessage());
+								e.printStackTrace();
+							}
+							//Then delete original file
+							File oldfile = new File(file);
+							oldfile.delete();
+							//Then remove _ on encrypted file
+							File newfile = new File(file+"_");
+							newfile.renameTo(new File(file));
+					 	}
+				 	}
+			 	}
+		 }
+		 //encrypt xml
+		 String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/db.xml";
+	 		Cipher cipher;
+			try {
+				cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+				Encryption.applyCipher(file, file+"_", cipher);
+			}catch (Exception e) {
+				// TODO Auto-generated catch block
+				Log.e("Encryption error", e.getLocalizedMessage());
+				e.printStackTrace();
+			}
+			//Then delete original file
+			File oldfile = new File(file);
+			oldfile.delete();
+			//Then remove _ on encrypted file
+			File newfile = new File(file+"_");
+			newfile.renameTo(new File(file));
 	}
       public void endExporting(){
     	  this.stopSelf();
@@ -223,31 +267,25 @@ public class Export2SDService extends Service {
         	}catch (IOException e){
         		Log.d("Write Error!", e.getLocalizedMessage());
         	}
-		/*
-         //Encrypt db.xml
-		 
-        Cipher cipher;
-        String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/"+String.valueOf(reportId)+"/db.xml";
- 		
-		try{
-			cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
-			Encryption.applyCipher(file, file+"_", cipher);
-		}catch(Exception e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		//Then delete original file
-		File oldfile = new File(file);
-		oldfile.delete();
-		
-		//Then remove _ on encrypted file
-		File newfile = new File(file+"_");
-		newfile.renameTo(new File(file));
-		
-		//Done!
-		 * 
-		 */
+			/*
+			//Encrypt xml
+			String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/db.xml";
+	 		Cipher cipher;
+			try {
+				cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+				Encryption.applyCipher(file, file+"_", cipher);
+			}catch (Exception e) {
+				// TODO Auto-generated catch block
+				Log.e("Encryption error", e.getLocalizedMessage());
+				e.printStackTrace();
+			}
+			//Then delete original file
+			File oldfile = new File(file);
+			oldfile.delete();
+			//Then remove _ on encrypted file
+			File newfile = new File(file+"_");
+			newfile.renameTo(new File(file));
+			*/
     }
 
 	public boolean zipFileAtPath(String sourcePath, String toLocation) {

@@ -18,20 +18,18 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class EncryptionService extends Service{
-	public String file;
+	public String filename;
 	public int mode;
 	@Override
     public void onCreate() {
           super.onCreate();
-          
-          
-	}
+    }
 	
 	@Override
 	public void onStart(Intent intent, int startId) {
 	    super.onStart(intent, startId);
-	     Bundle extras = intent.getExtras(); 
-	    file = (String) extras.get("filepath");
+	   Bundle extras = intent.getExtras(); 
+	    filename = (String) extras.get("filepath");
 	    mode = extras.getInt("mode");
 	    
 
@@ -54,7 +52,9 @@ public class EncryptionService extends Service{
 		}
 		protected  String doInBackground(String... args) {
 			Cipher cipher;
+			String file = filename;
 			try {
+				
 				cipher = Encryption.createCipher(mode);
 				Encryption.applyCipher(file, file+"_", cipher);
 			}catch (Exception e) {

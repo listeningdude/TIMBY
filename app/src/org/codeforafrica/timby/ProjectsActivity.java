@@ -2,6 +2,7 @@ package org.codeforafrica.timby;
 
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.ReportsActivity.getThumbnail;
+import org.codeforafrica.timby.media.Encryption;
 import org.codeforafrica.timby.media.MediaProjectManager;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
@@ -11,7 +12,11 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.crypto.Cipher;
+
 import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.widget.Toast;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -72,7 +77,9 @@ public class ProjectsActivity extends BaseActivity {
         */
         initListView(mListView);
         //new showList().execute();
-        
+
+        Toast.makeText(getApplicationContext(), "Thumbnails might take a while to display", Toast.LENGTH_LONG).show();
+       
         int delay = 3000; // delay for 1 sec. 
 		int period = 3000; // repeat every 10 sec. 
 		final Timer timer = new Timer(); 
@@ -307,20 +314,24 @@ public class ProjectsActivity extends BaseActivity {
                				if (bmp != null)
                					ivIcon.setImageBitmap(bmp);
                				/*
-               				//Delete decrypted file
-               				String filepath = media.getPath();
-                 			String[] fileparts = filepath.split("\\.");
-                 			String filename = fileparts[0];
-                 			String fileext = fileparts[1];
-                 			String tempFile = filename+"2."+fileext;
-                 			File temp = new File(tempFile);
-                 			temp.delete();
-                 			//If file is video delete thumbnail as well
-                 			if(media.getMimeType().contains("video")){
-                 				File fileThumb = new File(MediaProjectManager.getExternalProjectFolder(project, ProjectsActivity.this), media.getId() + "2.jpg");
-                 	            fileThumb.delete();
-                 			}
-                 			*/
+               				String file = media.getPath();
+            		 		Cipher cipher;
+            				try {
+            					cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+            					Encryption.applyCipher(file, file+"_", cipher);
+            				}catch (Exception e) {
+            					// TODO Auto-generated catch block
+            					Log.e("Encryption error", e.getLocalizedMessage());
+            					e.printStackTrace();
+            				}
+            				//Then delete original file
+            				File oldfile = new File(file);
+            				oldfile.delete();
+            				
+            				//Then remove _ on encrypted file
+            				File newfile = new File(file+"_");
+            				newfile.renameTo(new File(file));
+               				*/
                        }
 
           });

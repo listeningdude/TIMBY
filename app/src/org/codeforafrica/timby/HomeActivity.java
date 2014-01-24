@@ -37,6 +37,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -178,19 +181,37 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 			}
 		});
     }
-   
+    private boolean isServiceRunning(Class<?> cls) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (cls.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.button_sync:
-        	
-        	isInternetPresent = cd.isConnectingToInternet();
-  	       	if(!isInternetPresent){
-  	          	Toast.makeText(getBaseContext(), "You have no connection!", Toast.LENGTH_LONG).show();
-  	        }else{
-  	        	dialog.dismiss();
-  	        	startService(new Intent(HomeActivity.this,SyncService.class));
-  	        }   
-			   
+        	//check if service is already running
+        	//check if encryption is running
+        	//check if export is running
+        	if(isServiceRunning(SyncService.class)){
+  	          	Toast.makeText(getBaseContext(), "Syncing is already started!", Toast.LENGTH_LONG).show();
+        	}else if(isServiceRunning(EncryptionService.class)){
+  	          	Toast.makeText(getBaseContext(), "Please wait for encryption to finish!", Toast.LENGTH_LONG).show();
+        	}else if(isServiceRunning(Export2SDService.class)){
+  	          	Toast.makeText(getBaseContext(), "Please wait for exporting to finish!", Toast.LENGTH_LONG).show();
+        	}else{
+	        	isInternetPresent = cd.isConnectingToInternet();
+	  	       	if(!isInternetPresent){
+	  	          	Toast.makeText(getBaseContext(), "You have no connection!", Toast.LENGTH_LONG).show();
+	  	        }else{
+	  	        	dialog.dismiss();
+	  	        	startService(new Intent(HomeActivity.this,SyncService.class));
+	  	        }   
+        	}
         	//Intent i = new Intent(getApplicationContext(),SyncActivity.class);
 			//i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			//startActivity(i);
@@ -200,6 +221,15 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         case R.id.button_export:
         	dialog.dismiss();
         	startService(new Intent(HomeActivity.this,Export2SDService.class));
+        	if(isServiceRunning(Export2SDService.class)){
+  	          	Toast.makeText(getBaseContext(), "Export to SD is already started!", Toast.LENGTH_LONG).show();
+        	}else if(isServiceRunning(EncryptionService.class)){
+  	          	Toast.makeText(getBaseContext(), "Please wait for encryption to finish!", Toast.LENGTH_LONG).show();
+        	}else if(isServiceRunning(SyncService.class)){
+  	          	Toast.makeText(getBaseContext(), "Please wait for sync to finish!", Toast.LENGTH_LONG).show();
+        	}else{
+	  	        	startService(new Intent(HomeActivity.this,Export2SD.class)); 
+        	}
         	/*
         	Intent i2 = new Intent(getApplicationContext(), Export2SD.class);
         	i2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

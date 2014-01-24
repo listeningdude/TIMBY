@@ -1,10 +1,14 @@
 package org.codeforafrica.timby;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.crypto.Cipher;
+
 import org.codeforafrica.timby.login.UserFunctions;
+import org.codeforafrica.timby.media.Encryption;
 import org.codeforafrica.timby.model.Entity;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
@@ -62,7 +66,7 @@ public class SyncService extends Service {
     public void onCreate() {
           super.onCreate();
           
-          showNotification("You will be notified when syncing is complete!");
+          showNotification("Syncing...");
           cd = new ConnectionDetector(getApplicationContext());
         //get Internet status
         //  isInternetPresent = cd.isConnectingToInternet();
@@ -201,9 +205,7 @@ public class SyncService extends Service {
 	 		
 	 		Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
 	 		Media media = mediaList[0];
-		 	
 	 		String ppath = media.getPath();
-	 		
 		 	String ptype = media.getMimeType();
 		 	
 		 	String optype = "video";
@@ -212,8 +214,15 @@ public class SyncService extends Service {
 		 	}else if(ptype.contains("video")){
 		 		optype = "video";
 		 	}else if(ptype.contains("audio")){
-		 		optype = "video";
+		 		optype = "audio";
 		 	}
+		 	/*
+			//decrypt
+			Intent startMyService= new Intent(getApplicationContext(), EncryptionService.class);
+	        startMyService.putExtra("filepath", ppath);
+	        startMyService.putExtra("mode", Cipher.DECRYPT_MODE);
+	        startService(startMyService);
+	        */
 		 	/*decrypt file
 		 	String filepath = ppath;
 		 	String tempFile = ppath+"_";
@@ -240,6 +249,23 @@ public class SyncService extends Service {
      		File newfile = new File(tempFile);
      		newfile.renameTo(new File(ppath));
      		*/
+		 	String file = ppath;
+	 		Cipher cipher;
+			try {
+				cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
+				Encryption.applyCipher(file, file+"_", cipher);
+			}catch (Exception e) {
+				// TODO Auto-generated catch block
+				Log.e("Encryption error", e.getLocalizedMessage());
+				e.printStackTrace();
+			}
+			//Then delete original file
+			File oldfile = new File(file);
+			oldfile.delete();
+			//Then remove _ on encrypted file
+			File newfile = new File(file+"_");
+			newfile.renameTo(new File(file));
+			
 		 	String ptitle = project.getTitle();
 		 	String pdate = project.getDate();
 		 	String pid = String.valueOf(project.getId());
@@ -440,9 +466,28 @@ public class SyncService extends Service {
 						project.setSequenceId(sequence_id);
 						project.save();
 						/*
-             			File temp = new File(ppath);
-             			temp.delete();
-             			*/
+						//Re-encrypt
+						Intent startMyService= new Intent(getApplicationContext(), EncryptionService.class);
+				        startMyService.putExtra("filepath", ppath);
+				        startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
+				        startService(startMyService);
+				        */
+						String file = ppath;
+				 		Cipher cipher;
+						try {
+							cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+							Encryption.applyCipher(file, file+"_", cipher);
+						}catch (Exception e) {
+							// TODO Auto-generated catch block
+							Log.e("Encryption error", e.getLocalizedMessage());
+							e.printStackTrace();
+						}
+						//Then delete original file
+						File oldfile = new File(file);
+						oldfile.delete();
+						//Then remove _ on encrypted file
+						File newfile = new File(file+"_");
+						newfile.renameTo(new File(file));
 					}else{
 						//Some error message. Not sure what yet.
 					}
