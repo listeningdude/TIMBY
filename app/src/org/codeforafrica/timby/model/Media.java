@@ -50,7 +50,7 @@ public class Media {
     protected float trimStart;
     protected float trimEnd;
     protected float duration;
-
+    protected String encrypted;
     public final static int IMAGE_SAMPLE_SIZE = 4;
     
     public Media(Context context) {
@@ -58,7 +58,7 @@ public class Media {
     }
 
     public Media(Context context, int id, String path, String mimeType, String clipType, int clipIndex,
-            int sceneId, float trimStart, float trimEnd, float duration) {
+            int sceneId, float trimStart, float trimEnd, float duration, String encrypted) {
         super();
         this.context = context;
         this.id = id;
@@ -70,6 +70,7 @@ public class Media {
         this.trimStart = trimStart;
         this.trimEnd = trimEnd;
         this.duration = duration;
+        this.encrypted = encrypted;
     }
 
     public Media(Context context, Cursor cursor) {
@@ -93,7 +94,9 @@ public class Media {
                 cursor.getInt(cursor
                         .getColumnIndex(StoryMakerDB.Schema.Media.COL_TRIM_END)),
                 cursor.getInt(cursor
-                        .getColumnIndex(StoryMakerDB.Schema.Media.COL_DURATION)));
+                        .getColumnIndex(StoryMakerDB.Schema.Media.COL_DURATION)),
+                cursor.getString(cursor
+                        .getColumnIndex(StoryMakerDB.Schema.Media.COL_ENCRYPTED)));
     }
 
     /***** Table level static methods *****/
@@ -174,6 +177,21 @@ public class Media {
                 selectionArgs, null);
     }
 
+    public static ArrayList<Media> getUnEncrypted(Context context) {
+    	String selection = StoryMakerDB.Schema.Media.COL_ENCRYPTED + "=?";
+        String[] selectionArgs = new String[] { "0"};
+        Cursor cursor = context.getContentResolver().query(
+                ProjectsProvider.MEDIA_CONTENT_URI, null, selection,
+                selectionArgs, null);
+        
+        ArrayList<Media> medias = new ArrayList<Media>();
+        if (cursor.moveToFirst()) {
+            do {
+                medias.add(new Media(context, cursor));
+            } while (cursor.moveToNext());
+        }
+        return medias;
+    }
     /*
      * gets media in scene at location clipIndex
      */
@@ -302,7 +320,13 @@ public class Media {
     public void setPath(String path) {
         this.path = path;
     }
-
+    
+    public void setEncrypted(String encrypted) {
+        this.encrypted = encrypted;
+    }
+    public String getEncrypted() {
+        return encrypted;
+    }
     /**
      * @return the mimeType
      */

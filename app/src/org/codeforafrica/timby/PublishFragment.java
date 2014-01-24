@@ -305,21 +305,8 @@ public class PublishFragment extends Fragment {
 		       } catch (Exception e) {
 		               e.printStackTrace();
 		       }
-           //Encrypt thumbnail
-           Intent startMyService= new Intent(mActivity, EncryptionService.class);
-           startMyService.putExtra("filepath", filename);
-           startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
-           mActivity.startService(startMyService);
+           
         }
-        
-        //Encrypt file
-        
-        Intent startMyService= new Intent(mActivity, EncryptionService.class);
-        startMyService.putExtra("filepath", filepath);
-        startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
-        mActivity.startService(startMyService);
-        
-        
         mActivity.mMPM.mProject.save();
         //mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
         mActivity.finish();

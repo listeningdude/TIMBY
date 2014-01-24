@@ -296,6 +296,7 @@
 	<service android:name=".SyncService" />
 	<service android:name=".Export2SDService" />
 	<service android:name=".EncryptionService" />
+	<service android:name=".EncryptAllMediaService" />
     </application>
 
 </manifest>

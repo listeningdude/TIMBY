@@ -1,49 +1,44 @@
 package org.codeforafrica.timby;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.crypto.Cipher;
 
 import org.codeforafrica.timby.Export2SDService.export2SD;
 import org.codeforafrica.timby.media.Encryption;
+import org.codeforafrica.timby.model.Media;
+import org.codeforafrica.timby.model.Project;
 
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
 public class EncryptionService extends Service{
-	public String filename;
-	public int mode;
+	String message;
+	private Context context;
+	
+	// Write Custom Constructor to pass Context
+    public EncryptionService(Context con) {
+        this.context = con;
+    }
+    
 	@Override
     public void onCreate() {
           super.onCreate();
+          message = "Encrypting file...";
+          showNotification(message);
+          new encryptFile().execute();
     }
-	
-	@Override
-	public void onStart(Intent intent, int startId) {
-	    super.onStart(intent, startId);
-	   Bundle extras = intent.getExtras(); 
-	    filename = (String) extras.get("filepath");
-	    mode = extras.getInt("mode");
-	    
 
-        String message;
-        if(mode==Cipher.ENCRYPT_MODE){
-      	  message = "Encrypting file...";
-        }else{
-      	  message = "Decrypting file...";
-        }
-        showNotification(message);
-        
-        new encryptFile().execute();
-	}
-	
 	class encryptFile extends AsyncTask<String, String, String> {
 		@Override
 		protected void onPreExecute() {
@@ -51,33 +46,40 @@ public class EncryptionService extends Service{
 
 		}
 		protected  String doInBackground(String... args) {
-			Cipher cipher;
-			String file = filename;
-			try {
+			//Get one media file to encrypt
+			ArrayList<Media> mediaList = Media.getUnEncrypted(context.getApplicationContext());
+			if(mediaList.size()>0){
+				Media media = mediaList.get(0);
 				
-				cipher = Encryption.createCipher(mode);
-				Encryption.applyCipher(file, file+"_", cipher);
-			}catch (Exception e) {
-				// TODO Auto-generated catch block
-				Log.e("Encryption error", e.getLocalizedMessage());
-				e.printStackTrace();
+				String file = media.getPath();			
+				
+				Cipher cipher;
+				
+				try {
+					
+					cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+					Encryption.applyCipher(file, file+"_", cipher);
+				}catch (Exception e) {
+					// TODO Auto-generated catch block
+					Log.e("Encryption error", e.getLocalizedMessage());
+					e.printStackTrace();
+				}
+				//Then delete original file
+				File oldfile = new File(file);
+				oldfile.delete();
+				//Then remove _ on encrypted file
+				File newfile = new File(file+"_");
+				newfile.renameTo(new File(file));
+				
+				//mark file as encrypted
+				media.setEncrypted("1");
 			}
-			//Then delete original file
-			File oldfile = new File(file);
-			oldfile.delete();
-			//Then remove _ on encrypted file
-			File newfile = new File(file+"_");
-			newfile.renameTo(new File(file));
-			
 			return null;
 		}
 		protected void onPostExecute(String file_url) {
-				String message;
-				if(mode==Cipher.ENCRYPT_MODE){
-		      	  message = "Encrypted successfully!";
-		        }else{
-		      	  message = "Decrypted successfully!";
-		        }
+
+		      	message = "Encrypted successfully!";
+		        
 				showNotification(message);
 				endEncryption();
 			}
@@ -96,6 +98,7 @@ public class EncryptionService extends Service{
 	   	NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 			nm.notify("service started", 2, notification);
 			}
+			
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub

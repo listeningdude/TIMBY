@@ -6,8 +6,8 @@ import android.content.Context;
 
 public class StoryMakerDB extends SQLiteOpenHelper {
 	
-    private static final int DB_VERSION = 16;
-    private static final String DB_NAME = "sm.db16";
+    private static final int DB_VERSION = 17;
+    private static final String DB_NAME = "sm.db17";
     
     public StoryMakerDB(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -172,7 +172,8 @@ public class StoryMakerDB extends SQLiteOpenHelper {
             public static final String COL_TRIM_START = "trim_start";
             public static final String COL_TRIM_END = "trim_end";
             public static final String COL_DURATION = "duration";
-	    	
+            public static final String COL_ENCRYPTED = "encrypted";
+            
 	    	private static final String CREATE_TABLE_MEDIA = "create table " + NAME + " ("
 	    			+ ID + " integer primary key autoincrement, "
 	    			+ COL_SCENE_ID + " text not null, "
@@ -182,7 +183,8 @@ public class StoryMakerDB extends SQLiteOpenHelper {
 	    			+ COL_CLIP_INDEX + " integer not null," 
                     + COL_TRIM_START + " integer," 
                     + COL_TRIM_END + " integer," 
-                    + COL_DURATION + " integer" 
+                    + COL_DURATION + " integer," 
+                    + COL_ENCRYPTED + " text"
 	    			+ "); ";
             
             private static final String UPDATE_TABLE_MEDIA_ADD_TRIM_START = "alter table " + NAME + " " 

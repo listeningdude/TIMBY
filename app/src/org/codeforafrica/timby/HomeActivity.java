@@ -125,6 +125,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         
         checkForTor();
         
+        if(!isServiceRunning(EncryptAllMediaService.class)){
+	        	startService(new Intent(HomeActivity.this,EncryptAllMediaService.class));
+        }
+        
         //checkForUpdates();
         
         load_new_report = (RelativeLayout)findViewById(R.id.load_new_report);
@@ -220,7 +224,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
             
         case R.id.button_export:
         	dialog.dismiss();
-        	startService(new Intent(HomeActivity.this,Export2SDService.class));
+        	
         	if(isServiceRunning(Export2SDService.class)){
   	          	Toast.makeText(getBaseContext(), "Export to SD is already started!", Toast.LENGTH_LONG).show();
         	}else if(isServiceRunning(EncryptionService.class)){
