@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import javax.crypto.Cipher;
 
 import org.codeforafrica.timby.Export2SDService.export2SD;
+import org.codeforafrica.timby.ReportsActivity.ReportArrayAdapter;
 import org.codeforafrica.timby.media.Encryption;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
+import org.codeforafrica.timby.model.Report;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -42,10 +44,16 @@ public class EncryptionService extends Service{
 	       file = extras.getString("filepath");
 	       message = "Started...";
 	       showNotification(message);
-	       encryptFile();
+	       new encryptFile().execute();
 	       
 	  }
-			public void encryptFile() {
+	  class encryptFile extends AsyncTask<String, String, String> {
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				
+			}
+			protected String doInBackground(String... args) {
 				Cipher cipher;
 				
 				try {
@@ -61,20 +69,26 @@ public class EncryptionService extends Service{
 				oldfile.delete();
 				//Then remove _ on encrypted file
 				File newfile = new File(file+"_");
-				newfile.renameTo(new File(file));
+				newfile.renameTo(new File(file));         
+		       //  mListView.setAdapter(aaReports);
+				return null;
+			}
+		protected void onPostExecute(String file_url) {
+
+			message = "Completed successfully!";
+			showNotification(message);
+			endEncryption();
 				
-				
-				message = "Completed successfully!";
-				showNotification(message);
-				endEncryption();
-			
+			}
 		}
+
 	public void endEncryption(){
         
 		this.stopSelf();
 	}
 	
 	private void showNotification(String message) {
+		/*
 	   	 CharSequence text = message;
 	   	 Notification notification = new Notification(R.drawable.timby_hold_icon, text, System.currentTimeMillis());
 	   	 PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
@@ -83,6 +97,7 @@ public class EncryptionService extends Service{
 	   	      text, contentIntent);
 	   	NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 			nm.notify("service started", 2, notification);
+			*/
 			}
 			
 	@Override

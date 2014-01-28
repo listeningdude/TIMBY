@@ -25,6 +25,8 @@ import javax.crypto.Cipher;
 import org.ffmpeg.android.MediaUtils;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.Spinner;
+import org.json.JSONArray;
+
 import redstone.xmlrpc.XmlRpcFault;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -352,6 +354,28 @@ public class PublishFragment extends Fragment {
         startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
         mActivity.startService(startMyService);
         */
+        //Add to Queue
+        
+        //First read all we have
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity.getApplicationContext());
+        JSONArray jsonArray2 = null;
+        try {
+            jsonArray2 = new JSONArray(prefs.getString("eQ", "[]"));
+            for (int i = 0; i < jsonArray2.length(); i++) {
+                 Log.d("your JSON Array", jsonArray2.getString(i)+"");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        //Then add new value
+        jsonArray2.put(filepath);
+        Editor editor = prefs.edit();
+        editor.putString("eQ", jsonArray2.toString());
+        System.out.println(jsonArray2.toString());
+        editor.commit();
+        
+        
         mActivity.mMPM.mProject.save();
         //mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
         mActivity.finish();

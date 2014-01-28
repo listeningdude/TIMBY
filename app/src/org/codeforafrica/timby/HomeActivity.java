@@ -125,10 +125,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
        
         
         checkForTor();
-        /*
-        if(!isServiceRunning(EncryptAllMediaService.class)){
-        	startService(new Intent(HomeActivity.this,EncryptAllMediaService.class));
-        }*/
+        
+        if(!isServiceRunning(EncryptionBackground.class)){
+        	startService(new Intent(HomeActivity.this,EncryptionBackground.class));
+        }
         //checkForUpdates();
        /*
         //Hide keyboard
