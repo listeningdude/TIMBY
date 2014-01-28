@@ -27,6 +27,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -75,6 +76,14 @@ public class ProjectsActivity extends BaseActivity {
 		pDialog.setCancelable(false);
 		pDialog.show(); 
         */
+        File mThumbsDir = new File(Environment.getExternalStorageDirectory(), AppConstants.TAG+"/decrypts");
+	    if (!mThumbsDir.exists()) {
+	        if (!mThumbsDir.mkdirs()) {
+	            Log.e("TIMBY: ", "Problem creating thumbnails folder");
+	        }
+	    }else{
+	    	DeleteRecursive(mThumbsDir);
+	    }
         initListView(mListView);
         //new showList().execute();
 
@@ -101,6 +110,13 @@ public class ProjectsActivity extends BaseActivity {
 		        } 
 		    }, delay, period); 
     }
+    void DeleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                DeleteRecursive(child);
+
+        fileOrDirectory.delete();
+    }
     public int checkTasks(){
 		int tasks = 0;
 		if((get_thumbnail!=null)){
@@ -108,7 +124,11 @@ public class ProjectsActivity extends BaseActivity {
 				tasks++;
 			}
 		}
-		
+		if(tasks==0){
+	        File mThumbsDir = new File(Environment.getExternalStorageDirectory(), AppConstants.TAG+"/decrypts");
+
+			DeleteRecursive(mThumbsDir);
+		};
 		Log.d("Tasks", String.valueOf(tasks));
 		return tasks;
 	}
@@ -313,8 +333,8 @@ public class ProjectsActivity extends BaseActivity {
                     	   
                				if (bmp != null)
                					ivIcon.setImageBitmap(bmp);
-               				/*
-               				String file = media.getPath();
+               				
+               				String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/thumbs/"+media.getId()+".jpg";
             		 		Cipher cipher;
             				try {
             					cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
@@ -331,7 +351,7 @@ public class ProjectsActivity extends BaseActivity {
             				//Then remove _ on encrypted file
             				File newfile = new File(file+"_");
             				newfile.renameTo(new File(file));
-               				*/
+               				
                        }
 
           });

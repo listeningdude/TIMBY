@@ -179,7 +179,6 @@ public class Project {
                 projects.add(new Project(context, cursor));
             } while (cursor.moveToNext());
         }
-        
         cursor.close();
         return projects;
     }

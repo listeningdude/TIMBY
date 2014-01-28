@@ -32,6 +32,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
@@ -74,6 +75,17 @@ public class ReportsActivity extends BaseActivity {
 		pDialog.setCancelable(false);
 		pDialog.show(); 
         */
+        
+        //Create decryption folder
+        File mThumbsDir = new File(Environment.getExternalStorageDirectory(), AppConstants.TAG+"/decrypts");
+	    if (!mThumbsDir.exists()) {
+	        if (!mThumbsDir.mkdirs()) {
+	            Log.e("TIMBY: ", "Problem creating thumbnails folder");
+	        }
+	    }else{
+	    	DeleteRecursive(mThumbsDir);
+	    }
+	    
         initListView(mListView);
         
         Toast.makeText(getApplicationContext(), "Thumbnails might take a while to display", Toast.LENGTH_LONG).show();
@@ -99,12 +111,26 @@ public class ReportsActivity extends BaseActivity {
 		        } 
 		    }, delay, period); 
     }
+    void DeleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                DeleteRecursive(child);
+
+        fileOrDirectory.delete();
+    }
+    
     public int checkTasks(){
 		int tasks = 0;
 		if((get_thumbnail!=null)){
 			if(get_thumbnail.getStatus() == AsyncTask.Status.RUNNING){
 				tasks++;
 			}
+		}
+		
+		if(tasks==0){
+	        File mThumbsDir = new File(Environment.getExternalStorageDirectory(), AppConstants.TAG+"/decrypts");
+
+			DeleteRecursive(mThumbsDir);
 		}
 		
 		Log.d("Tasks", String.valueOf(tasks));
@@ -436,8 +462,9 @@ public class ReportsActivity extends BaseActivity {
                     	   
                				if (bmp != null)
                					ivIcon.setImageBitmap(bmp);
-               				/*
-               				String file = media.getPath();
+               				
+               				String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/thumbs/"+media.getId()+".jpg";
+/*
             		 		Cipher cipher;
             				try {
             					cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);

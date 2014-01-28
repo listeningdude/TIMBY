@@ -238,23 +238,11 @@ public class Export2SDService extends Service {
 				 	}
 			 	}
 		 }
-		 //encrypt xml
+		 //delete xml
 		 String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/db.xml";
-	 		Cipher cipher;
-			try {
-				cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
-				Encryption.applyCipher(file, file+"_", cipher);
-			}catch (Exception e) {
-				// TODO Auto-generated catch block
-				Log.e("Encryption error", e.getLocalizedMessage());
-				e.printStackTrace();
-			}
-			//Then delete original file
-			File oldfile = new File(file);
-			oldfile.delete();
-			//Then remove _ on encrypted file
-			File newfile = new File(file+"_");
-			newfile.renameTo(new File(file));
+
+		File oldfile = new File(file);
+		oldfile.delete();
 	}
       public void endExporting(){
     	  this.stopSelf();

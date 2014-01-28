@@ -6,8 +6,8 @@ import android.content.Context;
 
 public class StoryMakerDB extends SQLiteOpenHelper {
 	
-    private static final int DB_VERSION = 17;
-    private static final String DB_NAME = "sm.db17";
+    private static final int DB_VERSION = 20;
+    private static final String DB_NAME = "sm.db20";
     
     public StoryMakerDB(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -184,7 +184,7 @@ public class StoryMakerDB extends SQLiteOpenHelper {
                     + COL_TRIM_START + " integer," 
                     + COL_TRIM_END + " integer," 
                     + COL_DURATION + " integer," 
-                    + COL_ENCRYPTED + " text"
+                    + COL_ENCRYPTED + " text DEFAULT \'0\'"
 	    			+ "); ";
             
             private static final String UPDATE_TABLE_MEDIA_ADD_TRIM_START = "alter table " + NAME + " " 

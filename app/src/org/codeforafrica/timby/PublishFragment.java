@@ -1,6 +1,7 @@
 package org.codeforafrica.timby;
 
 import org.codeforafrica.timby.R;
+import org.codeforafrica.timby.media.Encryption;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
 import org.codeforafrica.timby.server.LoginActivity;
@@ -28,12 +29,16 @@ import redstone.xmlrpc.XmlRpcFault;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
+import android.app.ActivityManager.RunningServiceInfo;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -300,22 +305,63 @@ public class PublishFragment extends Fragment {
            try {
                filename = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/thumbs/"+mediaList[0].getId()+".jpg";
                FileOutputStream out = new FileOutputStream(filename);
-               videoThumb.compress(Bitmap.CompressFormat.JPEG, 90, out);
+               videoThumb.compress(Bitmap.CompressFormat.JPEG, 5, out);
                out.close();
 		       } catch (Exception e) {
 		               e.printStackTrace();
 		       }
            
+        }else if(mediaList[0].getMimeType().contains("image")){
+        	try {
+        		Bitmap imagePath = BitmapFactory.decodeFile(filepath);
+        		//Bitmap imagePath2 = Bitmap.createScaledBitmap(imagePath, 100, 100, true);
+                filename = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/thumbs/"+mediaList[0].getId()+".jpg";
+                FileOutputStream out = new FileOutputStream(filename);
+                imagePath.compress(Bitmap.CompressFormat.JPEG, 5, out);
+                out.close();
+ 		       } catch (Exception e) {
+ 		               e.printStackTrace();
+ 		       }
         }
+        if((mediaList[0].getMimeType().contains("video"))||(mediaList[0].getMimeType().contains("image")))
+        {
+        	
+	        Cipher cipher;
+	        
+	        String file = filename;
+			try {
+				cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+				Encryption.applyCipher(file, file+"_", cipher);
+			}catch (Exception e) {
+				// TODO Auto-generated catch block
+				Log.e("Encryption error", e.getLocalizedMessage());
+				e.printStackTrace();
+			}
+			//Then delete original file
+			File oldfile = new File(file);
+			oldfile.delete();
+			//Then remove _ on encrypted file
+			File newfile = new File(file+"_");
+			newfile.renameTo(new File(file));
+			
+        }
+        /*
+		//encrypt
+		Intent startMyService= new Intent(mActivity.getApplicationContext(), EncryptionService.class);
+        startMyService.putExtra("filepath", filepath);
+        startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
+        mActivity.startService(startMyService);
+        */
         mActivity.mMPM.mProject.save();
         //mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
         mActivity.finish();
     }
-
+    
     private void showLogin() {
         mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
     }
 
+    
     private String setUploadAccount() {
        
 

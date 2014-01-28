@@ -176,20 +176,24 @@ public class Media {
                 ProjectsProvider.MEDIA_CONTENT_URI, null, selection,
                 selectionArgs, null);
     }
-
-    public static ArrayList<Media> getUnEncrypted(Context context) {
-    	String selection = StoryMakerDB.Schema.Media.COL_ENCRYPTED + "=?";
-        String[] selectionArgs = new String[] { "0"};
-        Cursor cursor = context.getContentResolver().query(
+    public static Cursor getUnEncryptedAsCursor(Context context) {
+    	String selection = StoryMakerDB.Schema.Media.COL_ENCRYPTED + "!=?";
+    	String unenc = "1";
+        String[] selectionArgs = new String[] { "" + unenc };
+        return context.getContentResolver().query(
                 ProjectsProvider.MEDIA_CONTENT_URI, null, selection,
                 selectionArgs, null);
-        
+    }
+    
+    public static ArrayList<Media> getUnEncrypted(Context context) {
+    	Cursor cursor = getUnEncryptedAsCursor(context);
         ArrayList<Media> medias = new ArrayList<Media>();
         if (cursor.moveToFirst()) {
             do {
                 medias.add(new Media(context, cursor));
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return medias;
     }
     /*
@@ -217,6 +221,7 @@ public class Media {
                 medias.add(new Media(context, cursor));
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return medias;
     }
 
@@ -245,7 +250,7 @@ public class Media {
         values.put(StoryMakerDB.Schema.Media.COL_TRIM_START, trimStart);
         values.put(StoryMakerDB.Schema.Media.COL_TRIM_END, trimEnd);
         values.put(StoryMakerDB.Schema.Media.COL_DURATION, duration);
-        
+        values.put(StoryMakerDB.Schema.Media.COL_ENCRYPTED, encrypted);
         return values;
     }
     
@@ -438,42 +443,29 @@ public class Media {
         {
             return null;
         }
-        else if (media.getMimeType().startsWith("video"))
+        else if ((media.getMimeType().startsWith("video"))||((media.getMimeType().startsWith("image"))))
         {
             String filename = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/thumbs/"+media.getId()+".jpg";
-
-            File fileThumb = new File(filename);
-            
+            String dest = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/decrypts/"+media.getId()+".jpg";
+           
                 final BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inSampleSize = IMAGE_SAMPLE_SIZE;
-            /*
-                //Decrypt    
-            Intent startMyService= new Intent(context, EncryptionService.class);
-            startMyService.putExtra("filepath", filename);
-            startMyService.putExtra("mode", Cipher.DECRYPT_MODE);
-            context.startService(startMyService);
-             */
-                /*
+
                 String file = filename;
 		 		Cipher cipher;
 				try {
 					cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
-					Encryption.applyCipher(file, file+"_", cipher);
+					Encryption.applyCipher(file, dest, cipher);
 				}catch (Exception e) {
 					// TODO Auto-generated catch block
 					Log.e("Encryption error", e.getLocalizedMessage());
 					e.printStackTrace();
 				}
-				//Then delete original file
-				File oldfile = new File(file);
-				oldfile.delete();
-				//Then remove _ on encrypted file
-				File newfile = new File(file+"_");
-				newfile.renameTo(new File(file));
-				*/
-            return BitmapFactory.decodeFile(fileThumb.getAbsolutePath(), options);
+				 
+				
+            return BitmapFactory.decodeFile(dest, options);
             
-        }
+        }/*
         else if (media.getMimeType().startsWith("image"))
         {
             final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -502,9 +494,9 @@ public class Media {
 			//Then remove _ on encrypted file
 			File newfile = new File(file+"_");
 			newfile.renameTo(new File(file));
-			*/
+			
             return BitmapFactory.decodeFile(media.getPath(), options);
-        }
+        }*/
         else if (media.getMimeType().startsWith("audio"))
         {
         	 final BitmapFactory.Options options = new BitmapFactory.Options();

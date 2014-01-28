@@ -68,6 +68,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -124,13 +125,18 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
        
         
         checkForTor();
-        
+        /*
         if(!isServiceRunning(EncryptAllMediaService.class)){
-	        	startService(new Intent(HomeActivity.this,EncryptAllMediaService.class));
-        }
-        
+        	startService(new Intent(HomeActivity.this,EncryptAllMediaService.class));
+        }*/
         //checkForUpdates();
-        
+       /*
+        //Hide keyboard
+        InputMethodManager inputManager = (InputMethodManager)            
+        		  this.getSystemService(Context.INPUT_METHOD_SERVICE); 
+        		    inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),      
+        		    InputMethodManager.HIDE_NOT_ALWAYS);
+        */	
         load_new_report = (RelativeLayout)findViewById(R.id.load_new_report);
         load_new_report.setOnClickListener(new View.OnClickListener() {
 
@@ -194,7 +200,20 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         }
         return false;
     }
-    
+    public boolean isEncryptionRunning() {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			       
+        String encryption_running = settings.getString("encryption_running",null);
+        
+	        if (encryption_running == null){
+	        	return false;
+	        }else if(encryption_running.equals("end")){
+	        	return false;
+	        }else{
+	        	return true;
+	        }
+	      
+	    }
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.button_sync:
@@ -203,7 +222,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         	//check if export is running
         	if(isServiceRunning(SyncService.class)){
   	          	Toast.makeText(getBaseContext(), "Syncing is already started!", Toast.LENGTH_LONG).show();
-        	}else if(isServiceRunning(EncryptionService.class)){
+        	}else if (isServiceRunning(EncryptionService.class)){
   	          	Toast.makeText(getBaseContext(), "Please wait for encryption to finish!", Toast.LENGTH_LONG).show();
         	}else if(isServiceRunning(Export2SDService.class)){
   	          	Toast.makeText(getBaseContext(), "Please wait for exporting to finish!", Toast.LENGTH_LONG).show();
@@ -227,12 +246,12 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         	
         	if(isServiceRunning(Export2SDService.class)){
   	          	Toast.makeText(getBaseContext(), "Export to SD is already started!", Toast.LENGTH_LONG).show();
-        	}else if(isServiceRunning(EncryptionService.class)){
+        	}else if (isServiceRunning(EncryptionService.class)){
   	          	Toast.makeText(getBaseContext(), "Please wait for encryption to finish!", Toast.LENGTH_LONG).show();
         	}else if(isServiceRunning(SyncService.class)){
   	          	Toast.makeText(getBaseContext(), "Please wait for sync to finish!", Toast.LENGTH_LONG).show();
         	}else{
-	  	        	startService(new Intent(HomeActivity.this,Export2SD.class)); 
+	  	        startService(new Intent(HomeActivity.this,Export2SDService.class)); 
         	}
         	/*
         	Intent i2 = new Intent(getApplicationContext(), Export2SD.class);
