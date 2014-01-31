@@ -130,13 +130,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         	startService(new Intent(HomeActivity.this,EncryptionBackground.class));
         }
         //checkForUpdates();
-       /*
-        //Hide keyboard
-        InputMethodManager inputManager = (InputMethodManager)            
-        		  this.getSystemService(Context.INPUT_METHOD_SERVICE); 
-        		    inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),      
-        		    InputMethodManager.HIDE_NOT_ALWAYS);
-        */	
+       	
         load_new_report = (RelativeLayout)findViewById(R.id.load_new_report);
         load_new_report.setOnClickListener(new View.OnClickListener() {
 
@@ -972,12 +966,12 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 	}
 	
 	private void checkForCrashes() {
-	   CrashManager.register(this, PrivateConstants.HOCKEY_APP_ID);
+	   CrashManager.register(this, PrivateCredentials.HOCKEY_APP_ID);
 	 }
 
 	 private void checkForUpdates() {
 	   // Remove this for store builds!
-	   UpdateManager.register(this, PrivateConstants.HOCKEY_APP_ID);
+	   UpdateManager.register(this, PrivateCredentials.HOCKEY_APP_ID);
 	 }
 
     

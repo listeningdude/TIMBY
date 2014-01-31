@@ -1,11 +1,13 @@
 package org.codeforafrica.timby.server;
 
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.codeforafrica.timby.BaseActivity;
 import org.codeforafrica.timby.HomeActivity;
 import org.codeforafrica.timby.LessonsActivity;
+import org.codeforafrica.timby.PrivateCredentials;
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.ReportActivity;
 import org.codeforafrica.timby.ReportsActivity;
@@ -149,7 +151,13 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
                // txtPass.setText(password);
         
     }
-    
+    public static <T> boolean contains( final T[] array, final T v ) {
+        for ( final T e : array )
+            if ( e == v || v != null && v.equals( e ) )
+                return true;
+
+        return false;
+    }
     public void run ()
     {
 	    	// creating connection detector class instance
@@ -178,32 +186,35 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	            	String user = txtUser.getText().toString();
 	            	String pass = txtPass.getText().toString();
 	            	
-	            	if(user.startsWith("timby")){
-	            		if(pass.equals(user+"afric")){
-	            			int userid = Integer.parseInt(user.replace("timby", ""));
-	            			userid = userid+1;
-	            			
-							saveCreds(String.valueOf(userid), "empty", user, pass);
-	            			mHandler.sendEmptyMessage(0);
-						}else{   
-							Message msgErr= mHandler.obtainMessage(1);
-		                    msgErr.getData().putString("err","Incorrect password!");
+	            	//find index of user
+	            	if(contains(PrivateCredentials.USERNAMES, user)){
+	            		int userInd = Arrays.asList(PrivateCredentials.USERNAMES).indexOf(user);
+	            		if(contains(PrivateCredentials.PASSWORDS, pass)){
+		            		int passInd = Arrays.asList(PrivateCredentials.PASSWORDS).indexOf(pass);
+		            		if(userInd==passInd){
+		            			//Login
+		            			saveCreds(String.valueOf(userInd), "empty", user, pass);
+		            			mHandler.sendEmptyMessage(0);
+		            		}else{
+		            			//No Login
+		            			Message msgErr= mHandler.obtainMessage(1);
+			                    msgErr.getData().putString("err","Incorrect username and/or password!");
+			                    mHandler.sendMessage(msgErr);
+		            		}
+	            		}else{
+	            			//No Login
+	            			Message msgErr= mHandler.obtainMessage(1);
+		                    msgErr.getData().putString("err","Incorrect username and/or password!");
 		                    mHandler.sendMessage(msgErr);
-						}
-	            	}else if(user.equals("test")){
-	            		if(pass.equals("timbytest")){
-	            			saveCreds("1", "empty", user, pass);
-	            			mHandler.sendEmptyMessage(0);
-						}else{   
-							Message msgErr= mHandler.obtainMessage(1);
-		                    msgErr.getData().putString("err","Incorrect password!");
-		                    mHandler.sendMessage(msgErr);
-						}
+	            		}
+	            		
 	            	}else{
+	            		//No Login
 	            		Message msgErr= mHandler.obtainMessage(1);
 	                    msgErr.getData().putString("err","Incorrect username and/or password!");
 	                    mHandler.sendMessage(msgErr);
 	            	}
+	            	
 	            	
 	            }
 	            

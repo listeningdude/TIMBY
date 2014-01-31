@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -15,7 +16,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
 import org.codeforafrica.timby.AppConstants;
-import org.codeforafrica.timby.PrivateConstants;
+import org.codeforafrica.timby.PrivateCredentials;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,19 +31,19 @@ import android.util.Log;
 public class UserFunctions {
 	
 	private JSONParser jsonParser;
-	private static String loginURL = PrivateConstants.API_PATH+"/login";
-	private static String logoutURL = PrivateConstants.API_PATH+"/logout";
-	private static String sectorsURL = PrivateConstants.API_PATH+"/getsectors";
-	private static String categoriesURL = PrivateConstants.API_PATH+"/getcategories";
-	private static String entitiesURL = PrivateConstants.API_PATH+"/getentities";
-	private static String tokenCheckURL = PrivateConstants.API_PATH+"/tokencheck";
-	private static String createreportURL = PrivateConstants.API_PATH+"/createreport";	
-	private static String updatereportURL = PrivateConstants.API_PATH+"/updatereport";	
-	private static String insertobjectURL = PrivateConstants.API_PATH+"/insertobject";
-	private static String updateobjectURL = PrivateConstants.API_PATH+"/updateobject";
+	private static String loginURL = PrivateCredentials.API_PATH+"/login";
+	private static String logoutURL = PrivateCredentials.API_PATH+"/logout";
+	private static String sectorsURL = PrivateCredentials.API_PATH+"/getsectors";
+	private static String categoriesURL = PrivateCredentials.API_PATH+"/getcategories";
+	private static String entitiesURL = PrivateCredentials.API_PATH+"/getentities";
+	private static String tokenCheckURL = PrivateCredentials.API_PATH+"/tokencheck";
+	private static String createreportURL = PrivateCredentials.API_PATH+"/createreport";	
+	private static String updatereportURL = PrivateCredentials.API_PATH+"/updatereport";	
+	private static String insertobjectURL = PrivateCredentials.API_PATH+"/insertobject";
+	private static String updateobjectURL = PrivateCredentials.API_PATH+"/updateobject";
 	private static String registerURL = "";
-	private static String api_key = PrivateConstants.API_KEY;
-	private static String[] api_keys = PrivateConstants.API_KEYS;
+	private static String api_key = PrivateCredentials.API_KEY;
+	private static String[] api_keys = PrivateCredentials.API_KEYS;
 	
 	// constructor
 	public UserFunctions(){
@@ -301,19 +302,13 @@ public class UserFunctions {
 	}
 
 	public final static String getAPIKey_un(String username){
-		String key;
-		if(username.equals("test")){
-			key = api_keys[(0)];
-		}else{
-			int uid = Integer.parseInt(username.replace("timby", ""));
-			key = api_keys[(uid)];
-		}
+		int userInd = Arrays.asList(PrivateCredentials.USERNAMES).indexOf(username);
+		String key = PrivateCredentials.API_KEYS[userInd];
 		return key;
 	}
-	public final static String getAPIKey_id(String username){
-		
-		String key = api_keys[(Integer.parseInt(username)-1)];
-		
+	public final static String getAPIKey_id(String userid){
+		int user_id = Integer.parseInt(userid)-1;
+		String key = PrivateCredentials.API_KEYS[user_id];
 		return key;
 	}
 }

@@ -42,7 +42,7 @@ public class EncryptionService extends Service{
 	      super.onStart(intent, startId);
 	       Bundle extras = intent.getExtras(); 
 	       file = extras.getString("filepath");
-	       message = "Started...";
+	       message = "Encryption started...";
 	       showNotification(message);
 	       new encryptFile().execute();
 	       
@@ -75,7 +75,7 @@ public class EncryptionService extends Service{
 			}
 		protected void onPostExecute(String file_url) {
 
-			message = "Completed successfully!";
+			message = "Encryption completed successfully!";
 			showNotification(message);
 			endEncryption();
 				
@@ -88,7 +88,7 @@ public class EncryptionService extends Service{
 	}
 	
 	private void showNotification(String message) {
-		/*
+		
 	   	 CharSequence text = message;
 	   	 Notification notification = new Notification(R.drawable.timby_hold_icon, text, System.currentTimeMillis());
 	   	 PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
@@ -97,8 +97,8 @@ public class EncryptionService extends Service{
 	   	      text, contentIntent);
 	   	NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 			nm.notify("service started", 2, notification);
-			*/
-			}
+			
+	}
 			
 	@Override
 	public IBinder onBind(Intent intent) {

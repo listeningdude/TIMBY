@@ -334,7 +334,7 @@
                 android:hint="@string/description_field"
                 style="@android:style/TextAppearance.Medium"
                 android:inputType="textMultiLine"
-                android:textColor="@color/soft_red" />
+                android:textColor="#686868" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

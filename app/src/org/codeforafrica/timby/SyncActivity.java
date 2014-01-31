@@ -1,11 +1,8 @@
 package org.codeforafrica.timby;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executor;
-
 import javax.crypto.Cipher;
 
 import org.holoeverywhere.widget.Toast;
@@ -15,8 +12,6 @@ import org.json.JSONObject;
 
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.login.UserFunctions;
-import org.codeforafrica.timby.media.Encryption;
-import org.codeforafrica.timby.media.MediaProjectManager;
 import org.codeforafrica.timby.model.Entity;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
@@ -24,7 +19,6 @@ import org.codeforafrica.timby.model.Report;
 import org.codeforafrica.timby.server.ConnectionDetector;
 import org.codeforafrica.timby.server.LoginPreferencesActivity;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
@@ -39,9 +33,7 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;

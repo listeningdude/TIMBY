@@ -55,22 +55,15 @@ public class EncryptionBackground extends Service {
         {
         	 new Thread(new Runnable() {
 				public void run() {
-		        	if(isServiceRunning()){
-		        		Log.d("running", "running");
-		        	}else{
-		        		Log.d("running", "not running");
-		        		
-		        		
+		        	if(!isServiceRunning()){
 		        		String filepath = null;
 		        		//Find first file
 		                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-
-		        		JSONArray jsonArray2 = null;
+		                JSONArray jsonArray2 = null;
 		                JSONArray jsonArray3 = new JSONArray();
 		                try {
 		                    jsonArray2 = new JSONArray(prefs.getString("eQ", "[]"));
-			        		Log.d("running", "not running"+jsonArray2.length());
+			        		//Log.d("running", "not running"+jsonArray2.length());
 
 		                    if(jsonArray2.length()>0){
 			                    filepath = jsonArray2.getString(0);
@@ -91,22 +84,18 @@ public class EncryptionBackground extends Service {
 		                */
 		                if(jsonArray2.length()>0){
 		                	
-		                	if(jsonArray3!=null){
+		                	
 		                		Editor editor = prefs.edit();
 		                		editor.putString("eQ", jsonArray3.toString());
-				                //System.out.println(jsonArray3.toString());
 				                editor.commit();
-		                	}
+		                	
 			                
 			                
-		                	showNotification("Background encryption running!");
 		                	
 		                	Intent startMyService= new Intent(getApplicationContext(), EncryptionService.class);
 			                startMyService.putExtra("filepath", filepath);
 			                startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
 			                startService(startMyService);
-		                }else{
-		                	showNotification("All files are encrypted!");
 		                }
 		        	}
 		        	
@@ -116,17 +105,6 @@ public class EncryptionBackground extends Service {
         }
     }   
 	
-	private void showNotification(String message) {
-		 CharSequence text = message;
-		 Notification notification = new Notification(R.drawable.timby_hold_icon, text, System.currentTimeMillis());
-		 PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-		                new Intent(this, HomeActivity.class), 0);
-		notification.setLatestEventInfo(this, "Encryption",
-		      text, contentIntent);
-		NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-		nm.notify("service started", 2, notification);
-		}
-
 	private boolean isServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {

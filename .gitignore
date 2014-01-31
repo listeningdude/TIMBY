@@ -17,3 +17,6 @@ local.properties
 
 # Eclipse stuff
 *.settings/
+
+# private settings
+app/src/org/codeforafrica/timby/PrivateCredentials.java

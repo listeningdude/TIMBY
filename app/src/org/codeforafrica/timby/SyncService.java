@@ -79,6 +79,8 @@ public class SyncService extends Service {
           
   		int delay = 3000; // delay for 1 sec. 
   		int period = 1000; // repeat every 10 sec. 
+  		
+  		
   		timer = new Timer(); 
   		timer.scheduleAtFixedRate(new TimerTask(){ 
   		        public void run() 
@@ -798,7 +800,9 @@ public class SyncService extends Service {
 		if(tasks<1){
 			//End
 			showNotification("Syncing complete!");
+			if(timer!=null){
 			timer.cancel();
+			}
 			this.stopSelf();
 			
 		}

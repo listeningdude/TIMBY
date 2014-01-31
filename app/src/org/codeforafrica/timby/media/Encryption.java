@@ -13,7 +13,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import org.codeforafrica.timby.AppConstants;
-import org.codeforafrica.timby.PrivateConstants;
+import org.codeforafrica.timby.PrivateCredentials;
 
 import android.app.Activity;
 
@@ -28,7 +28,8 @@ public class Encryption {
   }
   
   public static Cipher createCipher(int mode) throws Exception {
-    PBEKeySpec keySpec = new PBEKeySpec("test".toCharArray());
+	String encryption_key = PrivateCredentials.ENCRYPTION_KEY;
+    PBEKeySpec keySpec = new PBEKeySpec(encryption_key.toCharArray());
     SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
     SecretKey key = keyFactory.generateSecret(keySpec);
     MessageDigest md = MessageDigest.getInstance("MD5");

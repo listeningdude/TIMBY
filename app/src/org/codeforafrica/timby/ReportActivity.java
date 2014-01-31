@@ -29,6 +29,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 
 
 import android.widget.AdapterView;
@@ -407,8 +408,7 @@ OnItemLongClickListener{
     	    JSONArray jsonArray2 = new JSONArray(prefs.getString("sectors", "[]"));
     	    ArrayList<String> list=new ArrayList<String>();
     	    list.add("Select Sector");
-			for(int i=0;i<jsonArray2.length();i++)
-			{
+			for(int i=0;i<jsonArray2.length();i++){
 				list.add(jsonArray2.getString(i));
 			}
 			ArrayAdapter<String> spinnerMenu = new ArrayAdapter<String>(getApplicationContext(),  R.layout.spinner_report_new, list);
@@ -540,11 +540,17 @@ OnItemLongClickListener{
 	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        startActivity(intent);
         }else{
+        	//Hide keyboard
+            InputMethodManager inputManager = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE); 
+            inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),      
+            		    InputMethodManager.HIDE_NOT_ALWAYS);
+            
         	Toast.makeText(getBaseContext(), String.valueOf(rid)+" Updated successfully!", Toast.LENGTH_LONG).show();
         	Intent i = new Intent(getApplicationContext(), HomeActivity.class);
         	i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         	startActivity(i);
         	finish();        	
+        	
         }
          
     }
@@ -553,6 +559,10 @@ OnItemLongClickListener{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+            	//Hide keyboard
+                InputMethodManager inputManager = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE); 
+                inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),      
+                		    InputMethodManager.HIDE_NOT_ALWAYS);
                 //NavUtils.navigateUpFromSameTask(this);
                 Intent i = new Intent(getBaseContext(), HomeActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
