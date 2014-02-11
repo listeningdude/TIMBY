@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/light_cream"
+    android:fillViewport="true" >
+
+  <RelativeLayout
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:id="@+id/lyt_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_weight="0.6"
+            android:orientation="vertical"
+            android:padding="20dp" >
+	     <EditText
+              android:id="@+id/code"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="5dp"
+              android:layout_marginTop="5dip"
+              android:background="#ffffff"
+              android:hint="Enter unlock code"
+              android:padding="10dp"
+              android:password="true"
+              android:singleLine="true"
+              android:textColor="@color/soft_purple" />
+
+          <!-- Login button -->
+
+          <CheckBox
+              android:id="@+id/showPassword"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="15dp"
+              android:text="Show unlock code" />
+
+          <Button
+              android:id="@+id/btnLogin"
+              style="@style/button_text"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="5dip"
+              android:background="@drawable/purple_button"
+              android:text="Unlock"/>
+          
+             <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+              android:gravity="center"
+                     android:orientation="horizontal"
+                >
+                  <!-- Link to Registration Screen -->
+
+          <Button
+              android:id="@+id/link_to_skip"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:background="#FFFFFF"
+              android:paddingBottom="20dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:paddingTop="20dp"
+              android:text="Skip to Tutorials"
+              android:textColor="#0b84aa"
+              android:textSize="20dip" 
+              android:visibility="gone"/>
+          
+          <!-- Link to Registration Screen -->
+
+          <Button
+              android:id="@+id/btnLinkToRegisterScreen"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+               android:gravity="center"
+               android:background="#FFFFFF"
+              android:paddingBottom="20dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:paddingTop="20dp"
+              android:text="Register"
+              android:textColor="#0b84aa"
+              android:textSize="20dip"
+              android:visibility="gone"/>
+
+ </LinearLayout>
+        </LinearLayout>
+        <!-- Login Form Ends -->
+  </RelativeLayout>
+</ScrollView>
