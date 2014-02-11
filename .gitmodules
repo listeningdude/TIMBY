@@ -19,3 +19,6 @@
 [submodule "external/RangeSeekBar"]
 	path = external/RangeSeekBar
 	url = https://github.com/vitriolix/RangeSeekBar.git
+[submodule "docs/lessons"]
+	path = docs/lessons
+	url = https://github.com/CodeForAfrica/StoryMakerLessons.git
