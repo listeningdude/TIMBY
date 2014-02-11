@@ -27,6 +27,8 @@ import org.codeforafrica.timby.db.StoryMakerDB;
 import org.codeforafrica.timby.media.Encryption;
 import org.codeforafrica.timby.media.MediaProjectManager;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -432,9 +434,18 @@ public class Media {
     public void setDuration(int duration) {
         this.duration = duration;
     }
-    
+   
     public static Bitmap getThumbnail(Context context, Media media, Project project) 
     {
+    	    	
+    	ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (EncryptionService.class.getName().equals(service.service.getClassName())) {
+                return null;
+            }
+        }
+        
+    	
     	if (media == null)
     		return null;
     	

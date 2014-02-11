@@ -69,7 +69,6 @@
               android:hint="username"
               android:padding="10dp"
               android:singleLine="true"
-              android:text="test"
               android:textColor="@color/soft_purple" />
 
           <!--  Password Label -->          
@@ -85,7 +84,6 @@
               android:padding="10dp"
               android:password="true"
               android:singleLine="true"
-              android:text="timbytest"
               android:textColor="@color/soft_purple" />
 
           <!-- Login button -->

@@ -55,57 +55,63 @@ public class EncryptionBackground extends Service {
         {
         	 new Thread(new Runnable() {
 				public void run() {
-		        	if(!isServiceRunning()){
-		        		String filepath = null;
-		        		//Find first file
-		                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		                JSONArray jsonArray2 = null;
-		                JSONArray jsonArray3 = new JSONArray();
-		                try {
-		                    jsonArray2 = new JSONArray(prefs.getString("eQ", "[]"));
-			        		//Log.d("running", "not running"+jsonArray2.length());
+					try {
+						if(!isServiceRunning()){
+			        		String filepath = null;
+			        		//Find first file
+			                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			                JSONArray jsonArray2 = null;
+			                JSONArray jsonArray3 = new JSONArray();
+			                try {
+			                    jsonArray2 = new JSONArray(prefs.getString("eQ", "[]"));
+				        		//Log.d("running", "not running"+jsonArray2.length());
 
-		                    if(jsonArray2.length()>0){
-			                    filepath = jsonArray2.getString(0);
-			                  //Remove from list
-			                    
-			                    for (int i = 0; i < jsonArray2.length(); i++) {
-			                        if(i!=0){
-			                        	jsonArray3.put(jsonArray2.getString(i));
-			                        }
-			                   }
-		                    }
-		                } catch (Exception e) {
-		                    e.printStackTrace();
-		                }
-		                
-		                /*
-		                
-		                */
-		                if(jsonArray2.length()>0){
-		                	
-		                	
-		                		Editor editor = prefs.edit();
-		                		editor.putString("eQ", jsonArray3.toString());
-				                editor.commit();
-		                	
+			                    if(jsonArray2.length()>0){
+				                    filepath = jsonArray2.getString(0);
+				                  //Remove from list
+				                    
+				                    for (int i = 0; i < jsonArray2.length(); i++) {
+				                        if(i!=0){
+				                        	jsonArray3.put(jsonArray2.getString(i));
+				                        }
+				                   }
+			                    }
+			                } catch (Exception e) {
+			                    e.printStackTrace();
+			                }
 			                
+			                /*
 			                
-		                	
-		                	Intent startMyService= new Intent(getApplicationContext(), EncryptionService.class);
-			                startMyService.putExtra("filepath", filepath);
-			                startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
-			                startService(startMyService);
-		                }
-		        	}
-		        	
-		             
-                 }}).start();
+			                */
+			                if(jsonArray2.length()>0){
+			                	
+			                	
+			                		Editor editor = prefs.edit();
+			                		editor.putString("eQ", jsonArray3.toString());
+					                editor.commit();
+			                	
+				                
+				                
+			                	
+			                	Intent startMyService= new Intent(getApplicationContext(), EncryptionService.class);
+				                startMyService.putExtra("filepath", filepath);
+				                startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
+				                startService(startMyService);
+			                }
+			        	}
+					} catch (NullPointerException ex) { 
+					    System.out.println("NPE encountered in body"); 
+					} catch (Throwable ex) {
+					    System.out.println("Regular Throwable: " + ex.getMessage());
+					} finally {
+					    //System.out.println("Final throwable");
+					}
+				}}).start();
         	
         }
     }   
 	
-	private boolean isServiceRunning() {
+	public boolean isServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (EncryptionService.class.getName().equals(service.service.getClassName())) {

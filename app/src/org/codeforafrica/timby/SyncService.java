@@ -218,39 +218,6 @@ public class SyncService extends Service {
 		 	}else if(ptype.contains("audio")){
 		 		optype = "audio";
 		 	}
-		 	/*
-			//decrypt
-			Intent startMyService= new Intent(getApplicationContext(), EncryptionService.class);
-	        startMyService.putExtra("filepath", ppath);
-	        startMyService.putExtra("mode", Cipher.DECRYPT_MODE);
-	        startService(startMyService);
-	        */
-		 	/*decrypt file
-		 	String filepath = ppath;
-		 	String tempFile = ppath+"_";
-		 	
-		 	String filepath = media.getPath();
- 			String[] fileparts = filepath.split("\\.");
- 			String filename = fileparts[0];
- 			String fileext = fileparts[1];
- 			String tempFile = filename+"2."+fileext;
- 			Cipher cipher;
-            try{
-     			cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
-     			Encryption.applyCipher(filepath, tempFile, cipher);
-     		}catch(Exception e){
-     			e.printStackTrace();
-     		}
-           
-           /* 
-           //Then rename original file original file
-     		File oldfile = new File(ppath);
-     		oldfile.delete();
-     		
-     		//Then remove _ on decrypted file
-     		File newfile = new File(tempFile);
-     		newfile.renameTo(new File(ppath));
-     		*/
 		 	String file = ppath;
 	 		Cipher cipher;
 			try {
@@ -310,11 +277,35 @@ public class SyncService extends Service {
 		 	String psequence = String.valueOf(j+1);
 		 	String preportid = String.valueOf(serverid);
 		 	
-		 	//new updateObject().execute();	
-		 	
-		 	MyTaskParams params = new MyTaskParams(ppath, ptype, optype, ptitle, pdate, pid, psequence, preportid);
-		 	update_Object = new updateObject();
-		 	update_Object.execute(params);		 	
+		 	if(String.valueOf(project.getObjectID())!=""){
+			 	//new updateObject().execute();	
+			 	MyTaskParams params = new MyTaskParams(ppath, ptype, optype, ptitle, pdate, pid, psequence, preportid);
+			 	update_Object = new updateObject();
+			 	update_Object.execute(params);	
+		 	}else{
+		 		//file has not been uploaded yet
+		 		String file = ppath;
+		 		Cipher cipher;
+				try {
+					cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
+					Encryption.applyCipher(file, file+"_", cipher);
+				}catch (Exception e) {
+					// TODO Auto-generated catch block
+					Log.e("Encryption error", e.getLocalizedMessage());
+					e.printStackTrace();
+				}
+				//Then delete original file
+				File oldfile = new File(file);
+				oldfile.delete();
+				//Then remove _ on encrypted file
+				File newfile = new File(file+"_");
+				newfile.renameTo(new File(file));
+				
+			 	//new createObject().execute();		
+			 	MyTaskParams params = new MyTaskParams(ppath, ptype, optype, ptitle, pdate, pid, psequence, preportid);
+			 	create_Object = new createObject();
+			 	create_Object.execute(params);
+		 	}
 		 }
 	 	
 	}
@@ -782,7 +773,7 @@ public class SyncService extends Service {
 		}
 		
 		if(create_Entity!=null){
-			if(create_Object.getStatus() == AsyncTask.Status.RUNNING){
+			if(create_Entity.getStatus() == AsyncTask.Status.RUNNING){
 				tasks++;
 			}
 		}
@@ -801,7 +792,7 @@ public class SyncService extends Service {
 			//End
 			showNotification("Syncing complete!");
 			if(timer!=null){
-			timer.cancel();
+				timer.cancel();
 			}
 			this.stopSelf();
 			

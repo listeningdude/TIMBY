@@ -118,39 +118,33 @@ OnItemLongClickListener{
 			@Override
 			public void onClick(View v) {
 				//TODO Auto-generated method stub
-				if(isServiceRunning()){
-					Toast.makeText(getApplicationContext(), "Please wait another file is being encrypted!", Toast.LENGTH_LONG).show();
-				}else{
+				
 				story_mode = 2;
 				resultMode = Project.STORY_TYPE_PHOTO;
 				launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),datasource.toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
-				}
+				
 			}
 		});
         video.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				//TODO Auto-generated method stub
-				if(isServiceRunning()){
-					Toast.makeText(getApplicationContext(), "Please wait another file is being encrypted!", Toast.LENGTH_LONG).show();
-				}else{
+				
 				story_mode = 2;
 				resultMode = Project.STORY_TYPE_VIDEO;
 				launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),datasource.toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
-				}
+				
 			}
 		});
         audio.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				//TODO Auto-generated method stub
-				if(isServiceRunning()){
-					Toast.makeText(getApplicationContext(), "Please wait another file is being encrypted!", Toast.LENGTH_LONG).show();
-				}else{
+				
 				story_mode = 2;
 				resultMode = Project.STORY_TYPE_AUDIO;
 				launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),datasource.toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
-				}
+				
 			}
 		});
         
@@ -357,15 +351,7 @@ OnItemLongClickListener{
 			}
 		});
     }
-    private boolean isServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (EncryptionService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+
     public void setEntities(){
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     	try {

@@ -175,7 +175,6 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	            
 	            if((username!=null)&&(password!=null)){
 	            	 if((username.equals(txtUser.getText().toString()))&&(password.equals(txtPass.getText().toString()))){
-		            	
 		            	mHandler.sendEmptyMessage(0);
 					}else{   
 						Message msgErr= mHandler.obtainMessage(1);
@@ -219,27 +218,33 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	            }
 	            
 	        }else{
-		        
 	            String username = txtUser.getText().toString();
 	            String password = txtPass.getText().toString();
 	            UserFunctions userFunction = new UserFunctions();
-				
-				JSONObject json = userFunction.loginUser(username, password);
-				try {
-						String res = json.getString(KEY_SUCCESS); 
-						if(res.equals("OK")){
-							JSONObject json_user = json.getJSONObject("message");
-							saveCreds(json_user.getString(KEY_USER_ID), json_user.getString(KEY_TOKEN), username, password);
-							mHandler.sendEmptyMessage(0);
-						}else{
-							Message msgErr= mHandler.obtainMessage(1);
-	                        msgErr.getData().putString("err",json.getString(KEY_ERROR_MSG));
-	                        mHandler.sendMessage(msgErr);
-						}
-					
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+	            //find index of user
+            	if(contains(PrivateCredentials.USERNAMES, username)&&contains(PrivateCredentials.PASSWORDS, password)){
+            		JSONObject json = userFunction.loginUser(username, password);
+					try {
+							String res = json.getString(KEY_SUCCESS); 
+							if(res.equals("OK")){
+								JSONObject json_user = json.getJSONObject("message");
+								saveCreds(json_user.getString(KEY_USER_ID), json_user.getString(KEY_TOKEN), username, password);
+								mHandler.sendEmptyMessage(0);
+							}else{
+								Message msgErr= mHandler.obtainMessage(1);
+		                        msgErr.getData().putString("err",json.getString(KEY_ERROR_MSG));
+		                        mHandler.sendMessage(msgErr);
+							}
+						
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+            	}else{
+            		//No Login
+            		Message msgErr= mHandler.obtainMessage(1);
+                    msgErr.getData().putString("err","Incorrect username and/or password!");
+                    mHandler.sendMessage(msgErr);
+            	}
 	        }
            
     }
@@ -300,8 +305,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
     	SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     	String sectors_current = settings.getString("sectors",null);
     	if(sectors_current==null){
-	    	SharedPreferences prefs = PreferenceManager
-			        .getDefaultSharedPreferences(getApplicationContext());
+	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	    	    	
 			JSONArray sectors = new JSONArray();
 			

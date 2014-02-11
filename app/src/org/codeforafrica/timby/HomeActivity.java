@@ -126,6 +126,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         
         checkForTor();
         
+        //check if settings are set
+        
+        checkSettings();
+        
         if(!isServiceRunning(EncryptionBackground.class)){
         	startService(new Intent(HomeActivity.this,EncryptionBackground.class));
         }
@@ -184,6 +188,47 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 				
 			}
 		});
+    }
+    public void checkSettings(){
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		Editor editor = prefs.edit();
+		
+    	String encrypt_zip_files = prefs.getString("encrypt_zip_files",null);
+    	if(encrypt_zip_files==null){
+    		editor.putString("encrypt_zip_files", "1");
+    	}
+    	
+    	String delete_after_sync = prefs.getString("delete_after_sync",null);
+    	if(delete_after_sync==null){
+    		editor.putString("delete_after_sync", "0");
+    	}
+    	
+    	String delete_after_export = prefs.getString("delete_after_export",null);
+    	if(delete_after_export==null){
+    		editor.putString("delete_after_export", "0");
+    	}
+    	
+    	String maximum_video_length = prefs.getString("maximum_video_length",null);
+    	if(maximum_video_length==null){
+    		editor.putString("maximum_video_length", "60");
+    	}
+    	
+    	String encryption_key = prefs.getString("encryption_key",null);
+    	if(encryption_key==null){
+    		editor.putString("encryption_key", PrivateCredentials.ENCRYPTION_KEY);
+    	}
+    	
+    	String api_base_url = prefs.getString("api_base_url",null);
+    	if(api_base_url==null){
+    		editor.putString("api_base_url", PrivateCredentials.API_PATH);
+    	}
+    	
+    	String hockey_app_id = prefs.getString("hockey_app_id",null);
+    	if(hockey_app_id==null){
+    		editor.putString("hockey_app_id", PrivateCredentials.HOCKEY_APP_ID);
+    	}
+    	
+		editor.commit();
     }
     private boolean isServiceRunning(Class<?> cls) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);

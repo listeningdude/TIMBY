@@ -48,7 +48,7 @@ public class Encryption {
     
 	CipherInputStream in = new CipherInputStream(new FileInputStream(inFile), cipher);
     BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outFile));
-    int BUFFER_SIZE = 8;
+    int BUFFER_SIZE = 2048;
     byte[] buffer = new byte[BUFFER_SIZE];
     int numRead = 0;
     do {
@@ -56,7 +56,7 @@ public class Encryption {
       if (numRead > 0){
         out.write(buffer, 0, numRead);
       }
-    } while (numRead == 8);
+    } while (numRead == 2048);
     	out.close();  	
  }
 }

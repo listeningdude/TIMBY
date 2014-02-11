@@ -170,6 +170,7 @@ public class Export2SDService extends Service {
 			//Now create new zip
 			zipFileAtPath(ext, String.valueOf(getSD())+"/timby.zip");
 			
+			/*
 			//encrypt zip file
 			String file = String.valueOf(getSD())+"/timby.zip";
 			
@@ -187,7 +188,7 @@ public class Export2SDService extends Service {
 			oldfile.delete();
 			//Then remove _ on encrypted file
 			File newfile = new File(file+"_");
-			newfile.renameTo(new File(file));
+			newfile.renameTo(new File(file));*/
 			
 			//Re-encrypt everything
 			reEncrypt_everything();
@@ -196,7 +197,6 @@ public class Export2SDService extends Service {
 		}
 		
 	protected void onPostExecute(String file_url) {
-			
 			showNotification("Exported Successfully!");
 			endExporting();
 		}

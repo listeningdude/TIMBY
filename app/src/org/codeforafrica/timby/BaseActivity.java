@@ -263,9 +263,11 @@ public class BaseActivity extends Activity {
 	        startActivity(intent);
         }
         /*if (item.getItemId() == R.id.settings)
-        {
-        	Intent intent = new Intent(this,SimplePreferences.class);
-    		this.startActivityForResult(intent, 9999);
+        {	
+        	   		
+        	Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	        startActivity(intent);
         }*/
         if (item.getItemId() == R.id.logout)
         {

@@ -54,7 +54,8 @@ public class MediaHelper implements MediaScannerConnectionClient {
          mMediaUriTmp = Uri.fromFile(mMediaFileTmp);
          
      	Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        intent.putExtra( MediaStore.EXTRA_OUTPUT, mMediaUriTmp);
+     	intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mMediaUriTmp);
 
      	mActivity.startActivityForResult(intent, MediaConstants.CAMERA_RESULT);
          
