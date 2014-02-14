@@ -113,8 +113,12 @@ public class EditorBaseActivity extends BaseActivity {
                     
                     if (mProgressDialog != null)
                     {
-                    	mProgressDialog.dismiss();
-                    	mProgressDialog = null;
+                        try {
+                            mProgressDialog.dismiss();
+                            mProgressDialog = null;
+                        } catch (Exception e) {
+                            // ignore: http://stackoverflow.com/questions/2745061/java-lang-illegalargumentexception-view-not-attached-to-window-manager
+                        }
                     }
                     
                     File fileMedia = new File(localPath);
@@ -134,8 +138,12 @@ public class EditorBaseActivity extends BaseActivity {
                 	
                     if (mProgressDialog != null && mProgressDialog.isShowing())
                     {
-                        mProgressDialog.dismiss();
-                        mProgressDialog = null;
+                        try {
+                            mProgressDialog.dismiss();
+                            mProgressDialog = null;
+                        } catch (Exception e) {
+                            // ignore: http://stackoverflow.com/questions/2745061/java-lang-illegalargumentexception-view-not-attached-to-window-manager
+                        }
                     }
                     
                     AlertDialog.Builder builder = new AlertDialog.Builder(EditorBaseActivity.this);

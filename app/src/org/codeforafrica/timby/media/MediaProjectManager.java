@@ -23,7 +23,7 @@ import org.apache.commons.io.IOUtils;
 import org.ffmpeg.android.MediaDesc;
 import org.holoeverywhere.app.Activity;
 
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,7 +35,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class MediaProjectManager implements MediaManager {
-	
+	public final static String TAG = "MediaProjectManager";
 
     public final static String EXPORT_VIDEO_FILE_EXT = ".mp4";
 //    public final static String EXPORT_AUDIO_FILE_EXT = ".m4a";//".ogg";//"".3gp";
@@ -202,9 +202,40 @@ public class MediaProjectManager implements MediaManager {
     	    mFileExternDir.mkdirs();
     	    mThumbsDir.mkdirs();
     	}
+    }
+    	/*
+    @SuppressLint("NewApi")
+	private static synchronized void initExternalStorage (Context context)
+    {   	
+    	if (sFileExternDir == null){
+    	   	
+    		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());	 
+    		mUseInternal = settings.getBoolean("p_use_internal_storage",false);
+
+    		boolean isStorageEmulated = false;
+    		
+    		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB){
+    			isStorageEmulated = Environment.isExternalStorageEmulated();
+    		}
+    		
+    		if (mUseInternal && !isStorageEmulated){
+    			sFileExternDir = new File (context.getFilesDir(), AppConstants.FOLDER_PROJECTS_NAME);
+    		}
+    		else{
+    			sFileExternDir = new File(Environment.getExternalStorageDirectory(), AppConstants.FOLDER_PROJECTS_NAME);
+    		}
+            Log.d(TAG, "sFileExternDir:" + sFileExternDir.getAbsolutePath());
+            try {
+                Log.d(TAG, "sFileExternDir.getCanonicalPath():" + sFileExternDir.getCanonicalPath());
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+    		sFileExternDir.mkdirs();
+    	}
     	
     }
-    
+    */
     public static File getRenderPath (Context context)
     {
 
@@ -221,11 +252,10 @@ public class MediaProjectManager implements MediaManager {
     public static File getExternalProjectFolder (Project project, Context context)
     {
     	initExternalStorage (context);
-    	
     	//String folderName = project.getId()+"";
     	String folderName = project.getReport();
     	File fileProject = new File(mFileExternDir,folderName);
-    	
+ 	
     	if(!fileProject.exists()){
     		fileProject.mkdirs();
     	}
