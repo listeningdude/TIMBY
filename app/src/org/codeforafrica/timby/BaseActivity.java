@@ -284,7 +284,7 @@ public class BaseActivity extends Activity {
     
     	super.onCreate(savedInstanceState);
         
-        (new Eula(this)).show();
+        //(new Eula(this)).show();
     }
     
     @Override

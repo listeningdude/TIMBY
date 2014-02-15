@@ -76,6 +76,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout.LayoutParams;
 
 import com.fima.cardsui.views.CardUI;
+import com.google.analytics.tracking.android.EasyTracker;
 //import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -1041,5 +1042,16 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 
 		      writer.close();
 	 }
+	 @Override
+	  public void onStart() {
+	    super.onStart();
+	    EasyTracker.getInstance(this).activityStart(this);
+	  }
+
+	  @Override
+	  public void onStop() {
+	    super.onStop();
+	    EasyTracker.getInstance(this).activityStop(this);
+	  }
     
 }
