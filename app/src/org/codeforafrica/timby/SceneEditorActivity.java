@@ -30,6 +30,8 @@ import javax.crypto.spec.SecretKeySpec;
 import net.micode.soundrecorder.SoundRecorder;
 
 import org.holoeverywhere.app.AlertDialog;
+
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -64,6 +66,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
     public PublishFragment mPublishFragment;
 
     @Override
+    @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

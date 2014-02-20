@@ -91,6 +91,7 @@ OnItemLongClickListener{
     private Dialog dialog;
     
     @Override
+    @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
@@ -264,6 +265,9 @@ OnItemLongClickListener{
             done.setText("Update");
         }else{
         	getSupportActionBar().setTitle("Add Report");
+        }
+        if (datasource.size()==0){
+        	entitiesLV.setVisibility(View.GONE);
         }
         /*
         //Button actions
@@ -586,9 +590,11 @@ OnItemLongClickListener{
             TextView view = (TextView) convertView;
             if (null == view) {
                 view = new TextView(ReportActivity.this);
-                view.setPadding(10, 10, 10, 10);
+                view.setPadding(15, 15, 15, 15);
             }
             view.setText(datasource.get(position));
+            view.setTextAppearance(ReportActivity.this, android.R.style.TextAppearance_Medium);
+            view.setTextColor(getResources().getColor(R.color.grey));
             return view;
         }
     }
@@ -607,14 +613,16 @@ OnItemLongClickListener{
             if (null != text && 0 != text.compareTo("")) {
                 datasource.add(text);
                 
-                int minHeight = datasource.size()*50;
+                int minHeight = datasource.size()*80;
                 LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, minHeight);
                 entitiesLV.setLayoutParams(params);
                                 
                 dialog.dismiss();
                 adapter.notifyDataSetChanged();
             }
-
+            if (datasource.size()>0){
+            	entitiesLV.setVisibility(View.VISIBLE);
+            }
             break;
         }
     }
@@ -622,12 +630,17 @@ OnItemLongClickListener{
     @Override
     public boolean onItemLongClick(AdapterView<?> listView, View view,
             int position, long column) {
-    	int minHeight = datasource.size()*50;
+    	int minHeight = datasource.size()*80;
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, minHeight);
         entitiesLV.setLayoutParams(params);
         
         datasource.remove(position);
         adapter.notifyDataSetChanged();
+        
+        if (datasource.size()==0){
+        	entitiesLV.setVisibility(View.GONE);
+        }
+        
         return true;
     }
 }

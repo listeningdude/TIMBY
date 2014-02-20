@@ -37,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -68,6 +69,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -99,6 +101,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
     Boolean isInternetPresent = false;
     private Dialog dialog;
     @Override
+    
     public void onCreate(Bundle savedInstanceState) {
     
     	super.onCreate(savedInstanceState);
@@ -119,10 +122,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         
         // action bar stuff
        
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#f0e4d4")));
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
+         
+        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#f0e4d4")));
+        //getSupportActionBar().setTitle("");
+       // getSupportActionBar().setDisplayShowHomeEnabled(true);
        
         
         checkForTor();

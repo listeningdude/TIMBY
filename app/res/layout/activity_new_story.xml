@@ -307,6 +307,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/background_cream_grey_border"
                 android:text="Company/Person"
                 android:gravity="left"
@@ -318,7 +319,8 @@
                 android:id="@+id/EntitiesList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@android:style/TextAppearance.Medium" >
+                android:textColor="@color/grey"
+                android:background="@drawable/background_cream_grey_border" >
             </ListView>
 
             <EditText

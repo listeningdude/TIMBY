@@ -20,7 +20,9 @@ import org.json.JSONArray;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -56,6 +58,7 @@ public class ReportsActivity extends BaseActivity {
 	ProgressDialog pDialog;
 	getThumbnail get_thumbnail=null;
     @Override
+    @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projects);
@@ -462,9 +465,9 @@ public class ReportsActivity extends BaseActivity {
                     	   
                				if (bmp != null)
                					ivIcon.setImageBitmap(bmp);
-               				
+               				/*
                				String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/thumbs/"+media.getId()+".jpg";
-/*
+
             		 		Cipher cipher;
             				try {
             					cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
@@ -492,5 +495,15 @@ public class ReportsActivity extends BaseActivity {
             
         }
 	}
+	 @Override
+	  public void onStart() {
+	    super.onStart();
+	    EasyTracker.getInstance(this).activityStart(this);
+	  }
 
+	  @Override
+	  public void onStop() {
+	    super.onStop();
+	    EasyTracker.getInstance(this).activityStop(this);
+	  }
 }

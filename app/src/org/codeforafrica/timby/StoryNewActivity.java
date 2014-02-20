@@ -5,6 +5,9 @@ import java.util.Date;
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.model.Project;
 import org.codeforafrica.timby.model.Scene;
+
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -57,4 +60,15 @@ public class StoryNewActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
+    @Override
+	  public void onStart() {
+	    super.onStart();
+	    EasyTracker.getInstance(this).activityStart(this);
+	  }
+
+	  @Override
+	  public void onStop() {
+	    super.onStop();
+	    EasyTracker.getInstance(this).activityStop(this);
+	  }
 }

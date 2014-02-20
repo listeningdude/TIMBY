@@ -17,6 +17,7 @@ import javax.crypto.Cipher;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.Toast;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -55,6 +56,7 @@ public class ProjectsActivity extends BaseActivity {
 	ProgressDialog pDialog;
 	getThumbnail get_thumbnail=null;
     @Override
+    @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
@@ -333,7 +335,7 @@ public class ProjectsActivity extends BaseActivity {
                     	   
                				if (bmp != null)
                					ivIcon.setImageBitmap(bmp);
-               				
+               				/*
                				String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/thumbs/"+media.getId()+".jpg";
             		 		Cipher cipher;
             				try {
@@ -351,7 +353,7 @@ public class ProjectsActivity extends BaseActivity {
             				//Then remove _ on encrypted file
             				File newfile = new File(file+"_");
             				newfile.renameTo(new File(file));
-               				
+               				*/
                        }
 
           });

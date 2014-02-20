@@ -416,7 +416,17 @@
         android:layout_height="wrap_content"
         android:background="@drawable/purple_button"
         android:gravity="center_vertical"
+        android:layout_marginTop="10dp"
         android:text="Add Caption" />
+
+    <Button
+        android:id="@+id/btnSkip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/transparent"
+        android:text="Skip >>"
+        android:color="@color/light_blue" />
 
   </LinearLayout>
 </ScrollView>

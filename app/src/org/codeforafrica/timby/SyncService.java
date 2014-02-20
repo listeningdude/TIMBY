@@ -18,6 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -65,7 +67,7 @@ public class SyncService extends Service {
     @Override
     public void onCreate() {
           super.onCreate();
-          
+  	    
           showNotification("Syncing...");
           cd = new ConnectionDetector(getApplicationContext());
         //get Internet status

@@ -8,6 +8,7 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 
 public class LessonsActivity extends BaseActivity implements ActionBar.TabListener {
 
@@ -50,6 +52,7 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
     LessonListView mListView;
     
     @Override
+    @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
      
         
@@ -352,5 +355,15 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
 
 	        return super.onKeyDown(keyCode, event);
 	    }
+	 @Override
+	  public void onStart() {
+	    super.onStart();
+	    EasyTracker.getInstance(this).activityStart(this);
+	  }
 
+	  @Override
+	  public void onStop() {
+	    super.onStop();
+	    EasyTracker.getInstance(this).activityStop(this);
+	  }
 }

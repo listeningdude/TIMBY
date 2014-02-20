@@ -204,7 +204,13 @@ public class PublishFragment extends Fragment {
                 }
                 
             });
-            
+            Button btnSkip = (Button) mView.findViewById(R.id.btnSkip);
+            btnSkip.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    saveForm();
+                }
+            });
             
             Button btn = (Button) mView.findViewById(R.id.btnPublish);
             btn.setOnClickListener(new OnClickListener() {
