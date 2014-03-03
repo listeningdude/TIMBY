@@ -17,7 +17,7 @@ Among the core modifications of this fork include:<br />
 
 Follow these steps to setup your dev environment:
 
-1. Checkout mrapp git repo
+1. Checkout TIMBY git repo
 2. Init and update git submodules
 
     git submodule update --init --recursive
