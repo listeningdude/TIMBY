@@ -57,7 +57,7 @@ public class EncryptionService extends Service{
 				Cipher cipher;
 				
 				try {
-						cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+						cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE, getApplicationContext());
 						Encryption.applyCipher(file, file+"_", cipher);
 					}catch (Exception e) {
 						// TODO Auto-generated catch block

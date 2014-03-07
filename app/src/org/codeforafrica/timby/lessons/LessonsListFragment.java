@@ -17,8 +17,7 @@ public class LessonsListFragment extends ListFragment {
 	    String[] projection = { StoryMakerDB.Schema.Lessons.ID, StoryMakerDB.Schema.Lessons.COL_TITLE };
 	    String[] uiBindFrom = { StoryMakerDB.Schema.Lessons.COL_TITLE };
 	   // int[] uiBindTo = { R.id.title };
-	    Cursor tutorials = getActivity().managedQuery(
-	            LessonsProvider.CONTENT_URI, projection, null, null, null);
+	    Cursor tutorials = getActivity().managedQuery(LessonsProvider.CONTENT_URI, projection, null, null, null);
 	  
 	    //CursorAdapter adapter = new SimpleCursorAdapter(getActivity()
 	        //    .getApplicationContext(), R.layout.list_item, tutorials,

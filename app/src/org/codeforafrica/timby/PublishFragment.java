@@ -338,7 +338,7 @@ public class PublishFragment extends Fragment {
 	        
 	        String file = filename;
 			try {
-				cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+				cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE, mActivity.getApplicationContext());
 				Encryption.applyCipher(file, file+"_", cipher);
 			}catch (Exception e) {
 				// TODO Auto-generated catch block

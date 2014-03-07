@@ -64,7 +64,7 @@ public class LoginActivity extends Activity{
 				}else{
 					UserFunctions userFunction = new UserFunctions();
 					Log.d("Button", "Login");
-					JSONObject json = userFunction.loginUser(username, password);
+					JSONObject json = userFunction.loginUser(username, password, getApplicationContext());
 	
 					// check for login response
 					try {

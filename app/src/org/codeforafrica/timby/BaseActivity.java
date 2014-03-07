@@ -142,7 +142,8 @@ public class BaseActivity extends Activity {
             	intent.putExtra("story_type", 0);
             	intent.putExtra("auto_capture", true);
                 
-                 activity.startActivity(intent);      	Toast.makeText(BaseActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+                 activity.startActivity(intent);      	
+                 Toast.makeText(BaseActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
                  }
             	
         });
@@ -304,7 +305,7 @@ public class BaseActivity extends Activity {
             String password = settings.getString("password",null);
             //logout remotely
             UserFunctions userFunction = new UserFunctions();
-            JSONObject json = userFunction.logoutUser(username, password);
+            JSONObject json = userFunction.logoutUser(username, password, getApplicationContext());
             if ((json.getString(KEY_SUCCESS)!=null)&&(json.getString(KEY_SUCCESS).equals("OK"))){
             	//logout locally 
             	settings.edit().clear();

@@ -7,10 +7,10 @@ import java.util.Iterator;
 import org.codeforafrica.timby.BaseActivity;
 import org.codeforafrica.timby.HomeActivity;
 import org.codeforafrica.timby.LessonsActivity;
-import org.codeforafrica.timby.PrivateCredentials;
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.ReportActivity;
 import org.codeforafrica.timby.ReportsActivity;
+import org.codeforafrica.timby.SettingsActivity;
 import org.codeforafrica.timby.login.UserFunctions;
 
 
@@ -18,6 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 
 
@@ -76,7 +78,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
         
         getSupportActionBar().hide();
         //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#9E3B33")));
-        
+               
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new OnClickListener ()
         {
@@ -120,7 +122,23 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
       			}
       		});
     }
-    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.activity_settings, menu);   
+        return true;
+    }
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.settings)
+        {
+        	Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);
+			startActivity(settings);
+        }
+        
+       
+		return true;
+	}
     private void handleLogin ()
     {
             txtStatus.setText("Attempting login...");
@@ -151,7 +169,62 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
         
          //if (password != null)
                // txtPass.setText(password);
-        
+        checkSettings();
+    }
+    
+    public void checkSettings(){
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		Editor editor = prefs.edit();
+
+    	String encrypt_zip_files = prefs.getString("encrypt_zip_files",null);
+    	if(encrypt_zip_files==null){
+    		editor.putString("encrypt_zip_files", "1");
+    	}
+    	
+    	String delete_after_sync = prefs.getString("delete_after_sync",null);
+    	if(delete_after_sync==null){
+    		editor.putString("delete_after_sync", "0");
+    	}
+    	
+    	String delete_after_export = prefs.getString("delete_after_export",null);
+    	if(delete_after_export==null){
+    		editor.putString("delete_after_export", "0");
+    	}
+    	
+    	String maximum_video_length = prefs.getString("maximum_video_length",null);
+    	if(maximum_video_length==null){
+    		editor.putString("maximum_video_length", "60");
+    	}
+    	
+    	String encryption_key = prefs.getString("encryption_key",null);
+    	if(encryption_key==null){
+    		editor.putString("encryption_key", "test");
+    	}
+    	
+    	String api_base_url = prefs.getString("api_base_url",null);
+    	if(api_base_url==null){
+    		editor.putString("api_base_url", "http://uat.circle.co.ke/timbyweb/server/public/api");
+    	}
+    	
+    	String hockey_app_id = prefs.getString("hockey_app_id",null);
+    	if(hockey_app_id==null){
+    		editor.putString("hockey_app_id", "a9918f698864aa1601d6617df3dfc048");
+    	}
+    	String username = prefs.getString("username",null);
+    	if(username==null){
+    		editor.putString("username", "test");
+    	}
+    	
+    	String password = prefs.getString("password",null);
+    	if(password==null){
+    		editor.putString("password", "timbytest");
+    	}
+    	
+    	String api_key = prefs.getString("api_key",null);
+    	if(api_key==null){
+    		editor.putString("api_key", "6b239b3568b209");
+    	}
+		editor.commit();
     }
     public static <T> boolean contains( final T[] array, final T v ) {
         for ( final T e : array )
@@ -184,39 +257,8 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	                    mHandler.sendMessage(msgErr);
 					}
 	            }else{
-	            	String user = txtUser.getText().toString();
-	            	String pass = txtPass.getText().toString();
-	            	
-	            	//find index of user
-	            	if(contains(PrivateCredentials.USERNAMES, user)){
-	            		int userInd = Arrays.asList(PrivateCredentials.USERNAMES).indexOf(user);
-	            		if(contains(PrivateCredentials.PASSWORDS, pass)){
-		            		int passInd = Arrays.asList(PrivateCredentials.PASSWORDS).indexOf(pass);
-		            		if(userInd==passInd){
-		            			//Login
-		            			saveCreds(String.valueOf(userInd), "empty", user, pass);
-		            			mHandler.sendEmptyMessage(0);
-		            		}else{
-		            			//No Login
-		            			Message msgErr= mHandler.obtainMessage(1);
-			                    msgErr.getData().putString("err","Incorrect username and/or password!");
-			                    mHandler.sendMessage(msgErr);
-		            		}
-	            		}else{
-	            			//No Login
-	            			Message msgErr= mHandler.obtainMessage(1);
-		                    msgErr.getData().putString("err","Incorrect username and/or password!");
-		                    mHandler.sendMessage(msgErr);
-	            		}
-	            		
-	            	}else{
-	            		//No Login
-	            		Message msgErr= mHandler.obtainMessage(1);
-	                    msgErr.getData().putString("err","Incorrect username and/or password!");
-	                    mHandler.sendMessage(msgErr);
-	            	}
-	            	
-	            	
+	            	//Username / Password not set
+	            	Toast.makeText(getApplicationContext(), "Username and/or password not set!", Toast.LENGTH_LONG).show();
 	            }
 	            
 	        }else{
@@ -224,8 +266,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	            String password = txtPass.getText().toString();
 	            UserFunctions userFunction = new UserFunctions();
 	            //find index of user
-            	if(contains(PrivateCredentials.USERNAMES, username)&&contains(PrivateCredentials.PASSWORDS, password)){
-            		JSONObject json = userFunction.loginUser(username, password);
+            		JSONObject json = userFunction.loginUser(username, password, getApplicationContext());
 					try {
 							String res = json.getString(KEY_SUCCESS); 
 							if(res.equals("OK")){
@@ -241,12 +282,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-            	}else{
-            		//No Login
-            		Message msgErr= mHandler.obtainMessage(1);
-                    msgErr.getData().putString("err","Incorrect username and/or password!");
-                    mHandler.sendMessage(msgErr);
-            	}
+            	
 	        }
            
     }
@@ -376,7 +412,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	        String user_id = settings.getString("user_id",null);
 	        
         	UserFunctions userFunction = new UserFunctions();
-			JSONArray json = userFunction.getSectors(token, user_id);
+			JSONArray json = userFunction.getSectors(token, user_id, getApplicationContext());
 			Log.d("length", String.valueOf(json.length()));
 			
 			String str = json.toString();
@@ -441,7 +477,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
  	        String user_id = settings.getString("user_id",null);
  	        
          	UserFunctions userFunction = new UserFunctions();
- 			JSONArray json = userFunction.getCategories(token, user_id);
+ 			JSONArray json = userFunction.getCategories(token, user_id, getApplicationContext());
  			Log.d("length", String.valueOf(json.length()));
  			
  			String str = json.toString();
@@ -503,7 +539,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	        String user_id = settings.getString("user_id",null);
 	        
         	UserFunctions userFunction = new UserFunctions();
-			JSONArray json = userFunction.getEntities(token, user_id);
+			JSONArray json = userFunction.getEntities(token, user_id, getApplicationContext());
 			Log.d("length", String.valueOf(json.length()));
 			
 			String str = json.toString();

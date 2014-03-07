@@ -60,6 +60,8 @@ public class SyncService extends Service {
     //flag for Internet connection status
     Boolean isInternetPresent = false;
     Timer timer;
+    SharedPreferences prefs;
+    String delete_after_sync;
     @Override
     public IBinder onBind(Intent arg0) {
           return null;
@@ -78,7 +80,9 @@ public class SyncService extends Service {
           //}else{
           	check_token = new checkToken().execute();
          // }
-          
+        prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    	delete_after_sync = prefs.getString("delete_after_export",null);
+
   		int delay = 3000; // delay for 1 sec. 
   		int period = 1000; // repeat every 10 sec. 
   		
@@ -223,7 +227,7 @@ public class SyncService extends Service {
 		 	String file = ppath;
 	 		Cipher cipher;
 			try {
-				cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
+				cipher = Encryption.createCipher(Cipher.DECRYPT_MODE, getApplicationContext());
 				Encryption.applyCipher(file, file+"_", cipher);
 			}catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -289,7 +293,7 @@ public class SyncService extends Service {
 		 		String file = ppath;
 		 		Cipher cipher;
 				try {
-					cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
+					cipher = Encryption.createCipher(Cipher.DECRYPT_MODE, getApplicationContext());
 					Encryption.applyCipher(file, file+"_", cipher);
 				}catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -396,7 +400,7 @@ public class SyncService extends Service {
     	    
         	UserFunctions userFunction = new UserFunctions();
         	Log.d("j", String.valueOf(ppath));
-			JSONObject json = userFunction.updateObject(token, user_id, ptitle, psequence, preportid, ptype, optype, pid, pdate, ppath);
+			JSONObject json = userFunction.updateObject(token, user_id, ptitle, psequence, preportid, ptype, optype, pid, pdate, ppath, getApplicationContext());
 		
 			try {
 				String res = json.getString(KEY_SUCCESS); 
@@ -443,7 +447,7 @@ public class SyncService extends Service {
     	    Log.d("ptype", ptype);
         	
     	    UserFunctions userFunction = new UserFunctions();
-			JSONObject json = userFunction.newObject(token, user_id, ptitle, psequence, preportid, ptype, optype, pid, pdate, ppath);
+			JSONObject json = userFunction.newObject(token, user_id, ptitle, psequence, preportid, ptype, optype, pid, pdate, ppath, getApplicationContext());
 			
 			try {
 				String res = json.getString(KEY_SUCCESS); 
@@ -470,7 +474,7 @@ public class SyncService extends Service {
 						String file = ppath;
 				 		Cipher cipher;
 						try {
-							cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+							cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE, getApplicationContext());
 							Encryption.applyCipher(file, file+"_", cipher);
 						}catch (Exception e) {
 							// TODO Auto-generated catch block
@@ -518,7 +522,7 @@ public class SyncService extends Service {
     	    String description = params[0].description;;
     	    int rid = params[0].rid;
         	UserFunctions userFunction = new UserFunctions();
-			JSONObject json = userFunction.newReport(token, user_id, title, issue, sector, entity, lat, lon, date, description);
+			JSONObject json = userFunction.newReport(token, user_id, title, issue, sector, entity, lat, lon, date, description, getApplicationContext());
 			Log.d("Values passed", "Token: "+token+" user id: "+user_id+" title "+title+" issue "+issue+" sector "+sector+" entity "+entity+" lat "+lat+" lon "+lon+" date "+date+" description "+description);
 			try {
 				String res = json.getString(KEY_SUCCESS); 
@@ -577,7 +581,7 @@ public class SyncService extends Service {
     	    int rid = params[0].rid;
     	    int serverID = params[0].serverID;
         	UserFunctions userFunction = new UserFunctions();
-			JSONObject json = userFunction.updateReport(token, user_id, title, issue, sector, entity, lat, lon, date, description, String.valueOf(serverID));
+			JSONObject json = userFunction.updateReport(token, user_id, title, issue, sector, entity, lat, lon, date, description, String.valueOf(serverID), getApplicationContext());
 			
 			try {
 				String res = json.getString(KEY_SUCCESS); 
@@ -633,7 +637,7 @@ public class SyncService extends Service {
 				*/
 	        }else{
 		        UserFunctions userFunction = new UserFunctions();
-		        JSONObject json = userFunction.checkTokenValidity(user_id, token);
+		        JSONObject json = userFunction.checkTokenValidity(user_id, token, getApplicationContext());
 		        
 		        try{
 		        	String res = json.getString(KEY_SUCCESS); 
@@ -677,7 +681,7 @@ public class SyncService extends Service {
     	   
     	    
         	UserFunctions userFunction = new UserFunctions();
-			JSONObject json = userFunction.newEntity(entityName, serverID, token, user_id, date, String.valueOf(esequence));
+			JSONObject json = userFunction.newEntity(entityName, serverID, token, user_id, date, String.valueOf(esequence), getApplicationContext());
 			Log.d("Values passed", "Entity: "+entityName+" ServerID : "+serverID+" Date: "+date+" Sequence: "+String.valueOf(esequence));
 			try {
 				String res = json.getString(KEY_SUCCESS); 
@@ -726,7 +730,7 @@ public class SyncService extends Service {
     	    int entityid = params[0].entityid;
     	    int entity_object_id = params[0].entity_object_id;
         	UserFunctions userFunction = new UserFunctions();
-			JSONObject json = userFunction.updateEntity(entityName, serverID, token, user_id, entity_object_id);
+			JSONObject json = userFunction.updateEntity(entityName, serverID, token, user_id, entity_object_id, getApplicationContext());
 			Log.d("Values passed", "Entity: "+entityName+" ServerID : "+serverID);
 			try {
 				String res = json.getString(KEY_SUCCESS); 
@@ -797,7 +801,6 @@ public class SyncService extends Service {
 				timer.cancel();
 			}
 			this.stopSelf();
-			
 		}
 	}
 }

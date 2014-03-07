@@ -68,8 +68,8 @@ public class ProjectsActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
         
-        TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
-        title2.setTextColor(getResources().getColor(R.color.soft_purple));
+        //TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+        //title2.setTextColor(getResources().getColor(R.color.soft_purple));
 	     
         
         mListView = (ListView)findViewById(R.id.projectslist);

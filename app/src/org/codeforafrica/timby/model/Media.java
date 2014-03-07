@@ -437,7 +437,6 @@ public class Media {
    
     public static Bitmap getThumbnail(Context context, Media media, Project project) 
     {
-    	    	
     	ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (EncryptionService.class.getName().equals(service.service.getClassName())) {
@@ -465,7 +464,7 @@ public class Media {
                 String file = filename;
 		 		Cipher cipher;
 				try {
-					cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
+					cipher = Encryption.createCipher(Cipher.DECRYPT_MODE, context);
 					Encryption.applyCipher(file, dest, cipher);
 				}catch (Exception e) {
 					// TODO Auto-generated catch block

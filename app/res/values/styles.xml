@@ -1,7 +1,29 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <style name="MyCustomTheme" parent="Theme.storymakerstyle">
+    
+	<style name="MyCustomTheme" parent="CustomUpIcon">
+	<item name="android:actionBarStyle">@style/MyCustomTheme.ActionBarStyle</item>
+	<item name="actionBarStyle">@style/MyCustomTheme.ActionBarStyle</item>
+	<item name="actionMenuTextColor">@color/soft_purple</item>
+    <item name="android:actionMenuTextColor">@color/soft_purple</item>
+    <item name="@android:attr/actionBarTabTextStyle">@style/TabStyle</item>
+	</style>
+	
+	<style name="TabStyle" parent="android:Widget.Holo.Light.ActionBar.TabText.Inverse">
+      <item name="android:textColor">@color/soft_purple</item>
+	</style>
+	
+	<style name="MyCustomTheme.ActionBarStyle" parent="Widget.Sherlock.Light.ActionBar">
+	<item name="android:titleTextStyle">@style/MyCustomTheme.ActionBar.TitleTextStyle</item>
+	<item name="titleTextStyle">@style/MyCustomTheme.ActionBar.TitleTextStyle</item>
+	</style>
+	
+	<style name="MyCustomTheme.ActionBar.TitleTextStyle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">
+	<item name="android:textColor">@color/soft_purple</item>
+	</style>
+	
+    <style name="CustomUpIcon" parent="Theme.storymakerstyle">
     <item name="android:homeAsUpIndicator">@drawable/ic_home_enabled</item>
+    <item name="homeAsUpIndicator">@drawable/ic_home_enabled</item>
      <item name="windowContentOverlay">@null</item>
     <item name="android:windowContentOverlay">@null</item>
     </style>

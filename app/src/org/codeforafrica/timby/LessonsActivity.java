@@ -1,6 +1,5 @@
 package org.codeforafrica.timby;
 
-import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.lessons.LessonListView;
 import org.codeforafrica.timby.lessons.WebViewSetupJB;
 
@@ -8,10 +7,8 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +16,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,12 +27,10 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings.PluginState;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.analytics.tracking.android.EasyTracker;
 
 public class LessonsActivity extends BaseActivity implements ActionBar.TabListener {
 
@@ -52,7 +49,6 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
     LessonListView mListView;
     
     @Override
-    @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
      
         
@@ -60,16 +56,11 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
            
         setContentView(R.layout.activity_lessons);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
-       
-        TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
-        title2.setTextColor(getResources().getColor(R.color.soft_purple));
         
     	mListView = new LessonListView(this, this);
         
         LessonSectionFragment fLessons = new LessonSectionFragment();
         fLessons.setListView(mListView);
-        mListView.setBackgroundColor(getResources().getColor(R.color.light_cream));
         
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
@@ -82,7 +73,6 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
         // When swiping between different sections, select the corresponding tab.
         // We can also use ActionBar.Tab#select() to do this if we have a reference to the
         // Tab.
@@ -106,10 +96,11 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
         
         
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.activity_lessons, menu);
+        
         return true;
     }
 
@@ -219,8 +210,8 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                //case 0: return getString(R.string.title_lessons_lessons).toUpperCase();
-                //case 1: return getString(R.string.title_lessons_glossary).toUpperCase();
+                case 0: return getString(R.string.title_lessons_lessons).toUpperCase();
+                case 1: return getString(R.string.title_lessons_glossary).toUpperCase();
             }
             return null;
         }
@@ -240,7 +231,7 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
         
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                Bundle savedInstanceState) {
         	
         	mWebView = new WebView(getActivity());
         	mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -355,15 +346,5 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
 
 	        return super.onKeyDown(keyCode, event);
 	    }
-	 @Override
-	  public void onStart() {
-	    super.onStart();
-	    EasyTracker.getInstance(this).activityStart(this);
-	  }
 
-	  @Override
-	  public void onStop() {
-	    super.onStop();
-	    EasyTracker.getInstance(this).activityStop(this);
-	  }
 }

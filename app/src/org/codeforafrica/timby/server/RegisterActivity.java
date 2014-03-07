@@ -49,7 +49,7 @@ public class RegisterActivity extends Activity {
 				String username = inputUsername.getText().toString();
 				String password = inputPassword.getText().toString();
 				UserFunctions userFunction = new UserFunctions();
-				JSONObject json = userFunction.registerUser(username, password);
+				JSONObject json = userFunction.registerUser(username, password, getApplicationContext());
 				
 				// check for login response
 				try {

@@ -138,8 +138,8 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
             
         }*/
         	actionBar.setTitle("Add Caption");
-        	TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
-            title2.setTextColor(getResources().getColor(R.color.soft_purple));
+       // 	TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+       //     title2.setTextColor(getResources().getColor(R.color.soft_purple));
         // For each of the sections in the app, add a tab to the action bar.
         //	actionBar.addTab(actionBar.newTab().setText("Media List").setTabListener(this));
         // actionBar.addTab(actionBar.newTab().setText(R.string.tab_order).setTabListener(this));

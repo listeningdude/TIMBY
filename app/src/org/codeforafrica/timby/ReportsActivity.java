@@ -39,6 +39,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +59,6 @@ public class ReportsActivity extends BaseActivity {
 	ProgressDialog pDialog;
 	getThumbnail get_thumbnail=null;
     @Override
-    @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projects);
@@ -67,9 +67,10 @@ public class ReportsActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
          
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
-        getSupportActionBar().setTitle("View Reports");
-        TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
-        title2.setTextColor(getResources().getColor(R.color.soft_purple));
+        //getSupportActionBar().setTitle("View Reports");
+
+        //TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+        //title2.setTextColor(getResources().getColor(R.color.soft_purple));
 	     
         
         mListView = (ListView)findViewById(R.id.projectslist);
@@ -77,8 +78,8 @@ public class ReportsActivity extends BaseActivity {
 		pDialog.setMessage("Getting thumbnails...");
 		pDialog.setCancelable(false);
 		pDialog.show(); 
-        */
         
+        */
         //Create decryption folder
         File mThumbsDir = new File(Environment.getExternalStorageDirectory(), AppConstants.TAG+"/decrypts");
 	    if (!mThumbsDir.exists()) {
@@ -113,6 +114,7 @@ public class ReportsActivity extends BaseActivity {
 		             }
 		        } 
 		    }, delay, period); 
+		
     }
     void DeleteRecursive(File fileOrDirectory) {
         if (fileOrDirectory.isDirectory())

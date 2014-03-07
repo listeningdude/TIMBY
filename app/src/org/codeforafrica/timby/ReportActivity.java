@@ -99,15 +99,9 @@ OnItemLongClickListener{
         
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
-         
-        ViewGroup actionBar = (ViewGroup) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar", "id", "android"));
-        View v = actionBar.getChildAt(0);
-        ActionBar.LayoutParams p = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        p.gravity= Gravity.CENTER;
-        v.setLayoutParams(p);
-        
-        TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
-        title2.setTextColor(getResources().getColor(R.color.soft_purple));
+      
+        //TextView title2 = (TextView) getWindow().getDecorView().findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+        //title2.setTextColor(getResources().getColor(R.color.soft_purple));
         
         //
         images = (RelativeLayout)findViewById(R.id.images);

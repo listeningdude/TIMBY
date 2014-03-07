@@ -124,7 +124,7 @@ public class Export2SDService extends Service {
 						 		//Decrypt file
 						 		Cipher cipher;
 								try {
-									cipher = Encryption.createCipher(Cipher.DECRYPT_MODE);
+									cipher = Encryption.createCipher(Cipher.DECRYPT_MODE, getApplicationContext());
 									Encryption.applyCipher(file, file+"_", cipher);
 								}catch (Exception e) {
 									// TODO Auto-generated catch block
@@ -170,25 +170,32 @@ public class Export2SDService extends Service {
 			//Now create new zip
 			zipFileAtPath(ext, String.valueOf(getSD())+"/timby.zip");
 			
-			/*
-			//encrypt zip file
-			String file = String.valueOf(getSD())+"/timby.zip";
 			
-			Cipher cipher;
-			try {
-				cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
-				Encryption.applyCipher(file, file+"_", cipher);
-			}catch (Exception e) {
-				// TODO Auto-generated catch block
-				Log.e("Encryption error", e.getLocalizedMessage());
-				e.printStackTrace();
-			}
-			//Then delete original file
-			File oldfile = new File(file);
-			oldfile.delete();
-			//Then remove _ on encrypted file
-			File newfile = new File(file+"_");
-			newfile.renameTo(new File(file));*/
+			
+			//encrypt zip file
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			
+	    	String encrypt_zip_files = prefs.getString("encrypt_zip_files",null);
+	    	if(encrypt_zip_files.equals("1")){
+	    		String file = String.valueOf(getSD())+"/timby.zip";
+				
+				Cipher cipher;
+				try {
+					cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE, getApplicationContext());
+					Encryption.applyCipher(file, file+"_", cipher);
+				}catch (Exception e) {
+					// TODO Auto-generated catch block
+					Log.e("Encryption error", e.getLocalizedMessage());
+					e.printStackTrace();
+				}
+				//Then delete original file
+				File oldfile = new File(file);
+				oldfile.delete();
+				//Then remove _ on encrypted file
+				File newfile = new File(file+"_");
+				newfile.renameTo(new File(file));
+	    	}
+			
 			
 			//Re-encrypt everything
 			reEncrypt_everything();
@@ -221,7 +228,7 @@ public class Export2SDService extends Service {
 					 		String file = path;
 					 		Cipher cipher;
 							try {
-								cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
+								cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE, getApplicationContext());
 								Encryption.applyCipher(file, file+"_", cipher);
 							}catch (Exception e) {
 								// TODO Auto-generated catch block

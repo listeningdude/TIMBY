@@ -26,6 +26,10 @@ public class SettingsActivity extends Activity implements OnClickListener{
     CheckBox checkEncrypt;
     Button btnSave;
     
+    EditText eTAPIKey;
+    EditText eTUsername;
+    EditText eTPassword;
+    
     public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     	setContentView(R.layout.activity_settings);
@@ -38,14 +42,18 @@ public class SettingsActivity extends Activity implements OnClickListener{
     	eTEncryptionKey = (EditText)findViewById(R.id.eTEncryptionKey);
     	eTAPI = (EditText)findViewById(R.id.eTAPI);
     	eTHA = (EditText)findViewById(R.id.eTHA);
-
+    	
+    	eTAPIKey = (EditText)findViewById(R.id.eTAPIKey);
+    	eTUsername = (EditText)findViewById(R.id.eTUsername);
+    	eTPassword = (EditText)findViewById(R.id.eTPassword);
+    	
 	    loginDialog();
 	    
 	    btnSave.setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
+				saveSettings();
 			}
 	    });
     }
@@ -58,6 +66,37 @@ public class SettingsActivity extends Activity implements OnClickListener{
 	    dialog.setTitle("Unlock settings screen");
 	    dialog.setCancelable(false);
 	    dialog.show();
+    }
+    public void saveSettings(){
+    	 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+         Editor edit = settings.edit(); 
+        
+         if(checkEncrypt.isChecked()){
+             edit.putString("encrypt_zip_files", "1");
+         }else{
+        	 edit.putString("encrypt_zip_files", "0");
+         }
+         if(checkDeleteSync.isChecked()){
+             edit.putString("delete_after_sync", "1");
+         }else{
+        	 edit.putString("delete_after_sync", "0");
+         }
+         if(checkDeleteExport.isChecked()){
+             edit.putString("delete_after_export", "1");
+         }else{
+        	 edit.putString("delete_after_export", "0");
+         }
+             	
+         edit.putString("username", eTUsername.getText().toString());
+         edit.putString("password", eTPassword.getText().toString());
+         edit.putString("api_key", eTAPIKey.getText().toString());
+         edit.putString("maximum_video_length", eTVid.getText().toString());
+         edit.putString("encryption_key", eTEncryptionKey.getText().toString());
+         edit.putString("api_base_url", eTAPI.getText().toString());
+         edit.putString("hockey_app_id", eTHA.getText().toString());
+         edit.commit();       
+    	Toast.makeText(getApplicationContext(), "Settings have been saved!", Toast.LENGTH_LONG).show();
+		finish();
     }
     public void showSettings(){
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -76,6 +115,15 @@ public class SettingsActivity extends Activity implements OnClickListener{
     	if(delete_after_export.equals("1")){
     		checkDeleteExport.setChecked(true);
     	}
+    	
+    	String username = prefs.getString("username",null);
+    	eTUsername.setText(username);
+    	
+    	String password = prefs.getString("password",null);
+    	eTPassword.setText(password);
+    	
+    	String api_key = prefs.getString("api_key",null);
+    	eTAPIKey.setText(api_key);
     	
     	String maximum_video_length = prefs.getString("maximum_video_length",null);
     	eTVid.setText(maximum_video_length);
@@ -100,7 +148,6 @@ public class SettingsActivity extends Activity implements OnClickListener{
         		 Toast.makeText(getApplicationContext(), "incorrect code", Toast.LENGTH_LONG).show();
         		 finish();
         	}else{
-        		 
         		 showSettings();
         	}
             break;

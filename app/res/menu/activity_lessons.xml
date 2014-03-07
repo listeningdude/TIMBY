@@ -3,5 +3,6 @@
     <item android:id="@+id/menu_update"
         android:title="@string/menu_update"
         android:orderInCategory="1"
-        android:showAsAction="always" />    
+        android:showAsAction="always"
+        />    
 </menu>
