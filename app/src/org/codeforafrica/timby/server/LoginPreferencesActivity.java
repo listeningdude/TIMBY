@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import org.codeforafrica.timby.BaseActivity;
+import org.codeforafrica.timby.DefaultsActivity;
 import org.codeforafrica.timby.HomeActivity;
 import org.codeforafrica.timby.LessonsActivity;
 import org.codeforafrica.timby.R;
@@ -178,51 +179,51 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 
     	String encrypt_zip_files = prefs.getString("encrypt_zip_files",null);
     	if(encrypt_zip_files==null){
-    		editor.putString("encrypt_zip_files", "1");
+    		editor.putString("encrypt_zip_files", DefaultsActivity.encrypt_zip_files);
     	}
     	
     	String delete_after_sync = prefs.getString("delete_after_sync",null);
     	if(delete_after_sync==null){
-    		editor.putString("delete_after_sync", "0");
+    		editor.putString("delete_after_sync", DefaultsActivity.delete_after_sync);
     	}
     	
     	String delete_after_export = prefs.getString("delete_after_export",null);
     	if(delete_after_export==null){
-    		editor.putString("delete_after_export", "0");
+    		editor.putString("delete_after_export", DefaultsActivity.delete_after_export);
     	}
     	
     	String maximum_video_length = prefs.getString("maximum_video_length",null);
     	if(maximum_video_length==null){
-    		editor.putString("maximum_video_length", "60");
+    		editor.putString("maximum_video_length", DefaultsActivity.maximum_video_length);
     	}
     	
     	String encryption_key = prefs.getString("encryption_key",null);
     	if(encryption_key==null){
-    		editor.putString("encryption_key", "test");
+    		editor.putString("encryption_key", DefaultsActivity.encryption_key);
     	}
     	
     	String api_base_url = prefs.getString("api_base_url",null);
     	if(api_base_url==null){
-    		editor.putString("api_base_url", "http://uat.circle.co.ke/timbyweb/server/public/api");
+    		editor.putString("api_base_url", DefaultsActivity.api_base_url);
     	}
     	
     	String hockey_app_id = prefs.getString("hockey_app_id",null);
     	if(hockey_app_id==null){
-    		editor.putString("hockey_app_id", "a9918f698864aa1601d6617df3dfc048");
+    		editor.putString("hockey_app_id", DefaultsActivity.hockey_app_id);
     	}
     	String username = prefs.getString("username",null);
     	if(username==null){
-    		editor.putString("username", "test");
+    		editor.putString("username", DefaultsActivity.username);
     	}
     	
     	String password = prefs.getString("password",null);
     	if(password==null){
-    		editor.putString("password", "timbytest");
+    		editor.putString("password", DefaultsActivity.password);
     	}
     	
     	String api_key = prefs.getString("api_key",null);
     	if(api_key==null){
-    		editor.putString("api_key", "6b239b3568b209");
+    		editor.putString("api_key", DefaultsActivity.api_key);
     	}
 		editor.commit();
     }
