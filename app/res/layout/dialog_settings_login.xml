@@ -32,13 +32,6 @@
 
           <!-- Login button -->
 
-          <CheckBox
-              android:id="@+id/showPassword"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginBottom="15dp"
-              android:text="Show unlock code" />
-
           <Button
               android:id="@+id/btnLogin"
               style="@style/button_text"
