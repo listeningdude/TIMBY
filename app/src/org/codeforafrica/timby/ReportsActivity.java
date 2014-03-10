@@ -335,7 +335,7 @@ public class ReportsActivity extends BaseActivity {
         	    if(report.getSector().equals("0")){
         	    	tv.setText("Sector not set");
         	    }else{
-        	    tv.setText(jsonArray2.getString(Integer.parseInt(report.getSector())));
+        	    tv.setText(jsonArray2.getString(Integer.parseInt(report.getSector())-1));
         	    }
         	}catch (Exception e) {
         	    e.printStackTrace();
@@ -348,7 +348,7 @@ public class ReportsActivity extends BaseActivity {
         	    if(report.getIssue().equals("0")){
         	    	tv.setText("Category not set");
         	    }else{
-        	    tv.setText(jsonArray2.getString(Integer.parseInt(report.getIssue())));
+        	    tv.setText(jsonArray2.getString(Integer.parseInt(report.getIssue())-1));
         	    }
         	}catch (Exception e) {
         	    e.printStackTrace();

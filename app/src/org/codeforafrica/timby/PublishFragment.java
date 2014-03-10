@@ -384,6 +384,11 @@ public class PublishFragment extends Fragment {
         
         mActivity.mMPM.mProject.save();
         //mActivity.startActivity(new Intent(mActivity, ReportsActivity.class));
+    	int quickstory = getArguments().getInt("quickstory");
+
+        if(quickstory==1){
+        	showLogin();
+        }
         mActivity.finish();
     }
     

@@ -21,6 +21,7 @@ public class SettingsActivity extends Activity implements OnClickListener{
     EditText eTAPI;
     EditText eTEncryptionKey;
     EditText eTVid;
+    EditText eTUnlockCode;
     CheckBox checkDeleteExport;
     CheckBox checkDeleteSync;
     CheckBox checkEncrypt;
@@ -42,6 +43,7 @@ public class SettingsActivity extends Activity implements OnClickListener{
     	eTEncryptionKey = (EditText)findViewById(R.id.eTEncryptionKey);
     	eTAPI = (EditText)findViewById(R.id.eTAPI);
     	eTHA = (EditText)findViewById(R.id.eTHA);
+    	eTUnlockCode = (EditText)findViewById(R.id.eTUnlockCode);
     	
     	eTAPIKey = (EditText)findViewById(R.id.eTAPIKey);
     	eTUsername = (EditText)findViewById(R.id.eTUsername);
@@ -137,6 +139,9 @@ public class SettingsActivity extends Activity implements OnClickListener{
     	String hockey_app_id = prefs.getString("hockey_app_id",null);
     	eTHA.setText(hockey_app_id);
     	
+    	String unlock_code = prefs.getString("unlock_code",null);
+    	eTUnlockCode.setText(unlock_code);
+    	
     }
     public void onClick(View v) {
         switch (v.getId()) {
@@ -144,7 +149,11 @@ public class SettingsActivity extends Activity implements OnClickListener{
         	dialog.dismiss();
         	EditText cE = (EditText)dialog.findViewById(R.id.code);
         	String code = cE.getText().toString(); 
-        	if(!code.equals("5565")){
+        	
+        	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        	String unlockCode = prefs.getString("unlock_code", DefaultsActivity.unlock_code);
+        	
+        	if(!code.equals(unlockCode)){
         		 Toast.makeText(getApplicationContext(), "incorrect code", Toast.LENGTH_LONG).show();
         		 finish();
         	}else{

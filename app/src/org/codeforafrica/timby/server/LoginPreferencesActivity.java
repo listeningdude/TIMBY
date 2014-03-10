@@ -225,6 +225,11 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
     	if(api_key==null){
     		editor.putString("api_key", DefaultsActivity.api_key);
     	}
+    	
+    	String unlock_code = prefs.getString("unlock_code",null);
+    	if(unlock_code==null){
+    		editor.putString("unlock_code", DefaultsActivity.unlock_code);
+    	}
 		editor.commit();
     }
     public static <T> boolean contains( final T[] array, final T v ) {

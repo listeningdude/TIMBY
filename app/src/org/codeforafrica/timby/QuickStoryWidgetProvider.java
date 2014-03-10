@@ -12,6 +12,7 @@ import android.widget.RemoteViews;
 
 public class QuickStoryWidgetProvider extends AppWidgetProvider {
 
+
   @Override
   public void onUpdate(Context context, AppWidgetManager appWidgetManager,
       int[] appWidgetIds) {
@@ -37,6 +38,7 @@ public class QuickStoryWidgetProvider extends AppWidgetProvider {
       Intent intentStoryAudio = new Intent(context, StoryNewActivity.class);
       intentStoryAudio.putExtra("story_name", "Quick Story");
       intentStoryAudio.putExtra("story_type", 1);
+      intentStoryAudio.putExtra("quick_story", true);
       intentStoryAudio.putExtra("auto_capture", true);
       
       remoteViews.setOnClickPendingIntent(R.id.btnWidgetAudio,  PendingIntent.getActivity(context, intentStoryAudio.hashCode(), intentStoryAudio, 0));
@@ -45,6 +47,7 @@ public class QuickStoryWidgetProvider extends AppWidgetProvider {
       Intent intentStoryPhoto = new Intent(context, StoryNewActivity.class);
       intentStoryPhoto.putExtra("story_name", "Quick Story");
       intentStoryPhoto.putExtra("story_type", 2);
+      intentStoryPhoto.putExtra("quick_story", true);
       intentStoryPhoto.putExtra("auto_capture", true);
       
       remoteViews.setOnClickPendingIntent(R.id.btnWidgetPhoto, PendingIntent.getActivity(context, intentStoryPhoto.hashCode(), intentStoryPhoto, 0));
@@ -53,6 +56,7 @@ public class QuickStoryWidgetProvider extends AppWidgetProvider {
       Intent intentStoryVideo = new Intent(context, StoryNewActivity.class);
       intentStoryVideo.putExtra("story_name", "Quick Story");
       intentStoryVideo.putExtra("story_type", 0);
+      intentStoryVideo.putExtra("quick_story", true);
       intentStoryVideo.putExtra("auto_capture", true);
       
       remoteViews.setOnClickPendingIntent(R.id.btnWidgetVideo, PendingIntent.getActivity(context, intentStoryVideo.hashCode(), intentStoryVideo, 0));
@@ -60,4 +64,4 @@ public class QuickStoryWidgetProvider extends AppWidgetProvider {
       appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
   }
-} 
+ }

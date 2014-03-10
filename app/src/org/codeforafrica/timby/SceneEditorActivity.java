@@ -64,7 +64,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
     private final static String CAPTURE_MIMETYPE_AUDIO = "audio/3gpp";
     public Fragment mFragmentTab0, mFragmentTab1, mLastTabFrag;
     public PublishFragment mPublishFragment;
-
+    public int quickstory;
     @Override
     @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +77,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
 
         int pid = intent.getIntExtra("pid", -1); //project id
 
+        quickstory = intent.getIntExtra("quickstory", quickstory);
         mSceneIndex = getIntent().getIntExtra("scene", 0);
         //Log.e("pid", String.valueOf(pid));
         if (pid != -1)
@@ -542,6 +543,7 @@ public class SceneEditorActivity extends EditorBaseActivity implements ActionBar
                     Bundle args = new Bundle();
                     args.putInt(PublishFragment.ARG_SECTION_NUMBER, tab.getPosition() + 1);
                 	args.putInt("layout",layout);
+                	args.putInt("quickstory", quickstory);
                 	mPublishFragment.setArguments(args);
                         
     

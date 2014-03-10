@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.model.Project;
+import org.codeforafrica.timby.model.Report;
 import org.codeforafrica.timby.model.Scene;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 public class StoryNewActivity extends BaseActivity {
 	int rid;
 	int storymode;
+	int quickstory;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,13 +23,37 @@ public class StoryNewActivity extends BaseActivity {
         rid = intent.getIntExtra("rid", -1);
         storymode = intent.getIntExtra("storymode", -1);
         
+        quickstory = intent.getIntExtra("quickstory", 0);
+        
         setContentView(R.layout.activity_new_story);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         
-        launchSimpleStory("", rid, storymode, true);  
+        launchSimpleStory("", rid, storymode, true, quickstory);  
     }
-    private void launchSimpleStory(String pName,  int pReport, int storyMode, boolean autoCapture) {
-        int clipCount = AppConstants.DEFAULT_CLIP_COUNT;
+    private int createReport() {
+      	
+      	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      	String currentdate = dateFormat.format(new Date());
+      	
+      	String pLocation = "0, 0";
+      	
+      	String title = "Captured at "+currentdate;
+      	
+      	Report report = new Report (getApplicationContext(), 0, title, "Sector is not set", "Issue is not set", "", "", pLocation, "0", currentdate);
+          
+        report.save();
+          
+        rid = report.getId();
+        
+        return rid;
+          
+        }
+    private void launchSimpleStory(String pName,  int pReport, int storyMode, boolean autoCapture, int quickstory) {
+        if(quickstory == 1){
+        	rid  = createReport();
+        }
+    	
+    	int clipCount = AppConstants.DEFAULT_CLIP_COUNT;
         
         Project project;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -56,6 +82,7 @@ public class StoryNewActivity extends BaseActivity {
         intent.putExtra("title", project.getTitle());
         intent.putExtra("pid", project.getId());
         intent.putExtra("scene", 0);
+        intent.putExtra("quickstory", quickstory);
         intent.putExtra("auto_capture", autoCapture);
         startActivity(intent);
         finish();
