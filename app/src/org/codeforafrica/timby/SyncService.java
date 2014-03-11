@@ -49,7 +49,7 @@ public class SyncService extends Service {
 	
 	createEntity create_Entity=null;	
 	updateEntity update_Entity=null;
-	
+	private ArrayList<Report> mListReports;
 		
  	Button done;
  	TextView log;
@@ -72,6 +72,8 @@ public class SyncService extends Service {
   	    
           showNotification("Syncing...");
           cd = new ConnectionDetector(getApplicationContext());
+        	mListReports = Report.getAllAsList(getApplicationContext());
+
         //get Internet status
         //  isInternetPresent = cd.isConnectingToInternet();
           
@@ -81,7 +83,7 @@ public class SyncService extends Service {
           	check_token = new checkToken().execute();
          // }
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-    	delete_after_sync = prefs.getString("delete_after_export",null);
+    	delete_after_sync = prefs.getString("delete_after_sync",null);
 
   		int delay = 3000; // delay for 1 sec. 
   		int period = 1000; // repeat every 10 sec. 
@@ -112,10 +114,24 @@ public class SyncService extends Service {
     	NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		nm.notify("service started", 0, notification);
 		}
+    public void deleteReports(){
+		for(int i = 0; i<mListReports.size(); i++){
+			if(mListReports.get(i)!=null){
+			 	mListReports.get(i).delete();
+			 	ArrayList<Project> mListProjects;
+				mListProjects = Project.getAllAsList(getApplicationContext(), i);
+			 	for (int j = 0; j < mListProjects.size(); j++) {
+					if(mListProjects.get(j)!=null){
+						mListProjects.get(j).delete();
+					}
+			 	}
+			}
+		}
+	}
+
     public void loopReports(){
-		ArrayList<Report> mListReports;
-		mListReports = Report.getAllAsList(this);
-		for (int i = 0; i < mListReports.size(); i++) {
+    	for (int i = 0; i < mListReports.size(); i++) {
+		 	if(mListReports.get(i)!=null){
 			Report report = mListReports.get(i);
 			String location = report.getLocation();
 			
@@ -167,6 +183,7 @@ public class SyncService extends Service {
 			 	update_Report = new updateReport();
 			 	update_Report.execute(params);		 
 			}
+		 	}
 		}
 	}
 	public void uploadEntities(int rid, int serverid){
@@ -797,6 +814,10 @@ public class SyncService extends Service {
 		if(tasks<1){
 			//End
 			showNotification("Syncing complete!");
+			if(delete_after_sync.equals("1")){
+				//delete all reports
+				deleteReports();
+			}
 			if(timer!=null){
 				timer.cancel();
 			}

@@ -49,8 +49,9 @@ public class StoryNewActivity extends BaseActivity {
           
         }
     private void launchSimpleStory(String pName,  int pReport, int storyMode, boolean autoCapture, int quickstory) {
-        if(quickstory == 1){
-        	rid  = createReport();
+        
+    	if(rid == -1){
+        	pReport  = createReport();
         }
     	
     	int clipCount = AppConstants.DEFAULT_CLIP_COUNT;

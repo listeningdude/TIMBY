@@ -159,7 +159,10 @@ public class Report {
         Log.d(TAG, "deleted report: " + id + ", rows deleted: " + count);
         // FIXME make sure 1 row updated
         
+        
+        
         //TODO should we also delete all media files associated with this report?
+        
     }
 
    

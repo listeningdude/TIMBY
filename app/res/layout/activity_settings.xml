@@ -20,14 +20,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Delete reports after sync"
-        android:visibility="gone" />
+        />
     
     <CheckBox
         android:id="@+id/checkDeleteExport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Delete reports after export to SD"
-        android:visibility="gone" />
+        />
 
  
 	<TextView

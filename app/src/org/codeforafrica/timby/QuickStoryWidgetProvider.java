@@ -29,16 +29,15 @@ public class QuickStoryWidgetProvider extends AppWidgetProvider {
       //remoteViews.setTextViewText(R.id.update, String.valueOf(number));
 
       Intent intentHome = new Intent(context, HomeActivity.class);
-      PendingIntent pendingIntentHome = PendingIntent.getActivity(context,
-    		  intentHome.hashCode(), intentHome, 0);
+      PendingIntent pendingIntentHome = PendingIntent.getActivity(context, intentHome.hashCode(), intentHome, 0);
       remoteViews.setOnClickPendingIntent(R.id.btnWidgetHome, pendingIntentHome);
       
       // Register an onClickListener
       
       Intent intentStoryAudio = new Intent(context, StoryNewActivity.class);
       intentStoryAudio.putExtra("story_name", "Quick Story");
-      intentStoryAudio.putExtra("story_type", 1);
-      intentStoryAudio.putExtra("quick_story", true);
+      intentStoryAudio.putExtra("storymode", 1);
+      intentStoryAudio.putExtra("quick_story", 1);
       intentStoryAudio.putExtra("auto_capture", true);
       
       remoteViews.setOnClickPendingIntent(R.id.btnWidgetAudio,  PendingIntent.getActivity(context, intentStoryAudio.hashCode(), intentStoryAudio, 0));
@@ -46,8 +45,8 @@ public class QuickStoryWidgetProvider extends AppWidgetProvider {
 
       Intent intentStoryPhoto = new Intent(context, StoryNewActivity.class);
       intentStoryPhoto.putExtra("story_name", "Quick Story");
-      intentStoryPhoto.putExtra("story_type", 2);
-      intentStoryPhoto.putExtra("quick_story", true);
+      intentStoryPhoto.putExtra("storymode", 2);
+      intentStoryPhoto.putExtra("quick_story", 1);
       intentStoryPhoto.putExtra("auto_capture", true);
       
       remoteViews.setOnClickPendingIntent(R.id.btnWidgetPhoto, PendingIntent.getActivity(context, intentStoryPhoto.hashCode(), intentStoryPhoto, 0));
@@ -55,8 +54,8 @@ public class QuickStoryWidgetProvider extends AppWidgetProvider {
 
       Intent intentStoryVideo = new Intent(context, StoryNewActivity.class);
       intentStoryVideo.putExtra("story_name", "Quick Story");
-      intentStoryVideo.putExtra("story_type", 0);
-      intentStoryVideo.putExtra("quick_story", true);
+      intentStoryVideo.putExtra("storymode", 0);
+      intentStoryVideo.putExtra("quick_story", 1);
       intentStoryVideo.putExtra("auto_capture", true);
       
       remoteViews.setOnClickPendingIntent(R.id.btnWidgetVideo, PendingIntent.getActivity(context, intentStoryVideo.hashCode(), intentStoryVideo, 0));

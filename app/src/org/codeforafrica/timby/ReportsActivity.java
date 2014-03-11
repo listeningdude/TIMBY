@@ -292,6 +292,14 @@ public class ReportsActivity extends BaseActivity {
         
     	report.delete();
     	
+		 	ArrayList<Project> mListProjects;
+			mListProjects = Project.getAllAsList(getApplicationContext(), report.getId());
+		 	for (int j = 0; j < mListProjects.size(); j++) {
+		 		if(mListProjects.get(j)!=null){
+					mListProjects.get(j).delete();
+				}
+		 	}
+ 
     	//should we delete report folders here too?
     }
     

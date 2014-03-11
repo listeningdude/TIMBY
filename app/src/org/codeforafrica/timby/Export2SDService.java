@@ -42,11 +42,16 @@ public class Export2SDService extends Service {
 	String data = "";
 	String ext;
 	int BUFFER = 2048;
-	
+	String delete_after_export;
+	SharedPreferences pref;
 	@Override
     public void onCreate() {
           super.onCreate();
           showNotification("Exporting to SD...");
+       
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+      	delete_after_export = pref.getString("delete_after_export",null);
+      	mListReports = Report.getAllAsList(getApplicationContext());
           new export2SD().execute();
 	}
 	private void showNotification(String message) {
@@ -205,11 +210,21 @@ public class Export2SDService extends Service {
 		
 	protected void onPostExecute(String file_url) {
 			showNotification("Exported Successfully!");
+			if(delete_after_export.equals("1")){
+				deleteReports();
+			}
 			endExporting();
 		}
 	}
+	public void deleteReports(){
+		for(int i = 0; i<mListReports.size(); i++){
+			if(mListReports.get(i)!=null){
+			 	mListReports.get(i).delete();
+			}
+		}
+	}
 	public void reEncrypt_everything(){
-		mListReports = Report.getAllAsList(getApplicationContext());
+		
 		 for (int i = 0; i < mListReports.size(); i++) {
 			 	if(mListReports.get(i)!=null){
 				 	Report report = mListReports.get(i);
