@@ -27,10 +27,6 @@
         <item>Select Issue</item>
         <item>Logging</item>
     </string-array>
-    <string-array name="entities">
-        <item>Select Issue</item>
-        <item>Logging</item>
-    </string-array>
     <string-array name="categories">
         <item>Illegal Permit</item>
         <item>Community Land Rights</item>

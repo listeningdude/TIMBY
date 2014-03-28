@@ -28,6 +28,9 @@ public class Decompress {
      FileInputStream fin = new FileInputStream(_zipFile); 
      ZipInputStream zin = new ZipInputStream(fin); 
      ZipEntry ze = null; 
+     
+     
+     
      while ((ze = zin.getNextEntry()) != null) { 
        Log.v("Decompress", "Unzipping " + ze.getName()); 
 
@@ -35,10 +38,15 @@ public class Decompress {
          _dirChecker(ze.getName()); 
        } else { 
          FileOutputStream fout = new FileOutputStream(_location + ze.getName()); 
-         for (int c = zin.read(); c != -1; c = zin.read()) { 
-           fout.write(c); 
-         } 
-
+         //for (int c = zin.read(); c != -1; c = zin.read()) { 
+         //  fout.write(c); 
+         //} 
+         byte[] buffer = new byte[1024];
+         int length;
+         while ((length = zin.read(buffer))>0) {
+        	 fout.write(buffer, 0, length);
+         }
+         
          zin.closeEntry(); 
          fout.close(); 
        } 

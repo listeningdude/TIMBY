@@ -172,11 +172,11 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 					//if not start download service and toast
 					//else start activity
 				if(isServiceRunning(VideoTutorialsService.class)){
-					Toast.makeText(getApplicationContext(), "Currently downloading lessons..", Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), "Currently downloading lessons...", Toast.LENGTH_LONG).show();
 				}else{
 					File mFileExternDir = new File(Environment.getExternalStorageDirectory(), "TIMBY_Tutorials");
 				    if (!mFileExternDir.exists()) {
-				            Toast.makeText(getApplicationContext(), "Lessons have not been downloaded yet!", Toast.LENGTH_LONG).show();
+				            Toast.makeText(getApplicationContext(), "No lessons found! Downloading...", Toast.LENGTH_LONG).show();
 				            startService(new Intent(HomeActivity.this,VideoTutorialsService.class));
 				    }else{
 						Intent i = new Intent(getApplicationContext(),VideoTutorials.class);

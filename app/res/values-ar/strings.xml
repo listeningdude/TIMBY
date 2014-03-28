@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="app_name">StoryMaker</string>
+  <string name="app_name">TIMBY</string>
   <string name="title_projects">المشاريع</string>
   <string name="title_lessons">الدروس</string>
   <string name="action_publish">نشر</string>
@@ -10,7 +10,6 @@
   <string name="menu_lessons">الدروس</string>
   <string name="menu_glossary">مسرد المصطلحات</string>
   <string name="menu_contacts">المعارف</string>
-  <string name="menu_settings">إعدادات</string>
   <string name="menu_archive">الأرشيف</string>
   <string name="menu_add_media">إضافة</string>
   <string name="menu_capture_media">تسجيل</string>

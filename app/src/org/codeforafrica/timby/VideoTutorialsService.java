@@ -19,9 +19,13 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.IBinder;
+import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 
 public class VideoTutorialsService extends Service 
@@ -32,7 +36,7 @@ public class VideoTutorialsService extends Service
 
 	 public void onCreate() {
          super.onCreate();
-         showNotification("Downloading tutorials...");
+         //showNotification("Downloading tutorials...");
     //check if folder is created
     //if not create
       //Download tutorials
@@ -43,14 +47,19 @@ public class VideoTutorialsService extends Service
     mFileExternDir = new File(Environment.getExternalStorageDirectory(), "TIMBY_Tutorials");
     if (!mFileExternDir.exists()) {
         if (!mFileExternDir.mkdirs()) {
-            Log.e("TIMBY_Tutorials: ", "Problem creating file");
+            Log.e("TIMBY_Tutorials: ", "Problem creating file!");
             Toast.makeText(getApplicationContext(), "Problem creating folder", Toast.LENGTH_LONG).show();
             access_denied = true;
         }
+        File thumbsDir = new File(Environment.getExternalStorageDirectory(), "TIMBY_Tutorials/thumbs");
+        if(!thumbsDir.mkdirs()){
+        	Log.e("TIMBY_Tutorials: ", "Problem thumbnails folder!");
+        }
+        
     }
     
     File[] contents = mFileExternDir.listFiles();
-    if((contents.length==0)&&(access_denied==false)){
+    if((contents.length<2)&&(access_denied==false)){
     	new DownloadFileFromURL().execute(file_url); 	
     }
         
@@ -118,7 +127,12 @@ class DownloadFileFromURL extends AsyncTask<String, String, String> {
                 // publishing the progress....
                 // After this onProgressUpdate will be called
                 publishProgress("" + (int) ((total * 100) / lenghtOfFile));
-
+                
+                //FIXME: download progress bar causes error
+                
+                //int progress = (int) ((total * 100) / lenghtOfFile);
+                //showProgressNotification(progress);
+                
                 // writing data to file
                 output.write(data, 0, count);
             }
@@ -142,6 +156,34 @@ class DownloadFileFromURL extends AsyncTask<String, String, String> {
        new unzip().execute();
     }
 }
+
+private void showProgressNotification(final int incr){
+	final NotificationManager mNotifyManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+	final Builder mBuilder = new NotificationCompat.Builder(this);
+	mBuilder.setContentTitle("Tutorials download")
+	    .setContentText("Download in progress")
+	    .setSmallIcon(R.drawable.timby_hold_icon);
+	// Start a lengthy operation in a background thread
+	new Thread(
+	    new Runnable() {
+	        @Override
+	        public void run() {
+	         mBuilder.setProgress(100, (int) incr, false);
+	         // Displays the progress bar for the first time.
+	         mNotifyManager.notify(0, mBuilder.build());
+	                 
+	            
+	            // When the loop is finished, updates the notification
+	            mBuilder.setContentText("Download complete")
+	            // Removes the progress bar
+	                    .setProgress(0,0,false);
+	            mNotifyManager.notify(1, mBuilder.build());
+	        }
+	    }
+	// Starts the thread by calling the run() method in its Runnable
+	).start();
+}
+
 class unzip extends AsyncTask<String, String, String> {
 	@Override
 	protected void onPreExecute() {
@@ -166,6 +208,7 @@ class unzip extends AsyncTask<String, String, String> {
 		new generate_thumbs().execute();
 	}
 }
+
 class generate_thumbs extends AsyncTask<String, String, String> {
 	@Override
 	protected void onPreExecute() {
@@ -175,19 +218,25 @@ class generate_thumbs extends AsyncTask<String, String, String> {
 	@Override
 	protected String doInBackground(String... arg0) {
 		File file[] = mFileExternDir.listFiles();
+		int j = 0;
 		for (int i=0; i < file.length; i++)
 		{
-			String filepath = file[i].getPath();
-			String filenum = file[i].toString();
-			try {
-				Bitmap videoThumb = MediaUtils.getVideoFrame(new File(filepath).getCanonicalPath(), -1);
-				String filename = Environment.getExternalStorageDirectory()+"/TIMBY_Tutorials/thumbs/"+filenum+".jpg";
-	            FileOutputStream out = new FileOutputStream(filename);
-	            videoThumb.compress(Bitmap.CompressFormat.JPEG, 50, out);
-	            out.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			String filepath = file[i].getAbsolutePath();
+			if ( filepath.endsWith(".mp4")){
+				String[] thumbParts = file[i].toString().split("mp4");
+				String thumbName = thumbParts[0]+"jpg";
+				try {
+					//Bitmap videoThumb = ThumbnailUtils.createVideoThumbnail(filepath,  MediaStore.Images.Thumbnails.MINI_KIND);
+					Bitmap videoThumb = MediaUtils.getVideoFrame(new File(filepath).getCanonicalPath(), 100);
+					String filename = Environment.getExternalStorageDirectory()+"/TIMBY_Tutorials/thumbs/"+thumbName;
+		            FileOutputStream out = new FileOutputStream(filename);
+		            videoThumb.compress(Bitmap.CompressFormat.JPEG, 50, out);
+		            out.close();
+		            j++;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}		
 		return null;
@@ -195,6 +244,11 @@ class generate_thumbs extends AsyncTask<String, String, String> {
 	@Override
     protected void onPostExecute(String file_url) {		
 		showNotification("Complete!");
+		endService();
 	}
 }
+
+	public void endService(){
+		this.stopSelf();
+	}
 }
