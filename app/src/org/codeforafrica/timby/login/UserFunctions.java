@@ -27,6 +27,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class UserFunctions {
@@ -120,12 +121,20 @@ public class UserFunctions {
 		params.add(new BasicNameValuePair("long", lon));
 	
 		params.add(new BasicNameValuePair("key", getAPIKey(ctx)));
-
+		
+		params.add(new BasicNameValuePair("imei", getIMEI(ctx)));
 		// getting JSON Object
 		JSONObject json = jsonParser.getJSONFromUrl(getPath(createreportURL,ctx), params);
 		// return json
 		return json;
 	}
+	public String getIMEI(Context context){
+
+	    TelephonyManager mngr = (TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE); 
+	    String imei = mngr.getDeviceId();
+	    return imei;
+	}
+
 	public JSONArray getSectors(String token, String user_id, Context ctx){
 		// Building Parameters
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -147,8 +156,6 @@ public class UserFunctions {
 	}
 	public JSONObject updateReport(String token, String user_id, String title,
 			String issue, String sector, String entity, String lat, String lon,	String date, String description, String serverID, Context ctx) {
-			// TODO Auto-generated method stub
-			// Building Parameters
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("token", token));
 		
@@ -173,7 +180,8 @@ public class UserFunctions {
 			params.add(new BasicNameValuePair("key", getAPIKey(ctx)));
 			
 			params.add(new BasicNameValuePair("report_id", serverID));
-
+			
+			params.add(new BasicNameValuePair("imei", getIMEI(ctx)));
 			// getting JSON Object
 			JSONObject json = jsonParser.getJSONFromUrl(getPath(updatereportURL,ctx), params);
 			// return json
@@ -202,11 +210,9 @@ public class UserFunctions {
 	public JSONObject newObject(String token, String user_id, String ptitle, String psequence, String preportid, String ptype, String optype, String pid, String pdate, String path, Context ctx) {
 			//add media
 			MultipartEntity mpEntity = new MultipartEntity();
-			try{
-				
+			try{				
 				ContentBody content = new FileBody(new File(path), ptype);
 				//Log.d("What's null?", String.valueOf(content)+"userid"+user_id+"ptitle"+ptitle+"psequence"+psequence+"preportid"+preportid+"ptype"+ptype+"optype"+optype+api_key+pdate);
-				
 				mpEntity.addPart("userfile", content);
 				mpEntity.addPart("token", new StringBody(token));
 				mpEntity.addPart("user_id", new StringBody(user_id));

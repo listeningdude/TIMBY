@@ -35,6 +35,7 @@ public class Encryption {
     PBEKeySpec keySpec = new PBEKeySpec(encryption_key.toCharArray());
     SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
     SecretKey key = keyFactory.generateSecret(keySpec);
+    
     MessageDigest md = MessageDigest.getInstance("MD5");
     md.update("input".getBytes());
     byte[] digest = md.digest();

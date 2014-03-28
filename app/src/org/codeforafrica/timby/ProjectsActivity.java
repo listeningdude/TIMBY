@@ -1,9 +1,6 @@
 package org.codeforafrica.timby;
 
 import org.codeforafrica.timby.R;
-import org.codeforafrica.timby.ReportsActivity.getThumbnail;
-import org.codeforafrica.timby.media.Encryption;
-import org.codeforafrica.timby.media.MediaProjectManager;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
 
@@ -11,8 +8,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.crypto.Cipher;
 
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.Toast;
@@ -29,7 +24,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +36,6 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class ProjectsActivity extends BaseActivity {
@@ -243,10 +236,7 @@ public class ProjectsActivity extends BaseActivity {
                         
                     })
                     .setNegativeButton(R.string.no, null).show();
-            
-            
-                
-                return false;
+                    return false;
             }
     	    
     	});

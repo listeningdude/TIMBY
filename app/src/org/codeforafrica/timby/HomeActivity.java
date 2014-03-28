@@ -168,10 +168,22 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent i = new Intent(getApplicationContext(),LessonsActivity.class);
-				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
+				//Check if lessons have been download
+					//if not start download service and toast
+					//else start activity
+				if(isServiceRunning(VideoTutorialsService.class)){
+					Toast.makeText(getApplicationContext(), "Currently downloading lessons..", Toast.LENGTH_LONG).show();
+				}else{
+					File mFileExternDir = new File(Environment.getExternalStorageDirectory(), "TIMBY_Tutorials");
+				    if (!mFileExternDir.exists()) {
+				            Toast.makeText(getApplicationContext(), "Lessons have not been downloaded yet!", Toast.LENGTH_LONG).show();
+				            startService(new Intent(HomeActivity.this,VideoTutorialsService.class));
+				    }else{
+						Intent i = new Intent(getApplicationContext(),VideoTutorials.class);
+						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(i);
+				    }
+				}
 			}
 		});
         load_sync = (RelativeLayout)findViewById(R.id.load_sync);
@@ -286,7 +298,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 			
 		}
 		
-		 checkForCrashes();
+		 //checkForCrashes();
 	}
 
 

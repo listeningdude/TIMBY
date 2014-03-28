@@ -28,12 +28,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class Export2SDService extends Service {
@@ -69,6 +71,12 @@ public class Export2SDService extends Service {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public String getIMEI(Context context){
+
+	    TelephonyManager mngr = (TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE); 
+	    String imei = mngr.getDeviceId();
+	    return imei;
+	}
 	class export2SD extends AsyncTask<String, String, String> {
 		@Override
 		protected void onPreExecute() {
@@ -85,13 +93,15 @@ public class Export2SDService extends Service {
 			//Begin "XML" file
 		 	data += "<?xml version='1.0' encoding='UTF-8'?>\n";
 		 	data += "<reports>\n";
+		 	data += "<imei>"+getIMEI(getApplicationContext())+"</imei>";
+		 	data += "<user_id>"+user_id+"</user_id>";
 			 mListReports = Report.getAllAsList(getApplicationContext());
 			 for (int i = 0; i < mListReports.size(); i++) {
 				 	//check if report actually exists
 				 	if(mListReports.get(i)!=null){
 					 	
 					 	data += "<report>\n";
-					 	//data += "<user_id>"+user_id+"</user_id>";
+					 	
 					 	Report report = mListReports.get(i);
 					 	data += "<id>"+String.valueOf(report.getId())+"</id>\n";
 					 	data += "<report_title>"+report.getTitle()+"</report_title>\n";
@@ -216,13 +226,19 @@ public class Export2SDService extends Service {
 			endExporting();
 		}
 	}
-	public void deleteReports(){
-		for(int i = 0; i<mListReports.size(); i++){
-			if(mListReports.get(i)!=null){
-			 	mListReports.get(i).delete();
+
+	 public void deleteReports(){
+			for(int i = 0; i<mListReports.size(); i++){
+				if(mListReports.get(i)!=null){
+				 	mListReports.get(i).delete();
+				 	ArrayList<Project> mListProjects;
+					mListProjects = Project.getAllAsList(getApplicationContext(), i);
+				 	for (int j = 0; j < mListProjects.size(); j++) {
+				 		mListProjects.get(j).delete();
+				 	}
+				}
 			}
 		}
-	}
 	public void reEncrypt_everything(){
 		
 		 for (int i = 0; i < mListReports.size(); i++) {

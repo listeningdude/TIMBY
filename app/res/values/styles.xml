@@ -7,7 +7,13 @@
     <item name="android:actionMenuTextColor">@color/soft_purple</item>
     <item name="@android:attr/actionBarTabTextStyle">@style/TabStyle</item>
 	</style>
-	
+		
+    <style name="CustomUpIcon" parent="Theme.storymakerstyle">
+    <item name="android:homeAsUpIndicator">@drawable/ic_home_enabled</item>
+    <item name="homeAsUpIndicator">@drawable/ic_home_enabled</item>
+     <item name="windowContentOverlay">@null</item>
+    <item name="android:windowContentOverlay">@null</item>
+    </style>
 	<style name="TabStyle" parent="android:Widget.Holo.Light.ActionBar.TabText.Inverse">
       <item name="android:textColor">@color/soft_purple</item>
 	</style>
@@ -20,13 +26,7 @@
 	<style name="MyCustomTheme.ActionBar.TitleTextStyle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">
 	<item name="android:textColor">@color/soft_purple</item>
 	</style>
-	
-    <style name="CustomUpIcon" parent="Theme.storymakerstyle">
-    <item name="android:homeAsUpIndicator">@drawable/ic_home_enabled</item>
-    <item name="homeAsUpIndicator">@drawable/ic_home_enabled</item>
-     <item name="windowContentOverlay">@null</item>
-    <item name="android:windowContentOverlay">@null</item>
-    </style>
+
 
 	<style name="CustomDialogTheme" parent="@android:style/Theme.Dialog">
 	<item name="android:windowBackground">@color/transparent_black</item>

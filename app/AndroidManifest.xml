@@ -2,8 +2,8 @@
     package="org.codeforafrica.timby"
     android:installLocation="auto"
 
-    android:versionCode="120"
-    android:versionName="1.2.30" >
+    android:versionCode="122"
+    android:versionName="2.0.01" >
     <uses-sdk
     android:minSdkVersion="10"
     android:targetSdkVersion="19" />
@@ -11,7 +11,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-     
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+   
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_STORAGE"  android:required="false"  />      
     
@@ -139,6 +140,17 @@
         </activity>
         <activity
             android:name="org.codeforafrica.timby.SyncActivity"
+            android:configChanges="locale"
+            android:label="Sync"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
+        <activity
+            android:name="org.codeforafrica.timby.VideoTutorials"
             android:configChanges="locale"
             android:label="Sync"
             android:launchMode="singleTop"
@@ -282,8 +294,8 @@
         </service>
         
         <receiver
-       android:icon="@drawable/ic_launcher"
-       android:label="StoryMaker QuickStory"
+       android:icon="@drawable/timby_hold_icon"
+       android:label="TIMBY QuickStory"
        android:name="org.codeforafrica.timby.QuickStoryWidgetProvider" >
        <intent-filter >
             <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -305,6 +317,7 @@
 	<service android:name=".Export2SDService" />
 	<service android:name=".EncryptionService" />
 	<service android:name=".EncryptionBackground" />
+	<service android:name=".VideoTutorialsService" />	
     </application>
 
 </manifest>
