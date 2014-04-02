@@ -4,7 +4,6 @@ import org.codeforafrica.timby.login.UserFunctions;
 import org.codeforafrica.timby.server.LoginActivity;
 import org.codeforafrica.timby.server.LoginPreferencesActivity;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -28,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.content.SharedPreferences.Editor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -272,6 +272,12 @@ public class BaseActivity extends Activity {
         }*/
         if (item.getItemId() == R.id.logout)
         {
+        	//nullify user
+        	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    		Editor editor = prefs.edit();
+    		editor.putString("logged_in", "0");
+        	editor.commit();
+        	
         	Intent intent = new Intent(getBaseContext(), LoginPreferencesActivity.class);
 	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        startActivity(intent);

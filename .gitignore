@@ -22,3 +22,4 @@ local.properties
 app/src/org/codeforafrica/timby/PrivateCredentials.java
 app/res/values/analytics/xml
 app/src/org/codeforafrica/timby/DefaultsActivity.java
+app/project.properties

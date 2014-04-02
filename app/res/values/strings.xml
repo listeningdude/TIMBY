@@ -131,6 +131,7 @@ Build number: <xliff:g id="build_number">%s</xliff:g>\n
     <string name="title_home_projects">Projects</string>
     <string name="title_home_activity">Activity</string>
     <string name="title_lessons_lessons">Lessons</string>
+    <string name="title_lessons_videos">Videos</string>
     <string name="title_lessons_glossary">Glossary</string>
     <string name="hello_world">Hello world!</string>
     

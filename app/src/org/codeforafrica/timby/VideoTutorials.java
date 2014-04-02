@@ -1,9 +1,13 @@
 package org.codeforafrica.timby;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 
 import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -87,6 +91,7 @@ public void refreshProjects ()
     vaProjects = new VideosArrayAdapter(VideoTutorials.this, R.layout.list_video_row, mListProjects);
 	mListView.setAdapter(vaProjects);
 }
+/*
 @Override
 public boolean onCreateOptionsMenu(Menu menu) {
     getSupportMenuInflater().inflate(R.menu.activity_lessons, menu);
@@ -111,19 +116,21 @@ public void updateLessons(){
 	 //true:delete everything
 		//start video service
 	//false:give notification
-	
-	File tutorials = new File(Environment.getExternalStorageDirectory(), "TIMBY_Tutorials");
-	DeleteRecursive(tutorials);
-	
-    startService(new Intent(VideoTutorials.this,VideoTutorialsService.class));
-    
-   //Intent i = new Intent(getApplicationContext(),HomeActivity.class);
-	//i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	//startActivity(i);
-	
-	finish();
-}
+    //check if zip file is new
+    //if new start process, else stop and redirect back to homescreen with toast
 
+		File tutorials = new File(Environment.getExternalStorageDirectory(), "TIMBY_Tutorials");
+		DeleteRecursive(tutorials);
+		
+	    startService(new Intent(VideoTutorials.this,VideoTutorialsService.class));
+	    
+	   //Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+		//i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		//startActivity(i);
+		
+		finish();
+}
+*/
 void DeleteRecursive(File fileOrDirectory) {
     if (fileOrDirectory.isDirectory())
         for (File child : fileOrDirectory.listFiles())
@@ -181,10 +188,9 @@ class VideosArrayAdapter extends ArrayAdapter {
         if (bmp!= null){
 			ivIcon.setImageBitmap(bmp);
 		}
-        //String[] iPc = projects.get(position).split("-");
+        String[] iPc = projects.get(position).split(".mp4");
         
-        //tv.setText(iPc[0]);
-        tv.setText(projects.get(position));
+        tv.setText(iPc[0]);
         
         //ivType.setImageDrawable(getContext().getResources().getDrawable(R.drawable.btn_toggle_ic_list_video));
     	ivType.setVisibility(View.GONE);

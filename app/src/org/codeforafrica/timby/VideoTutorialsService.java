@@ -2,12 +2,14 @@ package org.codeforafrica.timby;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.MessageDigest;
 
 import org.codeforafrica.timby.VideoTutorials.VideosArrayAdapter;
 import org.ffmpeg.android.MediaUtils;
@@ -18,11 +20,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -32,37 +37,39 @@ public class VideoTutorialsService extends Service
 {
 	File mFileExternDir;
 
-	private static String file_url = "https://www.dropbox.com/s/fwctfwwdlth9ln1/tutorials.zip?dl=1";
+	private static String file_url = "https://www.dropbox.com/s/2hxu8svr7fdiega/compressed.zip?dl=1";
 
 	 public void onCreate() {
-         super.onCreate();
-         //showNotification("Downloading tutorials...");
-    //check if folder is created
-    //if not create
-      //Download tutorials
-    //list files
-    	//on click open
-    boolean access_denied = false;
+     super.onCreate();
+     //showNotification("Downloading tutorials...");
+	    //check if folder is created
+	    //if not create
+	      //Download tutorials
+	    //list files
+	    	//on click open
+         
+     
+	    boolean access_denied = false;
+	    
+	    mFileExternDir = new File(Environment.getExternalStorageDirectory(), "TIMBY_Tutorials");
+	    if (!mFileExternDir.exists()) {
+	        if (!mFileExternDir.mkdirs()) {
+	            Log.e("TIMBY_Tutorials: ", "Problem creating file!");
+	            Toast.makeText(getApplicationContext(), "Problem creating folder", Toast.LENGTH_LONG).show();
+	            access_denied = true;
+	        }
+	        File thumbsDir = new File(Environment.getExternalStorageDirectory(), "TIMBY_Tutorials/thumbs");
+	        if(!thumbsDir.mkdirs()){
+	        	Log.e("TIMBY_Tutorials: ", "Problem thumbnails folder!");
+	        }
+	        
+	    }
+	    
+	    File[] contents = mFileExternDir.listFiles();
+	    if((contents.length<2)&&(access_denied==false)){
+	    	new DownloadFileFromURL().execute(file_url); 	
+	    }
     
-    mFileExternDir = new File(Environment.getExternalStorageDirectory(), "TIMBY_Tutorials");
-    if (!mFileExternDir.exists()) {
-        if (!mFileExternDir.mkdirs()) {
-            Log.e("TIMBY_Tutorials: ", "Problem creating file!");
-            Toast.makeText(getApplicationContext(), "Problem creating folder", Toast.LENGTH_LONG).show();
-            access_denied = true;
-        }
-        File thumbsDir = new File(Environment.getExternalStorageDirectory(), "TIMBY_Tutorials/thumbs");
-        if(!thumbsDir.mkdirs()){
-        	Log.e("TIMBY_Tutorials: ", "Problem thumbnails folder!");
-        }
-        
-    }
-    
-    File[] contents = mFileExternDir.listFiles();
-    if((contents.length<2)&&(access_denied==false)){
-    	new DownloadFileFromURL().execute(file_url); 	
-    }
-        
 }
 private void showNotification(String message) {
    	 CharSequence text = message;
@@ -198,7 +205,8 @@ class unzip extends AsyncTask<String, String, String> {
     	 
     	Decompress d = new Decompress(zipFile, unzipLocation); 
     	d.unzip(); 
-    	
+    	        
+    	//Delete zip file to save memory
     	(new File(zipFile)).delete();
     	
 		return null;
@@ -218,25 +226,24 @@ class generate_thumbs extends AsyncTask<String, String, String> {
 	@Override
 	protected String doInBackground(String... arg0) {
 		File file[] = mFileExternDir.listFiles();
-		int j = 0;
+
 		for (int i=0; i < file.length; i++)
 		{
-			String filepath = file[i].getAbsolutePath();
-			if ( filepath.endsWith(".mp4")){
-				String[] thumbParts = file[i].toString().split("mp4");
+			String filepath = file[i].getPath();
+			if (filepath.endsWith(".mp4")){
+				String[] thumbParts = file[i].getName().split("mp4");
 				String thumbName = thumbParts[0]+"jpg";
 				try {
-					//Bitmap videoThumb = ThumbnailUtils.createVideoThumbnail(filepath,  MediaStore.Images.Thumbnails.MINI_KIND);
-					Bitmap videoThumb = MediaUtils.getVideoFrame(new File(filepath).getCanonicalPath(), 100);
-					String filename = Environment.getExternalStorageDirectory()+"/TIMBY_Tutorials/thumbs/"+thumbName;
-		            FileOutputStream out = new FileOutputStream(filename);
-		            videoThumb.compress(Bitmap.CompressFormat.JPEG, 50, out);
-		            out.close();
-		            j++;
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+						Bitmap videoThumb = ThumbnailUtils.createVideoThumbnail(filepath,  MediaStore.Images.Thumbnails.MINI_KIND);
+					    //Bitmap videoThumb = MediaUtils.getVideoFrame(new File(filepath).getCanonicalPath(), -1);
+						String filename = Environment.getExternalStorageDirectory()+"/TIMBY_Tutorials/thumbs/"+thumbName;
+			            FileOutputStream out = new FileOutputStream(filename);
+			            videoThumb.compress(Bitmap.CompressFormat.JPEG, 50, out);
+			            out.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 			}
 		}		
 		return null;
@@ -247,7 +254,38 @@ class generate_thumbs extends AsyncTask<String, String, String> {
 		endService();
 	}
 }
+public static String fileToMD5(String filePath) {
+    InputStream inputStream = null;
+    try {
+        inputStream = new FileInputStream(filePath);
+        byte[] buffer = new byte[1024];
+        MessageDigest digest = MessageDigest.getInstance("MD5");
+        int numRead = 0;
+        while (numRead != -1) {
+            numRead = inputStream.read(buffer);
+            if (numRead > 0)
+                digest.update(buffer, 0, numRead);
+        }
+        byte [] md5Bytes = digest.digest();
+        return convertHashToString(md5Bytes);
+    } catch (Exception e) {
+        return null;
+    } finally {
+        if (inputStream != null) {
+            try {
+                inputStream.close();
+            } catch (Exception e) { }
+        }
+    }
+}
 
+private static String convertHashToString(byte[] md5Bytes) {
+    String returnVal = "";
+    for (int i = 0; i < md5Bytes.length; i++) {
+        returnVal += Integer.toString(( md5Bytes[i] & 0xff ) + 0x100, 16).substring(1);
+    }
+    return returnVal.toUpperCase();
+}
 	public void endService(){
 		this.stopSelf();
 	}

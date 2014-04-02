@@ -121,7 +121,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
            
         }
         cd = new ConnectionDetector(getApplicationContext());
-        //checkCreds();
+        checkCreds();
     	//new getSectors().execute();
        // new getCategories().execute();
         setContentView(R.layout.activity_home_screen);
@@ -179,7 +179,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 				            Toast.makeText(getApplicationContext(), "No lessons found! Downloading...", Toast.LENGTH_LONG).show();
 				            startService(new Intent(HomeActivity.this,VideoTutorialsService.class));
 				    }else{
-						Intent i = new Intent(getApplicationContext(),VideoTutorials.class);
+						Intent i = new Intent(getApplicationContext(),LessonsActivity.class);
 						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(i);
 				    }
@@ -808,15 +808,16 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
     	
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
        
-        String user = settings.getString("user",null);
+        String user = settings.getString("logged_in",null);
         
-        if (user == null)
+        if ((user == null)||(user.equals("0")))
         {
         	Intent intent = new Intent(this,LoginPreferencesActivity.class);
         	startActivity(intent);
-        	//finish();
+        	finish();
         }else{
-
+        	//Do nothing
+        	
         }
     }
     

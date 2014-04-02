@@ -152,6 +152,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         Editor edit = settings.edit(); 
         
+        
         edit.putString("user_id", user_id);
         edit.putString("token", token);
         edit.putString("username", username);
@@ -337,6 +338,13 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	    	getPresetCategories();
 	    	getPresetEntities();
 	    }
+        
+        //Save logged in status
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		Editor editor = prefs.edit();
+		editor.putString("logged_in", "1");
+    	editor.commit();
+    	
         
     	Intent intent = new Intent(LoginPreferencesActivity.this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

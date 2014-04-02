@@ -1,16 +1,27 @@
 package org.codeforafrica.timby;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import org.codeforafrica.timby.VideoTutorials.VideosArrayAdapter;
 import org.codeforafrica.timby.lessons.LessonListView;
 import org.codeforafrica.timby.lessons.WebViewSetupJB;
-
+import org.codeforafrica.timby.ui.MyCard;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
@@ -27,10 +38,18 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings.PluginState;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.fima.cardsui.objects.CardStack;
+import com.fima.cardsui.views.CardUI;
 
 public class LessonsActivity extends BaseActivity implements ActionBar.TabListener {
 
@@ -50,8 +69,7 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
-     
-        
+             
         super.onCreate(savedInstanceState);
            
         setContentView(R.layout.activity_lessons);
@@ -187,7 +205,13 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
         public Fragment getItem(int i) {
         	Fragment fragment = null;
         	
-        	if (i == 0)
+        	if(i == 0){
+        		fragment = new VideosSectionFragment();
+	            Bundle args = new Bundle();
+	            args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
+	            fragment.setArguments(args);
+        	}
+        	else if (i == 1)
         	{
         		fragment = fLessons;
  	            
@@ -204,19 +228,133 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case 0: return getString(R.string.title_lessons_lessons).toUpperCase();
-                case 1: return getString(R.string.title_lessons_glossary).toUpperCase();
+            	case 0: return getString(R.string.title_lessons_videos).toUpperCase();
+                case 1: return getString(R.string.title_lessons_lessons).toUpperCase();
+                case 2: return getString(R.string.title_lessons_glossary).toUpperCase();
             }
             return null;
         }
     }
+    public static class VideosSectionFragment extends Fragment{
+		
+    	ListView mListView;
+    	File mFileExternDir;
+    	//private ArrayList<Project> mListProjects;
+    	private VideosArrayAdapter vaProjects;
+    	ArrayList<String> mListProjects = new ArrayList<String>();
+    	
+    	// Progress Dialog
+    	public static final int progress_bar_type = 0;
 
+    	// File url to download
+    	@Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.activity_video_tutorials, container, false);
+            mFileExternDir = new File(Environment.getExternalStorageDirectory(), "TIMBY_Tutorials");
+            mListView = (ListView)view.findViewById(R.id.videoslist);
+            initListView(mListView); 
+            return view;
+        }
+    	public void initListView (ListView list) {
+    		
+    	    list.setOnItemClickListener(new OnItemClickListener ()
+    	    {
+    			@Override
+    			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    				String vidPath = "/TIMBY_Tutorials/"+mListProjects.get(position);
+    				
+    				Intent intent = new Intent(Intent.ACTION_VIEW);
+    				File sdCard = Environment.getExternalStorageDirectory();
+    				File file = new File(sdCard, vidPath);
+    				intent.setDataAndType(Uri.fromFile(file), "video/*");
+    				startActivity(intent);
+    			}
+    	    	
+    	    });
+    	    
+    	   refreshProjects();
+    	    
+    	}
+    	public void refreshProjects ()
+    	{
+    		File file[] = mFileExternDir.listFiles();
+    		for (int i=0; i < file.length; i++)
+    		{
+    			if(!file[i].getName().equals("thumbs")){
+    				mListProjects.add(file[i].getName());
+    			}
+    		}
+    	    vaProjects = new VideosArrayAdapter(getActivity().getApplicationContext(), R.layout.list_video_row, mListProjects);
+    		mListView.setAdapter(vaProjects);
+    	}
+    	
+    	
+    	class VideosArrayAdapter extends ArrayAdapter {
+    		
+    		Context context; 
+    	    int layoutResourceId;    
+    	    ArrayList<String> projects;
+    	    
+    	    public VideosArrayAdapter(Context context, int layoutResourceId,ArrayList<String> mListProjects) {
+    	        super(context, layoutResourceId, mListProjects);        
+    	        
+    	        this.layoutResourceId = layoutResourceId;
+    	        this.context = context;
+    	        this.projects = mListProjects;
+    	    }
+    	    
+    	    @Override
+    	    public View getView(int position, View convertView, ViewGroup parent) {
+    	        View row = convertView;
+    	        
+    	        TextView tv;
+    	        
+    	        if(row == null)
+    	        {
+    	            android.view.LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+    	            row = inflater.inflate(layoutResourceId, parent, false);
+    	        }
+    	        
+    	        tv = (TextView)row.findViewById(R.id.title);
+    	        
+    	                
+    	        tv.setText("");   
+    	        
+    	        
+    	        tv = (TextView)row.findViewById(R.id.description);
+    	        
+    	        ImageView ivType = (ImageView)row.findViewById(R.id.cardIcon);
+    	        ImageView ivIcon = (ImageView)row.findViewById(R.id.imageView1);
+    	        
+    	        
+    	        String[] thumbParts = projects.get(position).split("mp4");
+    			String thumbName = thumbParts[0]+"jpg";
+    			
+    	        String imagePath = Environment.getExternalStorageDirectory().toString()+"/TIMBY_Tutorials/thumbs/"+thumbName;
+    	        
+    	        
+    	        Bitmap bmp = BitmapFactory.decodeFile(imagePath);
+    			
+    	        if (bmp!= null){
+    				ivIcon.setImageBitmap(bmp);
+    			}
+    	        String[] iPc = projects.get(position).split(".mp4");
+    	        
+    	        tv.setText(iPc[0]);
+    	        
+    	        //ivType.setImageDrawable(getContext().getResources().getDrawable(R.drawable.btn_toggle_ic_list_video));
+    	    	ivType.setVisibility(View.GONE);
+    	    	
+    	        return row;
+    	    	}
+    		}
+    }
     /**
      * A dummy fragment representing a section of the app, but that simply displays dummy text.
      */

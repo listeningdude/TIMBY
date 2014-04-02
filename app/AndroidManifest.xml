@@ -2,8 +2,8 @@
     package="org.codeforafrica.timby"
     android:installLocation="auto"
 
-    android:versionCode="122"
-    android:versionName="2.0.01" >
+    android:versionCode="124"
+    android:versionName="2.0.02" >
     <uses-sdk
     android:minSdkVersion="10"
     android:targetSdkVersion="19" />

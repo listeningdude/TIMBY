@@ -88,7 +88,7 @@ public class SettingsActivity extends Activity implements OnClickListener{
          }else{
         	 edit.putString("delete_after_export", "0");
          }
-             	
+         edit.putString("unlock_code", eTUnlockCode.getText().toString());    	
          edit.putString("username", eTUsername.getText().toString());
          edit.putString("password", eTPassword.getText().toString());
          edit.putString("api_key", eTAPIKey.getText().toString());
