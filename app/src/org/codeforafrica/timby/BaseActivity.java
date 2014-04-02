@@ -301,7 +301,7 @@ public class BaseActivity extends Activity {
 		super.onPostCreate(savedInstanceState);
 	
 
-        initSlidingMenu();
+       // initSlidingMenu();
 	}
 
     public void run ()
