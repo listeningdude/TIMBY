@@ -281,6 +281,7 @@ public class BaseActivity extends Activity {
         	Intent intent = new Intent(getBaseContext(), LoginPreferencesActivity.class);
 	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        startActivity(intent);
+	        finish();
         }
        
 		return true;
