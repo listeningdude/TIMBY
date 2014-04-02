@@ -3,7 +3,7 @@ package org.codeforafrica.timby;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.codeforafrica.timby.VideoTutorials.VideosArrayAdapter;
+//import org.codeforafrica.timby.VideoTutorials.VideosArrayAdapter;
 import org.codeforafrica.timby.lessons.LessonListView;
 import org.codeforafrica.timby.lessons.WebViewSetupJB;
 import org.codeforafrica.timby.ui.MyCard;
@@ -317,7 +317,7 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
     	        
     	        if(row == null)
     	        {
-    	            android.view.LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+    	            LayoutInflater inflater = getLayoutInflater();
     	            row = inflater.inflate(layoutResourceId, parent, false);
     	        }
     	        
