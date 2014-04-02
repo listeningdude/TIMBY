@@ -39,7 +39,7 @@ public class StoryNewActivity extends BaseActivity {
       	
       	String title = "Captured at "+currentdate;
       	
-      	Report report = new Report (getApplicationContext(), 0, title, "Sector is not set", "Issue is not set", "", "", pLocation, "0", currentdate);
+      	Report report = new Report (getApplicationContext(), 0, title, "0", "0", "", "", pLocation, "0", currentdate);
           
         report.save();
           
