@@ -13,8 +13,6 @@ import org.codeforafrica.timby.ReportActivity;
 import org.codeforafrica.timby.ReportsActivity;
 import org.codeforafrica.timby.SettingsActivity;
 import org.codeforafrica.timby.login.UserFunctions;
-
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +20,6 @@ import org.json.JSONObject;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
-
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -426,26 +423,21 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	        String user_id = settings.getString("user_id",null);
 	        
         	UserFunctions userFunction = new UserFunctions();
-			JSONArray json = userFunction.getSectors(token, user_id, getApplicationContext());
+			JSONObject json = userFunction.getSectors(token, user_id, getApplicationContext());
 			Log.d("length", String.valueOf(json.length()));
 			
-			String str = json.toString();
-			str = str.replace("[[", "{\"items\": [");
-			str = str.replace("]]", "]}");
-			
-			JSONObject json2 = null;
+			JSONObject sJson  = null;
 			try {
-				json2 = new JSONObject(str);
-			}catch (JSONException e) {
+				sJson = json.getJSONObject("message");
+				
+			} catch (JSONException e2) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e2.printStackTrace();
 			}
-			//Log.d("length2", String.valueOf(json2.length()));
-			
 			
 			JSONArray jArrayObject = null;
 			try {
-				jArrayObject = json2.getJSONArray("items");
+				jArrayObject = sJson.getJSONArray("sectors");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -491,26 +483,20 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
  	        String user_id = settings.getString("user_id",null);
  	        
          	UserFunctions userFunction = new UserFunctions();
- 			JSONArray json = userFunction.getCategories(token, user_id, getApplicationContext());
+ 			JSONObject json = userFunction.getCategories(token, user_id, getApplicationContext());
  			Log.d("length", String.valueOf(json.length()));
- 			
- 			String str = json.toString();
- 			str = str.replace("[[", "{\"items\": [");
- 			str = str.replace("]]", "]}");
- 			
- 			JSONObject json2 = null;
- 			try {
- 				json2 = new JSONObject(str);
- 			}catch (JSONException e) {
- 				// TODO Auto-generated catch block
- 				e.printStackTrace();
- 			}
- 			//Log.d("length2", String.valueOf(json2.length()));
- 			
- 			
- 			JSONArray jArrayObject = null;
- 			try {
- 				jArrayObject = json2.getJSONArray("items");
+ 			JSONObject sJson  = null;
+			try {
+				sJson = json.getJSONObject("message");
+				
+			} catch (JSONException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
+			JSONArray jArrayObject = null;
+			try {
+				jArrayObject = sJson.getJSONArray("categories");
  			} catch (JSONException e1) {
  				// TODO Auto-generated catch block
  				e1.printStackTrace();
@@ -553,26 +539,21 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
 	        String user_id = settings.getString("user_id",null);
 	        
         	UserFunctions userFunction = new UserFunctions();
-			JSONArray json = userFunction.getEntities(token, user_id, getApplicationContext());
+			JSONObject json = userFunction.getEntities(token, user_id, getApplicationContext());
 			Log.d("length", String.valueOf(json.length()));
 			
-			String str = json.toString();
-			str = str.replace("[[", "{\"items\": [");
-			str = str.replace("]]", "]}");
-			
-			JSONObject json2 = null;
+			JSONObject sJson  = null;
 			try {
-				json2 = new JSONObject(str);
-			}catch (JSONException e) {
+				sJson = json.getJSONObject("message");
+				
+			} catch (JSONException e2) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e2.printStackTrace();
 			}
-			//Log.d("length2", String.valueOf(json2.length()));
-			
 			
 			JSONArray jArrayObject = null;
 			try {
-				jArrayObject = json2.getJSONArray("items");
+				jArrayObject = sJson.getJSONArray("entities");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

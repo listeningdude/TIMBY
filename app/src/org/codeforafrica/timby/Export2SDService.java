@@ -50,6 +50,8 @@ public class Export2SDService extends Service {
 	int reportscount = 0;
 	String eI;
 	SharedPreferences pref;
+	String zipName;
+	public File newFolder;
 	@Override
     public void onCreate() {
           super.onCreate();
@@ -96,20 +98,28 @@ public class Export2SDService extends Service {
 		}
 		protected String doInBackground(String... args) {
 			
-			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-	        String user_id = settings.getString("user_id",null); 
-			
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String userid = prefs.getString("user_id", "0");
+			            
+            SimpleDateFormat s = new SimpleDateFormat("yyyyMMddhhmmss");
+            String timestamp = s.format(new Date());
+		 	mListReports = Report.getAllAsList_EI(getApplicationContext(), eI);
+            reportscount = mListReports.size();
+
+			zipName = "timby"+userid+"-"+String.valueOf(reportscount)+"-"+timestamp;
+			//create folder and transfer all content here
+			newFolder = new File(Environment.getExternalStorageDirectory(), zipName);
+			newFolder.mkdirs();
+						
 			ext = String.valueOf(Environment.getExternalStorageDirectory());
 		 	ext += "/"+AppConstants.TAG;
+		 	
 			//Begin "XML" file
 		 	data += "<?xml version='1.0' encoding='UTF-8'?>\n";
 		 	data += "<reports>\n";
 		 	data += "<imei>"+getIMEI(getApplicationContext())+"</imei>";
-		 	data += "<user_id>"+user_id+"</user_id>";
-		 	
-		 	mListReports = Report.getAllAsList_EI(getApplicationContext(), eI);
-		 	
-			 reportscount = mListReports.size();
+		 	data += "<user_id>"+userid+"</user_id>";
+		 			 	
 			 
 			 for (int i = 0; i < reportscount; i++) {
 				 	//check if report actually exists
@@ -124,6 +134,11 @@ public class Export2SDService extends Service {
 					 	report.save();
 					 	
 					 	data += "<id>"+String.valueOf(report.getId())+"</id>\n";
+					 	
+					 	//create report folder
+					 	File rFolder = new File(newFolder, "/"+String.valueOf(report.getId()));
+					 	rFolder.mkdirs();
+					 	
 					 	data += "<report_title>"+report.getTitle()+"</report_title>\n";
 					 	
 					 	String issue = report.getIssue();
@@ -143,6 +158,7 @@ public class Export2SDService extends Service {
 					 	data += "<report_date>"+report.getDate()+"</report_date>\n";
 					 	data += "<description>"+report.getDescription()+"</description>\n";
 					 	data += "<report_objects>\n";
+					 	
 					 	mListProjects = Project.getAllAsList(getApplicationContext(), report.getId());
 					 	for (int j = 0; j < mListProjects.size(); j++) {
 					 		Project project = mListProjects.get(j);
@@ -173,17 +189,24 @@ public class Export2SDService extends Service {
 								File newfile = new File(file+"_");
 								newfile.renameTo(new File(file));
 								
-						 		/*						 		
-						 		Intent startMyService= new Intent(Export2SDService.this, EncryptionService.class);
-						        startMyService.putExtra("filepath", file);
-						        startMyService.putExtra("mode", Cipher.DECRYPT_MODE);
-						        startService(startMyService);*/
-						        
-								//if(media.getMimeType().contains("video")){
-								//	copyfile(file, ext+"/"+report.getId()+"/vid"+String.valueOf(j)+".mp4");
-								//	data += "<object_media>/"+report.getId()+"/vid"+String.valueOf(j)+".mp4</object_media>\n";
-								//}else{
+								Log.d("file", file);
+								
 								path = path.replace(ext, "");
+								
+								Log.d("path", path);
+								String copyPath = (rFolder.getPath()).toString()+"/"+path;
+
+								try {
+									copy(new File(file), new File(copyPath));
+									
+									Log.d("copyPath", copyPath);
+									
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								Log.d("copypath", copyPath);
+								
 							 	data += "<object_media>"+path+"</object_media>\n";
 								//}
 						 		data += "<object_type>"+media.getMimeType()+"</object_type>\n";
@@ -199,23 +222,11 @@ public class Export2SDService extends Service {
 			 
 			 writeToFile(data);
 			 
-			//Delete old file
-			 File zipFile = new File(String.valueOf(getSD())+"/timby.zip");
-			 zipFile.delete();
-			 
+			 	
 			//Now create new zip
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String userid = prefs.getString("user_id", "0");
-			            
-            SimpleDateFormat s = new SimpleDateFormat("yyyyMMddhhmmss");
-            String timestamp = s.format(new Date());
-            
-			String zipName = "timby"+userid+"-"+String.valueOf(reportscount)+"-"+timestamp;
-			 
-			zipFileAtPath(ext, String.valueOf(getSD())+"/"+zipName+".zip");
+			zipFileAtPath(newFolder.getAbsolutePath(), String.valueOf(getSD())+"/"+zipName+".zip");
 			
 			//encrypt zip file
-			
 	    	String encrypt_zip_files = prefs.getString("encrypt_zip_files",null);
 	    	if(encrypt_zip_files.equals("1")){
 	    		
@@ -253,7 +264,21 @@ public class Export2SDService extends Service {
 			endExporting();
 		}
 	}
+	
+	public void copy(File src, File dst) throws IOException {
+	    InputStream in = new FileInputStream(src);
+	    OutputStream out = new FileOutputStream(dst);
 
+	    // Transfer bytes from in to out
+	    byte[] buf = new byte[1024];
+	    int len;
+	    while ((len = in.read(buf)) > 0) {
+	        out.write(buf, 0, len);
+	    }
+	    in.close();
+	    out.close();
+	}
+	
 	 public void deleteReports(){
 			for(int i = 0; i<mListReports.size(); i++){
 				if(mListReports.get(i)!=null){
@@ -303,18 +328,20 @@ public class Export2SDService extends Service {
 				 	}
 			 	}
 		 }
+		 /*
 		 //delete xml
 		 String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/db.xml";
 
 		File oldfile = new File(file);
 		oldfile.delete();
+		*/
 	}
       public void endExporting(){
     	  this.stopSelf();
       }
-	public static void writeToFile(final String fileContents) {
+	public void writeToFile(final String fileContents) {
 		try {
-	            FileWriter out = new FileWriter(new File(Environment.getExternalStorageDirectory(), AppConstants.TAG+"/db.xml"));
+	            FileWriter out = new FileWriter(new File(newFolder, "/db.xml"));
 	            out.write(fileContents);
 	            out.close();
         	}catch (IOException e){

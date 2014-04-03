@@ -135,23 +135,23 @@ public class UserFunctions {
 	    return imei;
 	}
 
-	public JSONArray getSectors(String token, String user_id, Context ctx){
+	public JSONObject getSectors(String token, String user_id, Context ctx){
 		// Building Parameters
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("user_id", user_id));
 		params.add(new BasicNameValuePair("token", token));
 		params.add(new BasicNameValuePair("key", getAPIKey(ctx)));
-		JSONArray json = jsonParser.getJSONArrayFromURL(getPath(sectorsURL,ctx), params);
+		JSONObject json = jsonParser.getJSONFromUrl(getPath(sectorsURL,ctx), params);
 		Log.d("details passed", "user_id:"+user_id+" token:"+token+" key:"+getAPIKey(ctx));
 		return json;
 	}
-	public JSONArray getCategories(String token, String user_id, Context ctx){
+	public JSONObject getCategories(String token, String user_id, Context ctx){
 		// Building Parameters
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("user_id", user_id));
 		params.add(new BasicNameValuePair("token", token));
 		params.add(new BasicNameValuePair("key", getAPIKey(ctx)));
-		JSONArray json = jsonParser.getJSONArrayFromURL(getPath(categoriesURL,ctx), params);
+		JSONObject json = jsonParser.getJSONFromUrl(getPath(categoriesURL,ctx), params);
 		return json;
 	}
 	public JSONObject updateReport(String token, String user_id, String title,
@@ -294,14 +294,14 @@ public class UserFunctions {
 			return json;
 	}
 
-	public JSONArray getEntities(String token, String user_id, Context ctx) {
+	public JSONObject getEntities(String token, String user_id, Context ctx) {
 		// TODO Auto-generated method stub
 		// Building Parameters
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("user_id", user_id));
 		params.add(new BasicNameValuePair("token", token));
 		params.add(new BasicNameValuePair("key", getAPIKey(ctx)));
-		JSONArray json = jsonParser.getJSONArrayFromURL(getPath(entitiesURL,ctx), params);
+		JSONObject json = jsonParser.getJSONFromUrl(getPath(entitiesURL,ctx), params);
 		return json;
 
 	}

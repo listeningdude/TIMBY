@@ -200,6 +200,8 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
                         HomeActivity.this);
                 dialog.findViewById(R.id.button_export).setOnClickListener(
                         HomeActivity.this);
+                dialog.findViewById(R.id.checkBox1).setOnClickListener(
+                        HomeActivity.this);
                 //dialog.setTitle("Choose Action");
                 dialog.show();
 				
@@ -285,7 +287,8 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         case R.id.button_export:
         	dialog.dismiss();
         	
-        	CheckBox cB = (CheckBox)findViewById(R.id.checkBox1);
+        	CheckBox cB = (CheckBox)dialog.findViewById(R.id.checkBox1);
+        	
         	String includeExported;
         	if(cB.isChecked()){
         		includeExported = "1";

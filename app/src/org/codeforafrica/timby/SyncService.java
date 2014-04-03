@@ -544,9 +544,9 @@ public class SyncService extends Service {
 			try {
 				String res = json.getString(KEY_SUCCESS); 
 					if(res.equals("OK")){
-						JSONArray json_report = json.getJSONArray("message");//json.getJSONObject("message");
-						JSONObject serverid = json_report.getJSONObject(0);//json_report.getString(KEY_ID);
-						String srid = String.valueOf(serverid.getString(KEY_ID));
+						JSONObject json_report = json.getJSONObject("message");//json.getJSONObject("message");
+						//JSONObject serverid = json_report.getJSONObject("id");//json_report.getString(KEY_ID);
+						String srid = String.valueOf(json_report.getString(KEY_ID));
 						//Update report with server id 
 						Report report = Report.get(getApplicationContext(), rid);
 						report.setServerId(srid);
@@ -603,11 +603,10 @@ public class SyncService extends Service {
 			try {
 				String res = json.getString(KEY_SUCCESS); 
 					if(res.equals("OK")){
-						JSONArray json_report = json.getJSONArray("message");//json.getJSONObject("message");
-						//if(!isInternetPresent){
-				        //	Toast.makeText(getApplicationContext(), "You have no connection!", Toast.LENGTH_LONG).show();
-				        //}else{
-							//Update objects
+						JSONObject json_report = json.getJSONObject("message");//json.getJSONObject("message");
+						//JSONObject serverid = json_report.getJSONObject("id");//json_report.getString(KEY_ID);
+						String severID = String.valueOf(json_report.getString("report_id"));
+						
 							updateEntities(rid, serverID);
 							updateMedia(rid, serverID);
 				        //}
