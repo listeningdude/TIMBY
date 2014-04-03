@@ -43,6 +43,7 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -71,6 +72,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -191,23 +193,45 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				//Intent i = new Intent(getApplicationContext(),SyncActivity.class);
-				//i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				//startActivity(i);
+				
 	            dialog = new Dialog(HomeActivity.this);
                 dialog.setContentView(R.layout.dialog_sync);
                 dialog.findViewById(R.id.button_sync).setOnClickListener(
                         HomeActivity.this);
                 dialog.findViewById(R.id.button_export).setOnClickListener(
                         HomeActivity.this);
-                dialog.setTitle("Choose Action");
+                //dialog.setTitle("Choose Action");
                 dialog.show();
 				
+				//showSyncDialog();
+                
 			}
 		});
     }
+    /*
+    private void showSyncDialog(){
+    	LayoutInflater factory = LayoutInflater.from(this);
+    	final View cbView = factory.inflate(R.layout.checkboxview, null);
 
+    	final CheckBox input1 = (CheckBox) cbView.findViewById(R.id.checkBox1);
+    	final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+    	
+    	alert.setView(cbView)
+    	     .setPositiveButton(getString(R.string.sync), 
+    	         new DialogInterface.OnClickListener() {
+    	             public void onClick(DialogInterface dialog, int whichButton) {
+    	                    Log.i("AlertDialog","TextEntry 1 Entered "+input1.getText().toString());
+
+    	             }
+    	         })
+    	     .setNegativeButton(getString(R.string.export),
+    	         new DialogInterface.OnClickListener() {
+    	             public void onClick(DialogInterface dialog,
+    	                    int whichButton) {
+    	             }
+    	         });
+    	alert.show();
+    }*/
     private boolean isServiceRunning(Class<?> cls) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -261,6 +285,14 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         case R.id.button_export:
         	dialog.dismiss();
         	
+        	CheckBox cB = (CheckBox)findViewById(R.id.checkBox1);
+        	String includeExported;
+        	if(cB.isChecked()){
+        		includeExported = "1";
+        	}else{
+        		includeExported = "0";
+        	}
+        	
         	if(isServiceRunning(Export2SDService.class)){
   	          	Toast.makeText(getBaseContext(), "Export to SD is already started!", Toast.LENGTH_LONG).show();
         	}else if (isServiceRunning(EncryptionService.class)){
@@ -268,7 +300,9 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
         	}else if(isServiceRunning(SyncService.class)){
   	          	Toast.makeText(getBaseContext(), "Please wait for sync to finish!", Toast.LENGTH_LONG).show();
         	}else{
-	  	        startService(new Intent(HomeActivity.this,Export2SDService.class)); 
+        		Intent eS = new Intent(HomeActivity.this,Export2SDService.class);
+        		eS.putExtra("includeExported", includeExported);
+	  	        startService(eS); 
         	}
         	/*
         	Intent i2 = new Intent(getApplicationContext(), Export2SD.class);

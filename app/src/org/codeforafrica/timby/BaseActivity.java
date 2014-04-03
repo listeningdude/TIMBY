@@ -239,7 +239,7 @@ public class BaseActivity extends Activity {
             public void onClick(View v) {
             	//mSlidingMenu.showContent(true);
             	
-                Intent i = new Intent(activity, Export2SD.class);
+                Intent i = new Intent(activity, Export2SDService.class);
                 activity.startActivity(i);
                 mSlidingMenu.showContent(false);
             }

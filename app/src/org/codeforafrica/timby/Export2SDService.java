@@ -10,13 +10,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.crypto.Cipher;
 
-import org.codeforafrica.timby.Export2SD.export2SD;
 import org.codeforafrica.timby.media.Encryption;
 import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
@@ -32,6 +33,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -45,16 +47,25 @@ public class Export2SDService extends Service {
 	String ext;
 	int BUFFER = 2048;
 	String delete_after_export;
+	int reportscount = 0;
+	String eI;
 	SharedPreferences pref;
 	@Override
     public void onCreate() {
           super.onCreate();
-          showNotification("Exporting to SD...");
-       
-        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-      	delete_after_export = pref.getString("delete_after_export",null);
-      	mListReports = Report.getAllAsList(getApplicationContext());
-          new export2SD().execute();
+          
+	}
+	@Override
+	  public void onStart(Intent intent, int startId) {
+	      super.onStart(intent, startId);
+	       Bundle extras = intent.getExtras(); 
+	       eI = extras.getString("includeExported");
+	       
+	       showNotification("Exporting to SD...");
+	       
+	        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+	      	delete_after_export = pref.getString("delete_after_export",null);
+	      	new export2SD().execute();
 	}
 	private void showNotification(String message) {
    	 CharSequence text = message;
@@ -95,14 +106,23 @@ public class Export2SDService extends Service {
 		 	data += "<reports>\n";
 		 	data += "<imei>"+getIMEI(getApplicationContext())+"</imei>";
 		 	data += "<user_id>"+user_id+"</user_id>";
-			 mListReports = Report.getAllAsList(getApplicationContext());
-			 for (int i = 0; i < mListReports.size(); i++) {
+		 	
+		 	mListReports = Report.getAllAsList_EI(getApplicationContext(), eI);
+		 	
+			 reportscount = mListReports.size();
+			 
+			 for (int i = 0; i < reportscount; i++) {
 				 	//check if report actually exists
 				 	if(mListReports.get(i)!=null){
 					 	
 					 	data += "<report>\n";
 					 	
 					 	Report report = mListReports.get(i);
+					 	
+					 	//TODO: use xml output to set exported
+					 	report.setExported("1");
+					 	report.save();
+					 	
 					 	data += "<id>"+String.valueOf(report.getId())+"</id>\n";
 					 	data += "<report_title>"+report.getTitle()+"</report_title>\n";
 					 	
@@ -182,17 +202,24 @@ public class Export2SDService extends Service {
 			//Delete old file
 			 File zipFile = new File(String.valueOf(getSD())+"/timby.zip");
 			 zipFile.delete();
+			 
 			//Now create new zip
-			zipFileAtPath(ext, String.valueOf(getSD())+"/timby.zip");
-			
-			
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String userid = prefs.getString("user_id", "0");
+			            
+            SimpleDateFormat s = new SimpleDateFormat("yyyyMMddhhmmss");
+            String timestamp = s.format(new Date());
+            
+			String zipName = "timby"+userid+"-"+String.valueOf(reportscount)+"-"+timestamp;
+			 
+			zipFileAtPath(ext, String.valueOf(getSD())+"/"+zipName+".zip");
 			
 			//encrypt zip file
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			
 	    	String encrypt_zip_files = prefs.getString("encrypt_zip_files",null);
 	    	if(encrypt_zip_files.equals("1")){
-	    		String file = String.valueOf(getSD())+"/timby.zip";
+	    		
+	    		String file = String.valueOf(getSD())+"/"+zipName+".zip";
 				
 				Cipher cipher;
 				try {

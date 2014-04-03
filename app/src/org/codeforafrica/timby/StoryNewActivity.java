@@ -39,7 +39,7 @@ public class StoryNewActivity extends BaseActivity {
       	
       	String title = "Captured at "+currentdate;
       	
-      	Report report = new Report (getApplicationContext(), 0, title, "0", "0", "", "", pLocation, "0", currentdate);
+      	Report report = new Report (getApplicationContext(), 0, title, "0", "0", "", "", pLocation, "0", currentdate, "0", "0");
           
         report.save();
           
@@ -88,7 +88,7 @@ public class StoryNewActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
-    @Override
+      @Override
 	  public void onStart() {
 	    super.onStart();
 	    EasyTracker.getInstance(this).activityStart(this);

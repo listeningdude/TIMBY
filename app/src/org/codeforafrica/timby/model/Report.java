@@ -2,6 +2,7 @@ package org.codeforafrica.timby.model;
 
 import java.util.ArrayList;
 
+import org.codeforafrica.timby.db.ProjectsProvider;
 import org.codeforafrica.timby.db.ReportsProvider;
 import org.codeforafrica.timby.db.StoryMakerDB;
 
@@ -23,9 +24,11 @@ public class Report {
     protected String _location;
     protected String _serverid;
     protected String _date;
+    protected String _exported;
+    protected String _synced;
     
     
-    public Report(Context context, int id, String title, String _sector, String _issue,String _entity, String _description, String _location, String _serverid, String _date) {
+    public Report(Context context, int id, String title, String _sector, String _issue,String _entity, String _description, String _location, String _serverid, String _date, String _exported, String _synced) {
         super();
         this.context = context;
         this.id = id;
@@ -37,6 +40,8 @@ public class Report {
         this._location = _location;
         this._serverid = _serverid;
         this._date = _date;
+        this._exported = _exported;
+        this._synced = _synced;
     }
 
     public Report(Context context, Cursor cursor) {
@@ -60,7 +65,11 @@ public class Report {
               cursor.getString(cursor
                           .getColumnIndex(StoryMakerDB.Schema.Reports.COL_SERVERID)),
         		cursor.getString(cursor
-        				.getColumnIndex(StoryMakerDB.Schema.Reports.COL_DATE)));
+        				.getColumnIndex(StoryMakerDB.Schema.Reports.COL_DATE)),
+        		cursor.getString(cursor
+        				.getColumnIndex(StoryMakerDB.Schema.Reports.COL_EXPORTED)),
+				cursor.getString(cursor
+        				.getColumnIndex(StoryMakerDB.Schema.Reports.COL_SYNCED)));
                // cursor.close();
 
     }
@@ -93,7 +102,26 @@ public class Report {
         return context.getContentResolver().query(
                 ReportsProvider.REPORTS_CONTENT_URI, null, null, null, StoryMakerDB.Schema.Reports.ID+" DESC");
     }
-
+    public static Cursor getAllAsCursor_EI(Context context) {
+    	String selection = StoryMakerDB.Schema.Reports.COL_EXPORTED + "=?";
+        String[] selectionArgs = new String[] { "" + 0 };
+        
+        return context.getContentResolver().query(
+                ReportsProvider.REPORTS_CONTENT_URI, null, selection, selectionArgs, StoryMakerDB.Schema.Reports.ID+" DESC");
+    }
+    public static ArrayList<Report> getAllAsList_EI(Context context, String eI) {
+        ArrayList<Report> reports = new ArrayList<Report>();
+        Cursor cursor = getAllAsCursor_EI(context);
+        
+        if (cursor.moveToFirst()) {
+            do {
+                reports.add(new Report(context, cursor));
+            } while (cursor.moveToNext());
+        }        
+        cursor.close();
+        return reports;
+    }
+    
     public static ArrayList<Report> getAllAsList(Context context) {
         ArrayList<Report> reports = new ArrayList<Report>();
         Cursor cursor = getAllAsCursor(context);
@@ -129,6 +157,8 @@ public class Report {
         values.put(StoryMakerDB.Schema.Reports.COL_LOCATION, _location);
         values.put(StoryMakerDB.Schema.Reports.COL_SERVERID, _serverid);
         values.put(StoryMakerDB.Schema.Reports.COL_DATE, _date);
+        values.put(StoryMakerDB.Schema.Reports.COL_EXPORTED, _exported);
+        values.put(StoryMakerDB.Schema.Reports.COL_SYNCED, _synced);
         return values;
     }
     private void insert() {
@@ -205,6 +235,12 @@ public class Report {
     public String getDate() {
         return _date;
     }
+    public String getExported() {
+        return _exported;
+    }
+    public String getSynced() {
+        return _synced;
+    }
     /**
      * @param title
      *            the title to set
@@ -233,4 +269,11 @@ public class Report {
     public void setDate(String _date) {
         this._date = _date;
     }    
+    public void setExported(String _exported) {
+        this._exported = _exported;
+    }
+    public void setSynced(String _synced) {
+        this._synced = _synced;
+    }
+
 }

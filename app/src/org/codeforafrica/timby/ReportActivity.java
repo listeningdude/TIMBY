@@ -490,7 +490,7 @@ OnItemLongClickListener{
     	Report report;
         if(rid==-1){
         	
-        	report = new Report (this, 0, title, String.valueOf(pSector), String.valueOf(pIssue), pEntity, pDesc, pLocation, "0", currentdate);
+        	report = new Report (this, 0, title, String.valueOf(pSector), String.valueOf(pIssue), pEntity, pDesc, pLocation, "0", currentdate, "0", "0");
          }else{
         	report = Report.get(this, rid);
         	report.setTitle(title);
@@ -498,7 +498,7 @@ OnItemLongClickListener{
         	report.setEntity(pEntity);
         	report.setIssue(String.valueOf(pIssue));
         	report.setSector(String.valueOf(pSector));
-        	report.setLocation(pLocation);
+        	report.setLocation(pLocation);        	
         }
         report.save();
         
