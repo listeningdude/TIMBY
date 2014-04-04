@@ -9,6 +9,9 @@
 	<string name="sync">Sync to Server</string>
 	<string name="export">Export to SD</string>
 	<string name="export_option">Include files already exported?</string>
+	<string name="unsaved_changes_alert">You have unsaved changes!</string>
+	<string name="save">Save</string>
+	<string name="discard">Discard</string>
 	
 	<string name="menu_export">Export to SD</string>
 	

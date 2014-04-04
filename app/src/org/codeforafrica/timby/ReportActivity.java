@@ -4,9 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+
+import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.*;
 import org.json.JSONArray;
-
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.model.Entity;
 import org.codeforafrica.timby.model.GPSTracker;
@@ -18,6 +19,7 @@ import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -30,8 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-
-
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -44,7 +44,6 @@ import android.widget.RadioGroup;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
-
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +54,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class ReportActivity extends BaseActivity implements OnClickListener,
 OnItemLongClickListener{
-
+	
 	//private RadioGroup rGroup;
 	//private TextView txtNewStoryDesc;
 	private EditText editTextStoryName;
@@ -90,6 +89,7 @@ OnItemLongClickListener{
     private MyAdapter adapter;
     private Dialog dialog;
     
+    public boolean new_report = false;
     @Override
     @SuppressLint("NewApi")
     public void onCreate(Bundle savedInstanceState) {
@@ -165,7 +165,8 @@ OnItemLongClickListener{
         
         //txtNewStoryDesc = (TextView)findViewById(R.id.txtNewStoryDesc);
         editTextStoryName = (EditText)findViewById(R.id.editTextStoryName);
-       
+        
+        
         addEntity = (Button)findViewById(R.id.AddEntity);
         entitiesLV = (ListView)findViewById(R.id.EntitiesList);
         
@@ -216,7 +217,7 @@ OnItemLongClickListener{
             }
         });
         
-        if(rid!=-1){
+        if(rid!=-1){ 
         	getSupportActionBar().setTitle("Edit Report");
         	title = i.getStringExtra("title");
             sector = i.getStringExtra("sector");
@@ -231,19 +232,8 @@ OnItemLongClickListener{
             spinnerSector.setSelection(Integer.parseInt(sector));
            
             spinnerIssue.setSelection(Integer.parseInt(issue));
-            //setSelectedItem(spinnerSector, sector);
-           //setSelectedItem(spinnerIssue, issue);
             editTextDesc.setText(description);
             
-            /*
-            String[] list1 = entity.split("\\s*,\\s*");
-            for(String file: list1) {
-                datasource.add(file);
-            }
-            
-            //datasource = Arrays.asList(entity.split("\\s*,\\s*"));
-            
-            */
             
             ArrayList<Entity> mListEntities;
     		mListEntities = Entity.getAllAsList(this, rid);
@@ -258,67 +248,20 @@ OnItemLongClickListener{
     
             done.setText("Update");
         }else{
+        	new_report = true;
         	getSupportActionBar().setTitle("Add Report");
         }
         if (datasource.size()==0){
         	entitiesLV.setVisibility(View.GONE);
         }
-        /*
-        //Button actions
-        rGroup.setOnCheckedChangeListener(new OnCheckedChangeListener()
-        {
-        	
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				
-				if (checkedId == R.id.radioStoryType0)
-		    	{
-		    		//video
-					txtNewStoryDesc.setText(R.string.template_video_desc);
-		    		
-		    	}
-		    	else if (checkedId == R.id.radioStoryType1)
-		    	{
-
-		    		//photo
-
-					txtNewStoryDesc.setText(R.string.template_photo_desc);
-		    	}
-		    	else if (checkedId == R.id.radioStoryType2)
-		    	{
-
-		    		//audio
-
-					txtNewStoryDesc.setText(R.string.template_audio_desc);
-		    	}
-				
-		    	else if (checkedId == R.id.radioStoryType3)
-                {
-                        //essay
-
-                            txtNewStoryDesc.setText(R.string.template_essay_desc);
-                        
-                }
-				story_mode = 2;
-				//if (formValid()) {
-					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),datasource.toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), false);		
-				//}else{
-					//rGroup.clearCheck();
-				//}
-				
-			}
-			
-        });
-        */
+     
         
         done.setOnClickListener(new OnClickListener() {
             
             @Override
             public void onClick(View v) {
             	
-            	if (formValid()) {
-					launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),datasource.toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), true);		
-            	}
+            	report_save();
             	
             }
         });
@@ -349,7 +292,25 @@ OnItemLongClickListener{
 			}
 		});
     }
-
+    public void report_save(){
+    	
+    	if (formValid()) {
+			launchProject(editTextStoryName.getText().toString(), spinnerIssue.getSelectedItemPosition(),spinnerSector.getSelectedItemPosition(),datasource.toString(),editTextDesc.getText().toString(),gpsInfo.getText().toString(), true);		
+    	}
+    	
+    }
+    public void report_close(){
+    	
+    	//Hide keyboard
+        InputMethodManager inputManager = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE); 
+        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),      
+        		    InputMethodManager.HIDE_NOT_ALWAYS);
+        //NavUtils.navigateUpFromSameTask(this);
+        Intent i = new Intent(getBaseContext(), HomeActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+        finish();
+    }
     public void setEntities(){
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     	try {
@@ -469,7 +430,7 @@ OnItemLongClickListener{
 
     private void launchProject(String title, int pIssue, int pSector, String pEntity, String pDesc, String pLocation, boolean update) {
     	
-    	
+    	new_report = false;
     	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	String currentdate = dateFormat.format(new Date());
     	
@@ -489,7 +450,6 @@ OnItemLongClickListener{
     	
     	Report report;
         if(rid==-1){
-        	
         	report = new Report (this, 0, title, String.valueOf(pSector), String.valueOf(pIssue), pEntity, pDesc, pLocation, "0", currentdate, "0", "0");
          }else{
         	report = Report.get(this, rid);
@@ -543,20 +503,77 @@ OnItemLongClickListener{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-            	//Hide keyboard
-                InputMethodManager inputManager = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE); 
-                inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),      
-                		    InputMethodManager.HIDE_NOT_ALWAYS);
-                //NavUtils.navigateUpFromSameTask(this);
-                Intent i = new Intent(getBaseContext(), HomeActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                finish();
+            	if(new_report){
+            		if(something_changed()){
+            			showSaveAlert();
+            		}else{
+            			report_close();
+            		}
+            	}else{
+            		//old report
+            		if(something_changed_db()){
+            			showSaveAlert();
+            		}else{
+            			report_close();
+            		}
+            	}
+            	   
+            	
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+    public void showSaveAlert(){
+    	//Alert dialog to confirm
+    	AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
+        builder.setMessage(getString(R.string.unsaved_changes_alert))
+                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener(){
 
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    	report_save();  
+                    	report_close();
+                    }
+                })
+                
+                .setNegativeButton(R.string.discard, new DialogInterface.OnClickListener(){
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        report_close();                            	
+                    }
+                    
+                }).show();
+    }
+    public boolean something_changed_db(){
+    	Report report = Report.get(this, rid);
+    	
+    	if((editTextStoryName.getText().toString().equals(report.getTitle()))&&
+				(spinnerIssue.getSelectedItemPosition()==Integer.parseInt(report.getIssue()))&&
+				(spinnerSector.getSelectedItemPosition()==Integer.parseInt(report.getSector()))&&
+				(datasource.toString().equals("["+report.getEntity()+"]"))&&
+				(editTextDesc.getText().toString().equals(report.getDescription()))
+				){
+    		return false;
+    	}else{
+    		return true;
+    	}
+    }
+    public boolean something_changed(){
+		if((editTextStoryName.getText().toString().equals(""))&&
+				(spinnerIssue.getSelectedItemPosition()==0)&&
+				(spinnerSector.getSelectedItemPosition()==0)&&
+				(datasource.size()==0)&&
+				(editTextDesc.getText().toString().equals(""))
+				){
+			//nothing changed; ignore location change
+			
+			return false;
+		}else{
+				
+	    	return true;
+		}
+    }
     
     //entities
     private class MyAdapter extends BaseAdapter {
