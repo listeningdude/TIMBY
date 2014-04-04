@@ -176,14 +176,16 @@ public class SyncService extends Service {
 			 	createReport myTask = new createReport();
 			 	myTask.execute(params);		 
 			}else{
+				/*
 				//update report
 				//get report servid
 				//new updateReport().execute();
 				ReportTaskParams params = new ReportTaskParams(rid, serverID, title, issue, sector, entity, lat, lon, date, description);
 			 	update_Report = new updateReport();
-			 	update_Report.execute(params);		 
+			 	update_Report.execute(params);	
+			 	*/	 
 			}
-		 	}
+		  }
 		}
 	}
 	public void uploadEntities(int rid, int serverid){
@@ -470,11 +472,13 @@ public class SyncService extends Service {
 				String res = json.getString(KEY_SUCCESS); 
 					if(res.equals("OK")){
 						
-						JSONArray json_report = json.getJSONArray("message");
+						JSONObject json_report = json.getJSONObject("message");
 						
-						JSONObject details = json_report.getJSONObject(0);//json_report.getString(KEY_ID);
-						int object_id = Integer.parseInt(details.getString("object_id"));
-						String sequence_id = String.valueOf(details.getString("sequence_id"));
+						//JSONObject details = json_report.getJSONObject(0);//json_report.getString(KEY_ID);
+						int object_id = Integer.parseInt(json_report.getString("object_id"));
+						
+						//TODO: Get rid of sequence id as object property | new API
+						String sequence_id = "0";//String.valueOf(json_report.getString("sequence_id"));
 						
 						//Update object id and sequence id
 						Project project= Project.get(getApplicationContext(), Integer.parseInt(pid));

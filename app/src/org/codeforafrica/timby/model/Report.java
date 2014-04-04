@@ -104,7 +104,7 @@ public class Report {
     }
     public static Cursor getAllAsCursor_EI(Context context) {
     	String selection = StoryMakerDB.Schema.Reports.COL_EXPORTED + "=?";
-        String[] selectionArgs = new String[] { "" + 0 };
+        String[] selectionArgs = new String[] { "" + "0" };
         
         return context.getContentResolver().query(
                 ReportsProvider.REPORTS_CONTENT_URI, null, selection, selectionArgs, StoryMakerDB.Schema.Reports.ID+" DESC");

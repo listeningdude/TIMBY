@@ -103,7 +103,13 @@ public class Export2SDService extends Service {
 			            
             SimpleDateFormat s = new SimpleDateFormat("yyyyMMddhhmmss");
             String timestamp = s.format(new Date());
-		 	mListReports = Report.getAllAsList_EI(getApplicationContext(), eI);
+            
+            if(eI.equals("0")){
+            	mListReports = Report.getAllAsList_EI(getApplicationContext(), eI);
+            }else{
+            	mListReports = Report.getAllAsList(getApplicationContext());
+            }
+		 	
             reportscount = mListReports.size();
 
 			zipName = "timby"+userid+"-"+String.valueOf(reportscount)+"-"+timestamp;
@@ -166,10 +172,12 @@ public class Export2SDService extends Service {
 						 	data += "<object_id>"+project.getId()+"</object_id>\n";
 						 	data += "<object_title>"+project.getTitle()+"</object_title>\n";
 						 	
+						 	Log.d("I'm here", "I'm here - 1");
 						 	Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
 						 	for (Media media: mediaList){
 						 		String path = media.getPath();
-						 		
+							 	Log.d("I'm here", "I'm here - 2");
+
 						 		String file = path;
 						 		
 						 		//Decrypt file
@@ -194,7 +202,7 @@ public class Export2SDService extends Service {
 								path = path.replace(ext, "");
 								
 								Log.d("path", path);
-								String copyPath = (rFolder.getPath()).toString()+"/"+path;
+								String copyPath = (newFolder.getPath().toString()+path);
 
 								try {
 									copy(new File(file), new File(copyPath));
