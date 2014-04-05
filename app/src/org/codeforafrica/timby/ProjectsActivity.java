@@ -182,9 +182,9 @@ public class ProjectsActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 //NavUtils.navigateUpFromSameTask(this);
-                Intent i = new Intent(getBaseContext(), HomeActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                //Intent i = new Intent(getBaseContext(), HomeActivity.class);
+                //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //startActivity(i);
                 finish();
             return true;
         }
