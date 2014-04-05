@@ -32,14 +32,6 @@
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:src="@drawable/timby_logo" />
-          
-                 <TextView
-                     android:id="@+id/login_error"
-                     android:layout_width="fill_parent"
-                     android:layout_height="wrap_content"
-                     android:gravity="center"
-                     android:textColor="#555555"
-                     android:textSize="18dip" />
          
                 <!-- Logo Ends -->
 
@@ -94,6 +86,14 @@
               android:layout_height="wrap_content"
               android:layout_marginBottom="15dp"
               android:text="Show password" />
+
+          <TextView
+              android:id="@+id/login_error"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:textColor="#555555"
+              android:textSize="18dip" />
 
           <Button
               android:id="@+id/btnLogin"
