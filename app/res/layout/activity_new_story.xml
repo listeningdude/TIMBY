@@ -309,7 +309,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/background_cream_grey_border"
-                android:text="Company/Person"
+                android:text="Add Company/Person"
                 android:gravity="left"
                 android:padding="15dp"
                 style="@android:style/TextAppearance.Medium"
