@@ -25,9 +25,11 @@ public class StoryNewActivity extends BaseActivity {
         
         quickstory = intent.getIntExtra("quickstory", 0);
         
-        setContentView(R.layout.activity_new_story);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        
+        if(quickstory!=1){
+        	setContentView(R.layout.activity_new_story);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+                
         launchSimpleStory("", rid, storymode, true, quickstory);  
     }
     private int createReport() {

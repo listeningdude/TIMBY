@@ -1,6 +1,8 @@
 package org.codeforafrica.timby;
 
 import org.codeforafrica.timby.R;
+import org.codeforafrica.timby.server.LoginPreferencesActivity;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -28,7 +30,7 @@ public class QuickStoryWidgetProvider extends AppWidgetProvider {
       // Set the text
       //remoteViews.setTextViewText(R.id.update, String.valueOf(number));
 
-      Intent intentHome = new Intent(context, HomeActivity.class);
+      Intent intentHome = new Intent(context, LoginPreferencesActivity.class);
       PendingIntent pendingIntentHome = PendingIntent.getActivity(context, intentHome.hashCode(), intentHome, 0);
       remoteViews.setOnClickPendingIntent(R.id.btnWidgetHome, pendingIntentHome);
       
