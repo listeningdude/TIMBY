@@ -3,18 +3,16 @@ import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.login.UserFunctions;
 import org.codeforafrica.timby.server.LoginActivity;
 import org.codeforafrica.timby.server.LoginPreferencesActivity;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
-
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.preference.PreferenceManager;
 import org.holoeverywhere.preference.SharedPreferences;
 import org.holoeverywhere.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,7 +32,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.view.WindowManager;
 import android.widget.ImageView;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 //import com.google.analytics.tracking.android.EasyTracker;
@@ -45,9 +42,10 @@ public class BaseActivity extends Activity {
 
 	public SlidingMenu mSlidingMenu;
 	private static String KEY_SUCCESS = "status";
-	public static final long DISCONNECT_TIMEOUT = 900000; // 5 min = 5 * 60 * 1000 ms
+	public static final long DISCONNECT_TIMEOUT = 1*60*1000; // 5 min = 5 * 60 * 1000 ms
 
-    private Handler disconnectHandler = new Handler(){
+    @SuppressLint("HandlerLeak")
+	private Handler disconnectHandler = new Handler(){
         public void handleMessage(Message msg) {
         }
     };
@@ -55,16 +53,10 @@ public class BaseActivity extends Activity {
     private Runnable disconnectCallback = new Runnable() {
         @Override
         public void run() {
-            // Perform any required operation on disconnect
-        	//SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        	
-        	//settings.edit().clear();
-            //settings.edit().commit();	
-        	
             Intent i = new Intent(getBaseContext(), LoginPreferencesActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
-            finish();;
+            finish();
         }
     };
 
