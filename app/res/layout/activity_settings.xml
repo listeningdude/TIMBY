@@ -129,7 +129,7 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Maximum video length"
+        android:text="@string/max_vid_length"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText

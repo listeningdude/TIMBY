@@ -12,7 +12,7 @@
 	<string name="unsaved_changes_alert">You have unsaved changes!</string>
 	<string name="save">Save</string>
 	<string name="discard">Discard</string>
-	
+	<string name="max_vid_length">Maximum video length in minutes</string>
 	<string name="menu_export">Export to SD</string>
 	
 	<string name="add_picture">Image</string>
