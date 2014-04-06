@@ -154,10 +154,10 @@ public class GPSTracker extends Service implements LocationListener {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext); 
    
         // Setting Dialog Title 
-        alertDialog.setTitle("GPS is settings"); 
+        alertDialog.setTitle("GPS settings"); 
    
         // Setting Dialog Message 
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?"); 
+        alertDialog.setMessage("Do you want to go to settings menu? You also need a view of the sky for it work properly."); 
    
         // On pressing Settings button 
         alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() { 

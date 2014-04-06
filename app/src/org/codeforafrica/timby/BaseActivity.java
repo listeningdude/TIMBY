@@ -42,7 +42,7 @@ public class BaseActivity extends Activity {
 
 	public SlidingMenu mSlidingMenu;
 	private static String KEY_SUCCESS = "status";
-	public static final long DISCONNECT_TIMEOUT = 1*60*1000; // 5 min = 5 * 60 * 1000 ms
+	public static final long DISCONNECT_TIMEOUT = 5*60*1000; // 5 min = 5 * 60 * 1000 ms
 
     @SuppressLint("HandlerLeak")
 	private Handler disconnectHandler = new Handler(){

@@ -248,6 +248,7 @@ OnItemLongClickListener{
     
             done.setText("Update");
         }else{
+        	setLocation();
         	new_report = true;
         	getSupportActionBar().setTitle("Add Report");
         }
@@ -269,28 +270,34 @@ OnItemLongClickListener{
 		setLocation.setOnClickListener(new OnClickListener(){
 			@Override
             public void onClick(View v) {		
-				gpsT = new GPSTracker(ReportActivity.this); 
-				  
-		          // check if GPS enabled 
-		          if(gpsT.canGetLocation()){ 
-		  
-		              double latitude = gpsT.getLatitude(); 
-		              double longitude = gpsT.getLongitude(); 
-		  
-		              // \n is for new line 
-		              gpsInfo.setText(latitude+", "+longitude); 
-		             /* GeoPoint myGeoPoint = new GeoPoint( 
-		                    (int)(latitude*1000000), 
-		                    (int)(longitude*1000000)); 
-		            	CenterLocatio(myGeoPoint); */
-		          }else{ 
-		              // can't get location 
-		              // GPS or Network is not enabled 
-		              // Ask user to enable GPS/network in settings 
-		              gpsT.showSettingsAlert(); 
-		          } 
+				setLocation();
 			}
 		});
+    }
+    public void setLocation(){
+		gpsT = new GPSTracker(ReportActivity.this); 
+		  
+        // check if GPS enabled 
+        if(gpsT.canGetLocation()){ 
+
+            double latitude = gpsT.getLatitude(); 
+            double longitude = gpsT.getLongitude(); 
+
+            // \n is for new line 
+            gpsInfo.setText(latitude+", "+longitude); 
+           /* GeoPoint myGeoPoint = new GeoPoint( 
+                  (int)(latitude*1000000), 
+                  (int)(longitude*1000000)); 
+          	CenterLocatio(myGeoPoint); */
+            if(String.valueOf(latitude).equals("0")){
+                gpsT.showSettingsAlert(); 
+            }
+        }else{ 
+            // can't get location 
+            // GPS or Network is not enabled 
+            // Ask user to enable GPS/network in settings 
+            gpsT.showSettingsAlert(); 
+        } 
     }
     public void report_save(){
     	
@@ -437,6 +444,7 @@ OnItemLongClickListener{
     	if(pLocation.equals("Location not set")){
     		pLocation = "0, 0";
     	}
+    	
     	if (title == null || title.length() == 0)
     	{
     		title = "Captured at "+currentdate;
@@ -484,17 +492,20 @@ OnItemLongClickListener{
 	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        startActivity(intent);
         }else{
-        	//Hide keyboard
-            InputMethodManager inputManager = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE); 
-            inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),      
-            		    InputMethodManager.HIDE_NOT_ALWAYS);
-            
-        	Toast.makeText(getBaseContext(), String.valueOf(rid)+" Updated successfully!", Toast.LENGTH_LONG).show();
-        	Intent i = new Intent(getApplicationContext(), HomeActivity.class);
-        	i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        	startActivity(i);
-        	finish();        	
-        	
+        	if(pLocation.equals("0, 0")){
+        		Toast.makeText(getApplicationContext(), "Trouble finding location. Try again later!", Toast.LENGTH_LONG).show();
+        	}else{
+	    		//Hide keyboard
+	            InputMethodManager inputManager = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE); 
+	            inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),      
+	            		    InputMethodManager.HIDE_NOT_ALWAYS);
+	            
+	        	Toast.makeText(getBaseContext(), String.valueOf(rid)+" Updated successfully!", Toast.LENGTH_LONG).show();
+	        	Intent i = new Intent(getApplicationContext(), HomeActivity.class);
+	        	i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	        	startActivity(i);
+	        	finish(); 
+        	}      	
         }
          
     }
