@@ -92,7 +92,14 @@ public class SettingsActivity extends Activity implements OnClickListener{
          edit.putString("username", eTUsername.getText().toString());
          edit.putString("password", eTPassword.getText().toString());
          edit.putString("api_key", eTAPIKey.getText().toString());
-         edit.putString("maximum_video_length", eTVid.getText().toString());
+         
+         String maxL = eTVid.getText().toString();
+         int imaxL = Integer.parseInt(maxL);
+         imaxL = (int)(imaxL*60);
+         
+         edit.putString("maximum_video_length", String.valueOf(imaxL));
+         
+         
          edit.putString("encryption_key", eTEncryptionKey.getText().toString());
          edit.putString("api_base_url", eTAPI.getText().toString());
          edit.putString("hockey_app_id", eTHA.getText().toString());
@@ -128,7 +135,12 @@ public class SettingsActivity extends Activity implements OnClickListener{
     	eTAPIKey.setText(api_key);
     	
     	String maximum_video_length = prefs.getString("maximum_video_length",null);
-    	eTVid.setText(maximum_video_length);
+    	
+    	String maxL = maximum_video_length;
+        int imaxL = Integer.parseInt(maxL);
+        imaxL = (int)(imaxL/60);
+        
+    	eTVid.setText(imaxL);
     	
     	String encryption_key = prefs.getString("encryption_key",null);
     	eTEncryptionKey.setText(encryption_key);
