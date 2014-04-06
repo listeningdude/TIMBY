@@ -120,23 +120,7 @@ public class LoginPreferencesActivity extends BaseActivity implements Runnable
       			}
       		});
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.activity_settings, menu);   
-        return true;
-    }
-    @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.settings)
-        {
-        	Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);
-			startActivity(settings);
-        }
-        
-       
-		return true;
-	}
     private void handleLogin ()
     {
             txtStatus.setText("Attempting login...");
