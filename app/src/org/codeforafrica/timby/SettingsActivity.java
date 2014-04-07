@@ -17,17 +17,14 @@ import android.content.SharedPreferences.Editor;
 
 public class SettingsActivity extends Activity implements OnClickListener{
     private Dialog dialog;
-    EditText eTHA;
-    EditText eTAPI;
-    EditText eTEncryptionKey;
+
     EditText eTVid;
-    EditText eTUnlockCode;
+    
     CheckBox checkDeleteExport;
     CheckBox checkDeleteSync;
     CheckBox checkEncrypt;
     Button btnSave;
-    
-    EditText eTAPIKey;
+
     EditText eTUsername;
     EditText eTPassword;
     
@@ -40,12 +37,7 @@ public class SettingsActivity extends Activity implements OnClickListener{
     	btnSave = (Button)findViewById(R.id.btnSave);
     	
     	eTVid = (EditText)findViewById(R.id.eTVid);
-    	eTEncryptionKey = (EditText)findViewById(R.id.eTEncryptionKey);
-    	eTAPI = (EditText)findViewById(R.id.eTAPI);
-    	eTHA = (EditText)findViewById(R.id.eTHA);
-    	eTUnlockCode = (EditText)findViewById(R.id.eTUnlockCode);
     	
-    	eTAPIKey = (EditText)findViewById(R.id.eTAPIKey);
     	eTUsername = (EditText)findViewById(R.id.eTUsername);
     	eTPassword = (EditText)findViewById(R.id.eTPassword);
     	
@@ -87,11 +79,10 @@ public class SettingsActivity extends Activity implements OnClickListener{
              edit.putString("delete_after_export", "1");
          }else{
         	 edit.putString("delete_after_export", "0");
-         }
-         edit.putString("unlock_code", eTUnlockCode.getText().toString());    	
+         }   	
          edit.putString("username", eTUsername.getText().toString());
          edit.putString("password", eTPassword.getText().toString());
-         edit.putString("api_key", eTAPIKey.getText().toString());
+         
          
          String maxL = eTVid.getText().toString();
          int imaxL = Integer.parseInt(maxL);
@@ -99,10 +90,7 @@ public class SettingsActivity extends Activity implements OnClickListener{
          
          edit.putString("maximum_video_length", String.valueOf(imaxL));
          
-         
-         edit.putString("encryption_key", eTEncryptionKey.getText().toString());
-         edit.putString("api_base_url", eTAPI.getText().toString());
-         edit.putString("hockey_app_id", eTHA.getText().toString());
+
          edit.commit();       
     	Toast.makeText(getApplicationContext(), "Settings have been saved!", Toast.LENGTH_LONG).show();
 		finish();
@@ -131,9 +119,7 @@ public class SettingsActivity extends Activity implements OnClickListener{
     	String password = prefs.getString("password",null);
     	eTPassword.setText(password);
     	
-    	String api_key = prefs.getString("api_key",null);
-    	eTAPIKey.setText(api_key);
-    	
+  	
     	String maximum_video_length = prefs.getString("maximum_video_length",null);
     	
     	String maxL = maximum_video_length;
@@ -141,18 +127,6 @@ public class SettingsActivity extends Activity implements OnClickListener{
         imaxL = (int)(imaxL/60);
         
     	eTVid.setText(imaxL);
-    	
-    	String encryption_key = prefs.getString("encryption_key",null);
-    	eTEncryptionKey.setText(encryption_key);
-    	
-    	String api_base_url = prefs.getString("api_base_url",null);
-    	eTAPI.setText(api_base_url);
-    	
-    	String hockey_app_id = prefs.getString("hockey_app_id",null);
-    	eTHA.setText(hockey_app_id);
-    	
-    	String unlock_code = prefs.getString("unlock_code",null);
-    	eTUnlockCode.setText(unlock_code);
     	
     }
     public void onClick(View v) {
@@ -163,10 +137,10 @@ public class SettingsActivity extends Activity implements OnClickListener{
         	String code = cE.getText().toString(); 
         	
         	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        	String unlockCode = prefs.getString("unlock_code", DefaultsActivity.unlock_code);
+        	String unlockCode = prefs.getString("password", DefaultsActivity.password);
         	
         	if(!code.equals(unlockCode)){
-        		 Toast.makeText(getApplicationContext(), "incorrect code", Toast.LENGTH_LONG).show();
+        		 Toast.makeText(getApplicationContext(), "incorrect password", Toast.LENGTH_LONG).show();
         		 finish();
         	}else{
         		 showSettings();
