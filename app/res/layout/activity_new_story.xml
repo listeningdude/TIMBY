@@ -162,7 +162,8 @@
             android:padding="15dp"
             android:textColor="@color/soft_red"
             android:textColorHint="@color/grey" 
-            style="@android:style/TextAppearance.Medium"/>
+            style="@android:style/TextAppearance.Medium"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/textView2"
@@ -292,7 +293,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_cream_grey_border"
-                style="@android:style/TextAppearance.Medium" />
+                style="@android:style/TextAppearance.Medium"
+                android:visibility="gone" />
 
             <Spinner
                 android:id="@+id/spinnerIssue"
@@ -300,7 +302,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/background_cream_grey_border"
-                style="@android:style/TextAppearance.Medium"/>
+                style="@android:style/TextAppearance.Medium"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/AddEntity"
