@@ -41,6 +41,8 @@ public class ProjectActivity extends BaseActivity{
 	    pid = i.getIntExtra("pid", -1);
 	    project = Project.get(getApplicationContext(), pid);
 	    
+	    desc.setText(project.getTitle());
+	    
 	    ImageView ivIcon = (ImageView)findViewById(R.id.storyThumb);
 	    ivIcon.setVisibility(View.VISIBLE);
 	    

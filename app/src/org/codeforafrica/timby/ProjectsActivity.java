@@ -14,6 +14,7 @@ import org.holoeverywhere.widget.Toast;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,6 +29,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -223,7 +226,7 @@ public class ProjectsActivity extends BaseActivity {
                 
                 
                 final Project project = mListProjects.get(arg2);
-
+                /*
 
             AlertDialog.Builder builder = new AlertDialog.Builder(ProjectsActivity.this);
             builder.setMessage(R.string.delete_project_)
@@ -236,6 +239,30 @@ public class ProjectsActivity extends BaseActivity {
                         
                     })
                     .setNegativeButton(R.string.no, null).show();
+                    */
+                final Dialog dialog = new Dialog(ProjectsActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_delete);
+                dialog.findViewById(R.id.button_ok).setOnClickListener(new OnClickListener(){
+
+    				@Override
+    				public void onClick(View v) {
+    					// TODO Auto-generated method stub
+    					deleteProject (project);
+    					dialog.dismiss();
+    				}
+                	
+                });
+                dialog.findViewById(R.id.button_cancel).setOnClickListener(new OnClickListener(){
+
+    				@Override
+    				public void onClick(View v) {
+    					// TODO Auto-generated method stub
+    					dialog.dismiss();
+    				}
+    			});
+                	
+                dialog.show();
                     return false;
             }
     	    
@@ -249,9 +276,10 @@ public class ProjectsActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			
 				Project project = mListProjects.get(position);
-				Intent intent = null;
-
-			    
+				Intent intent = new Intent(ProjectsActivity.this, ProjectActivity.class);
+			    intent.putExtra("pid", project.getId());
+			    startActivity(intent);
+			    refreshProjects();
 				/*if (project.getScenesAsArray().length > 1) {
 					
 				    intent = new Intent(ProjectsActivity.this, StoryTemplateActivity.class);

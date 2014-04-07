@@ -24,6 +24,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,7 +44,9 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -234,6 +237,7 @@ public class ReportsActivity extends BaseActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             final Report report = mListReports.get(arg2);
+            /*
             AlertDialog.Builder builder = new AlertDialog.Builder(ReportsActivity.this);
             builder.setMessage("Delete report?")
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
@@ -247,7 +251,30 @@ public class ReportsActivity extends BaseActivity {
                     .setNegativeButton(R.string.no, null).show();
             
             
-                
+              */
+            final Dialog dialog = new Dialog(ReportsActivity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_delete);
+            dialog.findViewById(R.id.button_ok).setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					deleteReport (report);
+					dialog.dismiss();
+				}
+            	
+            });
+            dialog.findViewById(R.id.button_cancel).setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+				}
+			});
+            	
+            dialog.show();
                 return false;
             }
     	    

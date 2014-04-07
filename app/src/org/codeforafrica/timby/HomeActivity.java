@@ -195,6 +195,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 			public void onClick(View v) {
 				
 	            dialog = new Dialog(HomeActivity.this);
+	            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.dialog_sync);
                 dialog.findViewById(R.id.button_sync).setOnClickListener(
                         HomeActivity.this);
@@ -202,10 +203,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
                         HomeActivity.this);
                 dialog.findViewById(R.id.checkBox1).setOnClickListener(
                         HomeActivity.this);
-                //dialog.setTitle("Choose Action");
                 dialog.show();
-				
-				//showSyncDialog();
                 
 			}
 		});

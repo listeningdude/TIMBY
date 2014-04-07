@@ -32,6 +32,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -213,6 +214,7 @@ OnItemLongClickListener{
             @Override
             public void onClick(View v) {
             	 dialog = new Dialog(ReportActivity.this);
+            	 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                  dialog.setContentView(R.layout.dialog_entities);
                  //Entities autocomplete 
                  ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),

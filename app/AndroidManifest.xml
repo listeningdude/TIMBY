@@ -105,17 +105,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
-        <activity
-            android:name="org.codeforafrica.timby.LessonsActivity"
+            <activity
+            android:name="org.codeforafrica.timby.ProjectActivity"
             android:configChanges="locale"
-            android:label="@string/title_activity_lessons"
+            android:label="@string/title_projects"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
-        </activity>
+                android:value=".ProjectsActivity" />
+        </activity>   
         <activity
             android:name="org.codeforafrica.timby.ReportsActivity"
             android:configChanges="locale"
