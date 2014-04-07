@@ -19,9 +19,7 @@ import org.codeforafrica.timby.AppConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 import redstone.xmlrpc.util.Base64;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -43,6 +41,7 @@ public class UserFunctions {
 	private static String updatereportURL = "/updatereport";	
 	private static String insertobjectURL = "/insertobject";
 	private static String updateobjectURL = "/updateobject";
+	private static String updateuserURL = "/updateuser";
 	private static String registerURL = "";
 	
 	// constructor
@@ -318,5 +317,18 @@ public class UserFunctions {
    	 	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
     	String api_key = prefs.getString("api_key",null);
 		return api_key;
+	}
+
+	public JSONObject updateUser(String token, String user_id, String username,
+			String password, Context ctx) {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("user_id", user_id));
+		params.add(new BasicNameValuePair("token", token));
+		params.add(new BasicNameValuePair("username", username));
+		params.add(new BasicNameValuePair("password", password));
+
+		JSONObject json = jsonParser.getJSONFromUrl(getPath(updateuserURL,ctx), params);
+		return json;
+
 	}
 }

@@ -24,7 +24,7 @@
               android:layout_marginBottom="5dp"
               android:layout_marginTop="5dip"
               android:background="#ffffff"
-              android:hint="Enter unlock code"
+              android:hint="Enter password"
               android:padding="10dp"
               android:password="true"
               android:singleLine="true"
