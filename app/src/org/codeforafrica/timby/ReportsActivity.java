@@ -330,48 +330,34 @@ public class ReportsActivity extends BaseActivity {
                 
                 
             }
-            
-            tv = (TextView)row.findViewById(R.id.title);
             Report report = reports.get(position);
-            tv.setText(report.getTitle()); 
             
-            tv = (TextView)row.findViewById(R.id.sector);
-            tv.setText(report.getSector());
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        	try {
-        	    JSONArray jsonArray2 = new JSONArray(prefs.getString("sectors", "[]"));
-        	    if(report.getSector().equals("0")){
-        	    	tv.setText("Sector not set");
-        	    }else{
-        	    tv.setText(jsonArray2.getString(Integer.parseInt(report.getSector())-1));
-        	    }
-        	}catch (Exception e) {
-        	    e.printStackTrace();
-        	}
-        	
-            tv = (TextView)row.findViewById(R.id.category);
-            tv.setText(report.getIssue());
-                   	try {
-        	    JSONArray jsonArray2 = new JSONArray(prefs.getString("categories", "[]"));
-        	    if(report.getIssue().equals("0")){
-        	    	tv.setText("Category not set");
-        	    }else{
-        	    tv.setText(jsonArray2.getString(Integer.parseInt(report.getIssue())-1));
-        	    }
-        	}catch (Exception e) {
-        	    e.printStackTrace();
-        	}
-        	
+            //Set status
+            tv = (TextView)row.findViewById(R.id.status);
+            
+            String status = "";
+            String exported = "";
+            String synced = "";
+            
+            if(report.getServerId().equals("0")){
+            	synced = "Not synced";
+            }else{
+            	synced = "Synced";
+            }
+            
+            if(report.getExported().equals("0")){
+            	exported = "Not exported";
+            }else{
+            	exported = "Exported";
+            }
+            
+            status = exported+" | "+synced;
+        	tv.setText(status);
+            
+            
             tv = (TextView)row.findViewById(R.id.date);            
             tv.setText(report.getDate());
-            
-           // int totalprojects = Project.getAllAsList(((Activity)context), report.getId()).size();
                   
-            
-           // tv = (TextView)row.findViewById(R.id.files);
-            
-            //tv.setText(String.valueOf(totalprojects)+" files(s)");   	
-            
             //Thumbnail Business
             ArrayList<Project> mListProjects;
     		mListProjects = Project.getAllAsList(getApplicationContext(), report.getId());

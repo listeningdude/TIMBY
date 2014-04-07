@@ -15,6 +15,8 @@
 	<string name="max_vid_length">Maximum video length in minutes</string>
 	<string name="menu_export">Export to SD</string>
 	
+	<string name="report_status">Status</string>
+	
 	<string name="add_picture">Image</string>
 	<string name="add_video">Video</string>
 	<string name="add_audio">Audio</string>

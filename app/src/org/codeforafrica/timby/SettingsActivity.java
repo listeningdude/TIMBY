@@ -15,7 +15,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-public class SettingsActivity extends Activity implements OnClickListener{
+public class SettingsActivity extends BaseActivity implements OnClickListener{
     private Dialog dialog;
 
     EditText eTVid;

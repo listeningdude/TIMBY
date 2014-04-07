@@ -44,53 +44,7 @@
         android:orientation="vertical"
          >
 
-                    
-        <TextView
-            android:id="@+id/title"
-            style="@style/CardText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginBottom="3dp"
-            android:text="title" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/dark_grey"
-            android:layout_weight="1" >
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
-           <TextView
-            android:id="@+id/sector_desc"
-            style="@style/CardText"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:textColor="@color/grey"
-            android:text="Sector"
-              
-/>
-            <TextView
-            android:id="@+id/sector"
-            style="@style/CardText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:text="asldkjasdlkjsad"
-              
-/>
-        </LinearLayout>
+        
         
          <LinearLayout
             android:layout_width="match_parent"
@@ -106,7 +60,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp" >
            <TextView
-            android:id="@+id/category_desc"
+            android:id="@+id/status"
             style="@style/CardText"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
@@ -114,7 +68,7 @@
             android:ellipsize="end"
             android:maxLines="3"
             android:textColor="@color/grey"
-            android:text="Category"
+            android:text="@string/report_status"
               
 />
             <TextView
