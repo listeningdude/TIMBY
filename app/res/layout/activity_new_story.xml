@@ -43,7 +43,7 @@
 		                android:layout_gravity="center"
 		                android:src="@drawable/camera" />
 					<TextView
-		                android:id="@+id/textView1"
+		                android:id="@+id/picture_label"
 		                android:layout_width="wrap_content"
 		                android:layout_height="wrap_content"
 		                android:layout_gravity="center"
@@ -72,7 +72,7 @@
 	                 android:layout_gravity="center"
 	                android:src="@drawable/video" />
 				<TextView
-	                android:id="@+id/textView1"
+	                android:id="@+id/video_label"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                 android:layout_gravity="center"
@@ -101,7 +101,7 @@
 		                android:layout_gravity="center"
 		                android:src="@drawable/audio" />
 					<TextView
-		                android:id="@+id/textView1"
+		                android:id="@+id/audio_label"
 		                android:layout_width="wrap_content"
 		                android:layout_height="wrap_content"
 		               	android:layout_gravity="center"
@@ -132,7 +132,7 @@
 		                android:layout_gravity="center"
 		                />
 					<TextView
-		                android:id="@+id/textView1"
+		                android:id="@+id/gallery_label"
 		                android:layout_width="wrap_content"
 		                android:layout_height="wrap_content"
 		                android:layout_gravity="center"
@@ -250,7 +250,7 @@
         <LinearLayout
             android:id="@+id/llStoryType"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:gravity="left|center_vertical"
             android:orientation="vertical" >

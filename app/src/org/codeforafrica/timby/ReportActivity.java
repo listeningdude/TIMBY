@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.codeforafrica.timby.R;
 import org.codeforafrica.timby.model.Entity;
 import org.codeforafrica.timby.model.GPSTracker;
+import org.codeforafrica.timby.model.Media;
 import org.codeforafrica.timby.model.Project;
 import org.codeforafrica.timby.model.Report;
 
@@ -61,6 +62,16 @@ OnItemLongClickListener{
 	private Spinner spinnerSector;
 	private Spinner spinnerIssue;
 	private EditText editTextDesc;
+	
+	private TextView picture_label;
+	private TextView video_label;
+	private TextView audio_label;
+	private TextView gallery_label;
+	
+	int pics = 0;
+	int vids = 0;
+	int auds = 0;
+	
 	int rid;
 	String title;
 	String issue;
@@ -215,7 +226,12 @@ OnItemLongClickListener{
                 dialog.setTitle("Add Entity");
                 dialog.show();
             }
-        });
+        });        
+        
+        picture_label = (TextView)findViewById(R.id.picture_label);
+        video_label = (TextView)findViewById(R.id.video_label);
+        audio_label = (TextView)findViewById(R.id.audio_label);
+        gallery_label = (TextView)findViewById(R.id.gallery_label);
         
         if(rid!=-1){ 
         	getSupportActionBar().setTitle("Edit Report");
@@ -247,11 +263,21 @@ OnItemLongClickListener{
             gpsInfo.setText(location);
     
             done.setText("Update");
+            
+            setMediaCount();
+            
         }else{
         	setLocation();
         	new_report = true;
         	getSupportActionBar().setTitle("Add Report");
+        	
+            picture_label.setText("Picture (0)");
+        	video_label.setText("Video (0)");
+        	audio_label.setText("Audio (0)");
+        	gallery_label.setText("Gallery (0)");
+        	
         }
+        
         if (datasource.size()==0){
         	entitiesLV.setVisibility(View.GONE);
         }
@@ -274,6 +300,36 @@ OnItemLongClickListener{
 			}
 		});
     }
+    
+    public void setMediaCount(){
+    	
+    	pics = 0;
+    	vids = 0;
+    	auds = 0;
+    	
+    	ArrayList<Project> mListProjects = Project.getAllAsList(getApplicationContext(), rid);
+	 	for (int j = 0; j < mListProjects.size(); j++) {
+	 		Project project = mListProjects.get(j);
+	 		Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
+		 	for (Media media: mediaList){
+		 		String ptype = media.getMimeType();
+		 		if(ptype.contains("image")){
+			 		pics++;
+			 	}else if(ptype.contains("video")){
+			 		vids++;
+			 	}else if(ptype.contains("audio")){
+			 		auds++;
+			 	}
+		 	}
+	 	}
+	 	
+    	picture_label.setText("Picture ("+String.valueOf(pics)+")");
+    	video_label.setText("Video ("+String.valueOf(vids)+")");
+    	audio_label.setText("Audio ("+String.valueOf(auds)+")");
+    	int total = pics + vids + auds;    	
+    	gallery_label.setText("Gallery ("+String.valueOf(total)+")");
+    }
+    
     public void setLocation(){
 		gpsT = new GPSTracker(ReportActivity.this); 
 		  
@@ -491,6 +547,7 @@ OnItemLongClickListener{
 	        intent.putExtra("rid", report.getId());
 	        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        startActivity(intent);
+	        setMediaCount();
         }else{
         	if(pLocation.equals("0, 0")){
         		Toast.makeText(getApplicationContext(), "Trouble finding location. Try again later!", Toast.LENGTH_LONG).show();
