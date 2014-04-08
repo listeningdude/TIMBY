@@ -5,12 +5,13 @@ android:layout_height="match_parent"
 android:orientation="vertical"
 android:background="@color/light_cream" >
 
-    <CheckBox
-        android:id="@+id/checkBox1"
+    <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="@string/export_option"/>
+        android:text="@string/unsaved_changes_alert"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -22,20 +23,20 @@ android:background="@color/light_cream" >
     android:weightSum="2" >
 
     <Button
-        android:id="@+id/button_sync"
+        android:id="@+id/button_save"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/sync"
+        android:text="@string/save"
         android:background="@color/soft_purple"
         android:textColor="@color/white" />
 
     <Button
-        android:id="@+id/button_export"
+        android:id="@+id/button_discard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/export"
+        android:text="@string/discard"
         android:background="@color/red"
         android:textColor="@color/white" />
 </LinearLayout>

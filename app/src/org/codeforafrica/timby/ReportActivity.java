@@ -100,6 +100,7 @@ OnItemLongClickListener{
     private ArrayList<String> datasource;
     private MyAdapter adapter;
     private Dialog dialog;
+    private Dialog dialog_save;
     
     public boolean new_report = false;
     @Override
@@ -594,27 +595,27 @@ OnItemLongClickListener{
         return super.onOptionsItemSelected(item);
     }
     public void showSaveAlert(){
-    	//Alert dialog to confirm
-    	AlertDialog.Builder builder = new AlertDialog.Builder(ReportActivity.this);
-        builder.setMessage(getString(R.string.unsaved_changes_alert))
-                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener(){
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    	report_save();  
-                    	report_close();
-                    }
-                })
-                
-                .setNegativeButton(R.string.discard, new DialogInterface.OnClickListener(){
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        report_close();                            	
-                    }
-                    
-                }).show();
+    	dialog_save = new Dialog(ReportActivity.this);
+    	dialog_save.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    	dialog_save.setContentView(R.layout.dialog_save);
+    	dialog_save.findViewById(R.id.button_save).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				report_save();  
+            	report_close();
+				dialog_save.dismiss();
+			}        	
+        });
+    	dialog_save.findViewById(R.id.button_discard).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+            	report_close();
+				dialog_save.dismiss();
+			}        	
+        });
+    	dialog_save.show();
     }
+    
     public boolean something_changed_db(){
     	Report report = Report.get(this, rid);
     	

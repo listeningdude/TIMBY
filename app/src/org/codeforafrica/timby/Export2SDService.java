@@ -180,41 +180,21 @@ public class Export2SDService extends Service {
 
 						 		String file = path;
 						 		
+						 		
+						 		path = path.replace(ext, "");
+								String outfile = newFolder.getPath().toString()+path;
+								
 						 		//Decrypt file
 						 		Cipher cipher;
 								try {
 									cipher = Encryption.createCipher(Cipher.DECRYPT_MODE, getApplicationContext());
-									Encryption.applyCipher(file, file+"_", cipher);
+									Encryption.applyCipher(file, outfile, cipher);
 								}catch (Exception e) {
 									// TODO Auto-generated catch block
 									Log.e("Encryption error", e.getLocalizedMessage());
 									e.printStackTrace();
 								}
-								//Then delete original file
-								File oldfile = new File(file);
-								oldfile.delete();
-								//Then remove _ on encrypted file
-								File newfile = new File(file+"_");
-								newfile.renameTo(new File(file));
-								
-								Log.d("file", file);
-								
-								path = path.replace(ext, "");
-								
-								Log.d("path", path);
-								String copyPath = (newFolder.getPath().toString()+path);
-
-								try {
-									copy(new File(file), new File(copyPath));
 									
-									Log.d("copyPath", copyPath);
-									
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								Log.d("copypath", copyPath);
-								
 							 	data += "<object_media>"+path+"</object_media>\n";
 								//}
 						 		data += "<object_type>"+media.getMimeType()+"</object_type>\n";
@@ -257,13 +237,14 @@ public class Export2SDService extends Service {
 				newfile.renameTo(new File(file));
 	    	}
 			
-			
-			//Re-encrypt everything
-			reEncrypt_everything();
+	    	//delete zip source
+	    	File zipsource = new File(newFolder.getAbsolutePath());
+			DeleteRecursive(zipsource);
+	    	
 			
 			return null;
 		}
-		
+			
 	protected void onPostExecute(String file_url) {
 			showNotification("Exported Successfully!");
 			if(delete_after_export.equals("1")){
@@ -273,18 +254,12 @@ public class Export2SDService extends Service {
 		}
 	}
 	
-	public void copy(File src, File dst) throws IOException {
-	    InputStream in = new FileInputStream(src);
-	    OutputStream out = new FileOutputStream(dst);
+	void DeleteRecursive(File fileOrDirectory) {
+	    if (fileOrDirectory.isDirectory())
+	        for (File child : fileOrDirectory.listFiles())
+	            DeleteRecursive(child);
 
-	    // Transfer bytes from in to out
-	    byte[] buf = new byte[1024];
-	    int len;
-	    while ((len = in.read(buf)) > 0) {
-	        out.write(buf, 0, len);
-	    }
-	    in.close();
-	    out.close();
+	    fileOrDirectory.delete();
 	}
 	
 	 public void deleteReports(){
@@ -299,54 +274,11 @@ public class Export2SDService extends Service {
 				}
 			}
 		}
-	public void reEncrypt_everything(){
-		
-		 for (int i = 0; i < mListReports.size(); i++) {
-			 	if(mListReports.get(i)!=null){
-				 	Report report = mListReports.get(i);
-				 	mListProjects = Project.getAllAsList(getApplicationContext(), report.getId());
-				 	for (int j = 0; j < mListProjects.size(); j++) {
-				 		Project project = mListProjects.get(j);
-					 	Media[] mediaList = project.getScenesAsArray()[0].getMediaAsArray();
-					 	for (Media media: mediaList){
-					 		String path = media.getPath();
-					 		/*
-					 		Intent startMyService= new Intent(Export2SDService.this, EncryptionService.class);
-					        startMyService.putExtra("filepath", path);
-					        startMyService.putExtra("mode", Cipher.ENCRYPT_MODE);
-					        startService(startMyService);
-					        */
-					 		String file = path;
-					 		Cipher cipher;
-							try {
-								cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE, getApplicationContext());
-								Encryption.applyCipher(file, file+"_", cipher);
-							}catch (Exception e) {
-								// TODO Auto-generated catch block
-								Log.e("Encryption error", e.getLocalizedMessage());
-								e.printStackTrace();
-							}
-							//Then delete original file
-							File oldfile = new File(file);
-							oldfile.delete();
-							//Then remove _ on encrypted file
-							File newfile = new File(file+"_");
-							newfile.renameTo(new File(file));
-					 	}
-				 	}
-			 	}
-		 }
-		 /*
-		 //delete xml
-		 String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/db.xml";
 
-		File oldfile = new File(file);
-		oldfile.delete();
-		*/
-	}
-      public void endExporting(){
+	 public void endExporting(){
     	  this.stopSelf();
       }
+	 
 	public void writeToFile(final String fileContents) {
 		try {
 	            FileWriter out = new FileWriter(new File(newFolder, "/db.xml"));
@@ -355,25 +287,7 @@ public class Export2SDService extends Service {
         	}catch (IOException e){
         		Log.d("Write Error!", e.getLocalizedMessage());
         	}
-			/*
-			//Encrypt xml
-			String file = Environment.getExternalStorageDirectory()+"/"+AppConstants.TAG+"/db.xml";
-	 		Cipher cipher;
-			try {
-				cipher = Encryption.createCipher(Cipher.ENCRYPT_MODE);
-				Encryption.applyCipher(file, file+"_", cipher);
-			}catch (Exception e) {
-				// TODO Auto-generated catch block
-				Log.e("Encryption error", e.getLocalizedMessage());
-				e.printStackTrace();
-			}
-			//Then delete original file
-			File oldfile = new File(file);
-			oldfile.delete();
-			//Then remove _ on encrypted file
-			File newfile = new File(file+"_");
-			newfile.renameTo(new File(file));
-			*/
+
     }
 
 	public boolean zipFileAtPath(String sourcePath, String toLocation) {

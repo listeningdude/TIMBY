@@ -2,8 +2,8 @@
     package="org.codeforafrica.timby"
     android:installLocation="auto"
 
-    android:versionCode="124"
-    android:versionName="2.0.02" >
+    android:versionCode="125"
+    android:versionName="2.0.05" >
     <uses-sdk
     android:minSdkVersion="10"
     android:targetSdkVersion="19" />
@@ -95,10 +95,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
-              <activity
+        <activity
             android:name="org.codeforafrica.timby.ProjectsActivity"
             android:configChanges="locale"
             android:label="@string/title_projects"
+            android:launchMode="singleTop"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
+        <activity
+            android:name="org.codeforafrica.timby.LessonsActivity"
+            android:configChanges="locale"
+            android:label="@string/title_lessons"
             android:launchMode="singleTop"
             >
             <meta-data

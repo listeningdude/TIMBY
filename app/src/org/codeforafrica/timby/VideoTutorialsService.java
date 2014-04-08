@@ -157,7 +157,16 @@ class DownloadFileFromURL extends AsyncTask<String, String, String> {
 
         return null;
     }
-
+    @Override
+    protected void onProgressUpdate(String... values) {
+        super.onProgressUpdate(values);
+        //showProgressNotification(Integer.parseInt(values[0]));
+        int update = Integer.parseInt(values[0]);
+        //if(update%5 == 0){
+        showProgressNotification(update);
+        //}
+        
+    }
     @Override
     protected void onPostExecute(String file_url) {      
        new unzip().execute();
@@ -178,13 +187,17 @@ private void showProgressNotification(final int incr){
 	         mBuilder.setProgress(100, (int) incr, false);
 	         // Displays the progress bar for the first time.
 	         mNotifyManager.notify(0, mBuilder.build());
-	                 
-	            
-	            // When the loop is finished, updates the notification
-	            mBuilder.setContentText("Download complete")
-	            // Removes the progress bar
-	                    .setProgress(0,0,false);
-	            mNotifyManager.notify(1, mBuilder.build());
+	 	     mBuilder.setContentText("Download in progress " + String.valueOf(incr) + "%");
+
+	         
+	         // When the loop is finished, updates the notification
+	         if(incr==100){
+		         mBuilder.setContentText("Download complete")
+		         // Removes the progress bar
+		                  .setProgress(0,0,false);
+		         mNotifyManager.notify(1, mBuilder.build());
+	         }
+	         
 	        }
 	    }
 	// Starts the thread by calling the run() method in its Runnable
