@@ -3,6 +3,8 @@ package org.codeforafrica.timby;
 import java.io.File;
 import java.util.ArrayList;
 
+
+
 //import org.codeforafrica.timby.VideoTutorials.VideosArrayAdapter;
 import org.codeforafrica.timby.lessons.LessonListView;
 import org.codeforafrica.timby.lessons.WebViewSetupJB;
@@ -10,9 +12,11 @@ import org.codeforafrica.timby.ui.MyCard;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
+import org.holoeverywhere.widget.Toast;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -33,6 +37,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.View.OnClickListener;
 import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -156,14 +162,46 @@ public class LessonsActivity extends BaseActivity implements ActionBar.TabListen
     }
     
     public ProgressDialog mProgressLoading;
+    void DeleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                DeleteRecursive(child);
+
+        fileOrDirectory.delete();
+    }
     
     public void updateLessons ()
     {
-
-    	mProgressLoading = ProgressDialog.show(this, getString(R.string.title_lessons),getString(R.string.downloading_lessons_from_server_),true,true);
-        
-    	StoryMakerApp.getLessonManager().updateLessonsFromRemote();
-    	
+    	final Dialog dialog = new Dialog(LessonsActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_update_lessons);
+        dialog.findViewById(R.id.button_videos).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				File tutorials = new File(Environment.getExternalStorageDirectory(), "TIMBY_Tutorials");
+				DeleteRecursive(tutorials);
+				
+			    startService(new Intent(LessonsActivity.this,VideoTutorialsService.class));
+	            Toast.makeText(getApplicationContext(), "Updating lessons...", Toast.LENGTH_LONG).show();
+				dialog.dismiss();
+				finish();
+			}
+        	
+        });
+        dialog.findViewById(R.id.button_lessons).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				mProgressLoading = ProgressDialog.show(getApplicationContext(), getString(R.string.title_lessons),getString(R.string.downloading_lessons_from_server_),true,true);
+		        
+		    	StoryMakerApp.getLessonManager().updateLessonsFromRemote();
+				dialog.dismiss();
+			}
+		});
+        	
+        dialog.show();
+		
     }
 
     public void updateLessonProgress (String msg)

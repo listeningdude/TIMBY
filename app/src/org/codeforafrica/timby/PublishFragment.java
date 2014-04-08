@@ -11,7 +11,6 @@ import org.codeforafrica.timby.server.YouTubeSubmit;
 import org.codeforafrica.timby.server.Authorizer.AuthorizationListener;
 import org.codeforafrica.timby.server.soundcloud.SoundCloudUploader;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,6 +21,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 import javax.crypto.Cipher;
+
 import org.ffmpeg.android.MediaUtils;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.Spinner;
@@ -32,6 +32,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
@@ -53,6 +54,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -112,9 +114,32 @@ public class PublishFragment extends Fragment {
 
         mSettings = PreferenceManager
         .getDefaultSharedPreferences(getActivity().getApplicationContext());
-	
+        
+        saveDialog();
     }
-    
+   private void saveDialog(){
+    	final Dialog dialog = new Dialog(mActivity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_caption);
+        dialog.findViewById(R.id.button_caption).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				dialog.dismiss();
+			}
+        });
+        dialog.findViewById(R.id.button_discard).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				dialog.dismiss();
+				saveForm();
+			}
+		});
+        dialog.show();
+    }
 
     public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -123,6 +148,7 @@ public class PublishFragment extends Fragment {
             Bundle savedInstanceState) {
 
     	initFragment ();
+    	
     	
     	int layout = getArguments().getInt("layout");
     	

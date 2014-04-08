@@ -170,9 +170,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 			
 			@Override
 			public void onClick(View v) {
-				//Check if lessons have been download
-					//if not start download service and toast
-					//else start activity
 				if(isServiceRunning(VideoTutorialsService.class)){
 					Toast.makeText(getApplicationContext(), "Currently downloading lessons...", Toast.LENGTH_LONG).show();
 				}else{
@@ -180,6 +177,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 				    if (!mFileExternDir.exists()) {
 				            Toast.makeText(getApplicationContext(), "No lessons found! Downloading...", Toast.LENGTH_LONG).show();
 				            startService(new Intent(HomeActivity.this,VideoTutorialsService.class));
+				    }else if(mFileExternDir.listFiles().length<4){
+				    		DeleteRecursive(mFileExternDir);
+				    		Toast.makeText(getApplicationContext(), "No lessons found! Downloading...", Toast.LENGTH_LONG).show();
+				    		startService(new Intent(HomeActivity.this,VideoTutorialsService.class));
 				    }else{
 						Intent i = new Intent(getApplicationContext(),LessonsActivity.class);
 						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -188,6 +189,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 				}
 			}
 		});
+        
         load_sync = (RelativeLayout)findViewById(R.id.load_sync);
         load_sync.setOnClickListener(new OnClickListener() {
 			
@@ -207,6 +209,13 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
                 
 			}
 		});
+    }
+    void DeleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                DeleteRecursive(child);
+
+        fileOrDirectory.delete();
     }
     /*
     private void showSyncDialog(){
